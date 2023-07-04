@@ -1,0 +1,491 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="..\packages\BepInEx.PluginInfoProps.1.1.0\build\BepInEx.PluginInfoProps.props" Condition="Exists('..\packages\BepInEx.PluginInfoProps.1.1.0\build\BepInEx.PluginInfoProps.props')" />
+    <Import Project="..\packages\BepInEx.AssemblyPublicizer.MSBuild.0.4.0\build\BepInEx.AssemblyPublicizer.MSBuild.props" Condition="Exists('..\packages\BepInEx.AssemblyPublicizer.MSBuild.0.4.0\build\BepInEx.AssemblyPublicizer.MSBuild.props')" />
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+        <ProjectGuid>{90FCEBF6-4D0C-4BC7-BE23-F8CC436C9929}</ProjectGuid>
+        <OutputType>Library</OutputType>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>DeathrunRemade</RootNamespace>
+        <AssemblyName>DeathrunRemade</AssemblyName>
+        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+        <FileAlignment>512</FileAlignment>
+        <LangVersion>8</LangVersion>
+        <Nullable>warnings</Nullable>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+        <OutputPath>bin\Debug\</OutputPath>
+        <PlatformTarget>x64</PlatformTarget>
+        <DefineConstants>DEBUG;</DefineConstants>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <DebugType>full</DebugType>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+        <OutputPath>bin\Release\</OutputPath>
+        <PlatformTarget>x64</PlatformTarget>
+        <Optimize>true</Optimize>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <!-- Define important extra files needed in the final distribution. -->
+    <!--<PropertyGroup>
+        <DataDir>DataFiles</DataDir>
+    </PropertyGroup>
+    <ItemGroup>
+        <DataFiles Include="$(SolutionDir)\$(DataDir)\*" />
+    </ItemGroup>-->
+
+    <!-- Copy newly built files to the game directory. -->
+    <Target Name="CopyToGameFolder" AfterTargets="Build">
+        <Message Importance="high" Text="Copying files to game directory." />
+        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SUBNAUTICA_DIR)\BepInEx\plugins\$(AssemblyName)" />
+        <!--<Copy SourceFiles="@(DataFiles)" DestinationFolder="$(SUBNAUTICA_DIR)\BepInEx\plugins\$(AssemblyName)\$(DataDir)" />-->
+    </Target>
+
+    <!-- Automatically create the zip file, ready for distribution. -->
+    <Target Name="PrepareZip" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+        <Message Importance="normal" Text="Copying files to temporary directory." />
+        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(OutputPath)\zipper\plugins\$(AssemblyName)" />
+        <!--<Copy SourceFiles="@(DataFiles)" DestinationFolder="$(OutputPath)\zipper\plugins\$(AssemblyName)\$(DataDir)" />-->
+    </Target>
+    <Target Name="CreateZip" AfterTargets="PrepareZip" Condition="'$(Configuration)' == 'Release'">
+        <Message Importance="high" Text="Zipping project for distribution." />
+        <ZipDirectory DestinationFile="$(OutputPath)\$(AssemblyName).zip" SourceDirectory="$(OutputPath)\zipper" Overwrite="true" />
+    </Target>
+    <Target Name="Cleanup" AfterTargets="CreateZip" Condition="'$(Configuration)' == 'Release'">
+        <Message Importance="normal" Text="Cleaning up." />
+        <RemoveDir Directories="$(OutputPath)\zipper" />
+    </Target>
+    
+    <ItemGroup>
+        <Reference Include="0Harmony, Version=2.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\HarmonyX.2.7.0\lib\net45\0Harmony.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="AsmResolver, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\BepInEx.AssemblyPublicizer.MSBuild.0.4.0\lib\net472\AsmResolver.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="AsmResolver.DotNet, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\BepInEx.AssemblyPublicizer.MSBuild.0.4.0\lib\net472\AsmResolver.DotNet.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="AsmResolver.PE, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\BepInEx.AssemblyPublicizer.MSBuild.0.4.0\lib\net472\AsmResolver.PE.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="AsmResolver.PE.File, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\BepInEx.AssemblyPublicizer.MSBuild.0.4.0\lib\net472\AsmResolver.PE.File.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Assembly-CSharp.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Assembly-CSharp-firstpass.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="BepInEx, Version=5.4.20.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\BepInEx.BaseLib.5.4.20\lib\net35\BepInEx.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="BepInEx.AssemblyPublicizer, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\BepInEx.AssemblyPublicizer.MSBuild.0.4.0\lib\net472\BepInEx.AssemblyPublicizer.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="BepInEx.AssemblyPublicizer.MSBuild, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\BepInEx.AssemblyPublicizer.MSBuild.0.4.0\lib\net472\BepInEx.AssemblyPublicizer.MSBuild.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="FMODUnity, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\FMODUnity.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Mono.Cecil, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+          <HintPath>..\packages\Mono.Cecil.0.11.4\lib\net40\Mono.Cecil.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Mono.Cecil.Mdb, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+          <HintPath>..\packages\Mono.Cecil.0.11.4\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Mono.Cecil.Pdb, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+          <HintPath>..\packages\Mono.Cecil.0.11.4\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Mono.Cecil.Rocks, Version=0.11.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">
+          <HintPath>..\packages\Mono.Cecil.0.11.4\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="MonoMod.RuntimeDetour, Version=21.12.13.1, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\MonoMod.RuntimeDetour.21.12.13.1\lib\net452\MonoMod.RuntimeDetour.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="MonoMod.Utils, Version=21.12.13.1, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\MonoMod.Utils.21.12.13.1\lib\net452\MonoMod.Utils.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Nautilus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.Nautilus.1.0.0-pre.15\lib\net472\Nautilus.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+          <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Sentry, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Sentry.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="System" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Xml" />
+        <Reference Include="Unity.Addressables, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Unity.Addressables.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Unity.Burst, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Unity.Burst.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Unity.Burst.Cecil, Version=0.10.0.0, Culture=neutral, PublicKeyToken=fc15b93552389f74, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Unity.Burst.Cecil.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Unity.Burst.Cecil.Mdb, Version=0.10.0.0, Culture=neutral, PublicKeyToken=fc15b93552389f74, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Unity.Burst.Cecil.Mdb.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Unity.Burst.Cecil.Pdb, Version=0.10.0.0, Culture=neutral, PublicKeyToken=fc15b93552389f74, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Unity.Burst.Cecil.Pdb.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Unity.Burst.Cecil.Rocks, Version=0.10.0.0, Culture=neutral, PublicKeyToken=fc15b93552389f74, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Unity.Burst.Cecil.Rocks.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Unity.Burst.Unsafe, Version=4.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Unity.Burst.Unsafe.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Unity.Collections, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Unity.Collections.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Unity.Formats.Fbx.Runtime, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Unity.Formats.Fbx.Runtime.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Unity.InternalAPIEngineBridge.001, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Unity.InternalAPIEngineBridge.001.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Unity.Mathematics, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Unity.Mathematics.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Unity.MemoryProfiler, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Unity.MemoryProfiler.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Unity.Recorder, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Unity.Recorder.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Unity.ResourceManager.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Unity.ScriptableBuildPipeline, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Unity.ScriptableBuildPipeline.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Unity.TextMeshPro.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="Unity.Timeline, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Unity.Timeline.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.AccessibilityModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.AccessibilityModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.AIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.AIModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.AndroidJNIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.AndroidJNIModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.AnimationModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.ARModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.ARModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.AssetBundleModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.AssetBundleModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.AudioModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.ClothModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.ClothModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.ClusterInputModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.ClusterInputModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.ClusterRendererModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.ClusterRendererModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.CoreModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.CrashReportingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.CrashReportingModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.DirectorModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.DirectorModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.DSPGraphModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.DSPGraphModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.GameCenterModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.GameCenterModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.GridModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.GridModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.HotReloadModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.HotReloadModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.ImageConversionModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.ImageConversionModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.IMGUIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.IMGUIModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.InputLegacyModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.InputLegacyModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.InputModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.InputModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.JSONSerializeModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.JSONSerializeModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.LocalizationModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.LocalizationModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.ParticleSystemModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.ParticleSystemModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.PerformanceReportingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.PerformanceReportingModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.Physics2DModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.Physics2DModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.PhysicsModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.ProfilerModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.ProfilerModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.ScreenCaptureModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.ScreenCaptureModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.SharedInternalsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.SharedInternalsModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.SpriteMaskModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.SpriteMaskModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.SpriteShapeModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.SpriteShapeModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.StreamingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.StreamingModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.SubstanceModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.SubstanceModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.SubsystemsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.SubsystemsModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.TerrainModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.TerrainModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.TerrainPhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.TerrainPhysicsModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.TextCoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.TextCoreModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.TextRenderingModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.TilemapModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.TilemapModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.TLSModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.TLSModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\UnityEngine.UI.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UIElementsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.UIElementsModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.UIModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UmbraModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.UmbraModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UNETModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.UNETModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UnityAnalyticsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UnityConnectModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.UnityConnectModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UnityTestProtocolModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.UnityTestProtocolModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UnityWebRequestAudioModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UnityWebRequestModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.UnityWebRequestModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UnityWebRequestTextureModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UnityWebRequestWWWModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.VehiclesModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.VehiclesModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.VFXModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.VFXModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.VideoModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.VideoModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.VRModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.VRModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.WindModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.WindModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.XRModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.XRModule.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="UWE.EditorModifications, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\UWE.EditorModifications.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="Configuration\Config.cs" />
+        <Compile Include="DeathrunInit.cs" />
+        <Compile Include="Properties\AssemblyInfo.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Include="packages.config" />
+    </ItemGroup>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+      <PropertyGroup>
+        <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>
+      </PropertyGroup>
+      <Error Condition="!Exists('..\packages\BepInEx.AssemblyPublicizer.MSBuild.0.4.0\build\BepInEx.AssemblyPublicizer.MSBuild.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\BepInEx.AssemblyPublicizer.MSBuild.0.4.0\build\BepInEx.AssemblyPublicizer.MSBuild.props'))" />
+      <Error Condition="!Exists('..\packages\BepInEx.PluginInfoProps.1.1.0\build\BepInEx.PluginInfoProps.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\BepInEx.PluginInfoProps.1.1.0\build\BepInEx.PluginInfoProps.props'))" />
+      <Error Condition="!Exists('..\packages\BepInEx.Core.5.4.21\build\BepInEx.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\BepInEx.Core.5.4.21\build\BepInEx.Core.targets'))" />
+    </Target>
+    <Import Project="..\packages\BepInEx.Core.5.4.21\build\BepInEx.Core.targets" Condition="Exists('..\packages\BepInEx.Core.5.4.21\build\BepInEx.Core.targets')" />
+    <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
+
+</Project>
