@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeathrunRemade", "DeathrunRemade\DeathrunRemade.csproj", "{90FCEBF6-4D0C-4BC7-BE23-F8CC436C9929}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubnauticaCommons", "SubnauticaCommons\SubnauticaCommons\SubnauticaCommons.csproj", "{D3B5597C-3E59-4503-9026-17D34E5F2AA3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -12,5 +14,9 @@ Global
 		{90FCEBF6-4D0C-4BC7-BE23-F8CC436C9929}.Debug|x64.Build.0 = Debug|x64
 		{90FCEBF6-4D0C-4BC7-BE23-F8CC436C9929}.Release|x64.ActiveCfg = Release|x64
 		{90FCEBF6-4D0C-4BC7-BE23-F8CC436C9929}.Release|x64.Build.0 = Release|x64
+		{D3B5597C-3E59-4503-9026-17D34E5F2AA3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{D3B5597C-3E59-4503-9026-17D34E5F2AA3}.Debug|x64.Build.0 = Debug|Any CPU
+		{D3B5597C-3E59-4503-9026-17D34E5F2AA3}.Release|x64.ActiveCfg = Release|Any CPU
+		{D3B5597C-3E59-4503-9026-17D34E5F2AA3}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
