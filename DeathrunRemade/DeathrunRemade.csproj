@@ -122,10 +122,12 @@
     <ItemGroup>
         <Compile Include="Configuration\Config.cs" />
         <Compile Include="DeathrunInit.cs" />
-        <Compile Include="Interfaces\IDeathrunPrefab.cs" />
         <Compile Include="Items\AcidBattery.cs" />
+        <Compile Include="Items\AcidPowerCell.cs" />
+        <Compile Include="Items\DeathrunPrefabBase.cs" />
         <Compile Include="Items\ItemInfo.cs" />
         <Compile Include="Objects\Enums\Difficulty.cs" />
+        <Compile Include="Patches\BatteryPatcher.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>

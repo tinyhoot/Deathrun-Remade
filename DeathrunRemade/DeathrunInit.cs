@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using BepInEx;
 using DeathrunRemade.Configuration;
-using DeathrunRemade.Interfaces;
 using DeathrunRemade.Items;
+using HarmonyLib;
 using SubnauticaCommons;
 using SubnauticaCommons.Interfaces;
 
@@ -20,8 +19,6 @@ namespace DeathrunRemade
         internal static Config _Config;
         internal static ILogHandler _Log;
 
-        internal static Dictionary<string, IDeathrunPrefab> customItems;
-        
         private void Awake()
         {
             _Log = new HootLogger(NAME);
@@ -34,15 +31,16 @@ namespace DeathrunRemade
             
             RegisterItems();
             
+            Harmony harmony = new Harmony(GUID);
+            harmony.PatchAll(Hootils.GetAssembly());
+            
             _Log.Info("Finished loading.");
         }
 
         private void RegisterItems()
         {
-            customItems = new Dictionary<string, IDeathrunPrefab>
-            {
-                { nameof(AcidBattery), new AcidBattery() },
-            };
+            ItemInfo.AddPrefab(new AcidBattery(_Config.BatteryCapacity.Value));
+            ItemInfo.AddPrefab(new AcidPowerCell(_Config.BatteryCapacity.Value));
         }
     }
 }
