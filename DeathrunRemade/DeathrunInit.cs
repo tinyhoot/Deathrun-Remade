@@ -1,6 +1,9 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using BepInEx;
 using DeathrunRemade.Configuration;
+using DeathrunRemade.Interfaces;
+using DeathrunRemade.Items;
 using SubnauticaCommons;
 using SubnauticaCommons.Interfaces;
 
@@ -16,6 +19,8 @@ namespace DeathrunRemade
 
         internal static Config _Config;
         internal static ILogHandler _Log;
+
+        internal static Dictionary<string, IDeathrunPrefab> customItems;
         
         private void Awake()
         {
@@ -23,11 +28,21 @@ namespace DeathrunRemade
             _Log.Info($"{NAME} v{VERSION} starting up.");
             
             // Registering config.
-            _Config = new Config(Path.Combine(Paths.ConfigPath, SubnauticaCommons.Utils.GetConfigFileName(NAME)),
+            _Config = new Config(Path.Combine(Paths.ConfigPath, Hootils.GetConfigFileName(NAME)),
                 Info.Metadata);
             _Config.RegisterModOptions(NAME, transform);
             
+            RegisterItems();
+            
             _Log.Info("Finished loading.");
+        }
+
+        private void RegisterItems()
+        {
+            customItems = new Dictionary<string, IDeathrunPrefab>
+            {
+                { nameof(AcidBattery), new AcidBattery() },
+            };
         }
     }
 }

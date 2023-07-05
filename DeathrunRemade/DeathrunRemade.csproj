@@ -103,6 +103,9 @@
           <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.CoreModule.dll</HintPath>
           <Private>False</Private>
         </Reference>
+        <Reference Include="UnityEngine.ImageConversionModule">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.ImageConversionModule.dll</HintPath>
+        </Reference>
         <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\UnityEngine.UI.dll</HintPath>
           <Private>False</Private>
@@ -119,11 +122,42 @@
     <ItemGroup>
         <Compile Include="Configuration\Config.cs" />
         <Compile Include="DeathrunInit.cs" />
+        <Compile Include="Interfaces\IDeathrunPrefab.cs" />
+        <Compile Include="Items\AcidBattery.cs" />
+        <Compile Include="Items\ItemInfo.cs" />
         <Compile Include="Objects\Enums\Difficulty.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
       <None Include="packages.config" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Include="Assets\AcidBattery.png" />
+      <EmbeddedResource Include="Assets\AcidPowerCell.png" />
+      <EmbeddedResource Include="Assets\chemosynthesistank.png" />
+      <Content Include="Assets\chemosynthesistank.psd" />
+      <EmbeddedResource Include="Assets\CraftingTabIcon.png" />
+      <EmbeddedResource Include="Assets\lavalizardscale.png" />
+      <Content Include="Assets\lavalizardscale.psd" />
+      <Content Include="Assets\n2warning" />
+      <EmbeddedResource Include="Assets\photosynthesissmalltank.png" />
+      <Content Include="Assets\photosynthesissmalltank.psd" />
+      <EmbeddedResource Include="Assets\photosynthesistank.png" />
+      <Content Include="Assets\photosynthesistank.psd" />
+      <EmbeddedResource Include="Assets\reinforcedstillsuit.png" />
+      <Content Include="Assets\reinforcedstillsuit.psd" />
+      <EmbeddedResource Include="Assets\reinforcedsuit2.png" />
+      <Content Include="Assets\reinforcedsuit2.psd" />
+      <EmbeddedResource Include="Assets\reinforcedsuit3.png" />
+      <Content Include="Assets\reinforcedsuit3.psd" />
+      <EmbeddedResource Include="Assets\rivereelscale.png" />
+      <Content Include="Assets\rivereelscale.psd" />
+      <EmbeddedResource Include="Assets\SuitTabIcon.png" />
+      <Content Include="Assets\SuitTabIcon.psd" />
+      <EmbeddedResource Include="Assets\TankTabIcon.png" />
+      <Content Include="Assets\TankTabIcon.psd" />
+      <EmbeddedResource Include="Assets\thermophilesample.png" />
+      <Content Include="Assets\thermophilesample.psd" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
