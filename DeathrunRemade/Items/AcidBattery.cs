@@ -15,7 +15,7 @@ namespace DeathrunRemade.Items
         {
             var sprite = Hootils.LoadSprite("AcidBattery.png", true);
             _prefabInfo = Hootils.CreatePrefabInfo(
-                ItemInfo.GetIdForItem(this.GetType()),
+                ItemInfo.GetIdForItem(nameof(AcidBattery)),
                 "Copper/Zinc Battery",
                 "A very basic mobile power source, and NOT rechargeable. Please dispose of safely.",
                 sprite

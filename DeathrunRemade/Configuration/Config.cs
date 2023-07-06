@@ -43,7 +43,8 @@ namespace DeathrunRemade.Configuration
         {
             HootModOptions modOptions = new HootModOptions(name, this, separatorParent);
             modOptions.AddItem(DamageTaken.ToModSliderOption(0f, 10f));
-            modOptions.AddItem(BatteryCapacity.ToModChoiceOption(modOptions, null));
+            string[] yess = { "very normal", "not so normal", "oh no", "oh god oh fuck" };
+            modOptions.AddItem(BatteryCapacity.ToModChoiceOption(modOptions).ReplaceOptionStrings(yess));
 
             OptionsPanelHandler.RegisterModOptions(modOptions);
         }

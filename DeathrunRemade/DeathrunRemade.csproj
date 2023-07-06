@@ -125,7 +125,12 @@
         <Compile Include="Items\AcidBattery.cs" />
         <Compile Include="Items\AcidPowerCell.cs" />
         <Compile Include="Items\DeathrunPrefabBase.cs" />
+        <Compile Include="Items\DecompressionModule.cs" />
+        <Compile Include="Items\FilterChip.cs" />
         <Compile Include="Items\ItemInfo.cs" />
+        <Compile Include="Items\MobDrop.cs" />
+        <Compile Include="Items\Suit.cs" />
+        <Compile Include="Items\Tank.cs" />
         <Compile Include="Objects\Enums\Difficulty.cs" />
         <Compile Include="Patches\BatteryPatcher.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
