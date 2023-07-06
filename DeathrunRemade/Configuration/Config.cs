@@ -9,32 +9,74 @@ namespace DeathrunRemade.Configuration
 {
     internal class Config : HootConfig
     {
-        public ConfigEntryWrapper<int> DamageTaken;
-        public ConfigEntryWrapper<Difficulty> BatteryCapacity;
+        // Section Keys. Intentionally static readonly to enable quick equality checks by reference.
+        public static readonly string SectionChallenges = "Challenges";
+        public static readonly string SectionCosts = "Costs";
+        public static readonly string SectionEnvironment = "Environment";
+        public static readonly string SectionExploRad = "Explosion_Radiation";
+        public static readonly string SectionSurvival = "Survival";
+        public static readonly string SectionUI = "UI";
+        
+        // Survival
+        public ConfigEntryWrapper<Difficulty3> CrushDepth;
+        public ConfigEntryWrapper<Difficulty4> DamageTaken;
+        public ConfigEntryWrapper<Difficulty3> NitrogenBends;
+        public ConfigEntryWrapper<bool> SpecialAirTanks;
+        public ConfigEntryWrapper<Difficulty3> SurfaceAir;
+        
+        // Environment
+        public ConfigEntryWrapper<Difficulty4> CreatureAggression;
+        public ConfigEntryWrapper<DeathrunStarts> StartLocation;
+        public ConfigEntryWrapper<bool> ToppleLifepod;
+        public ConfigEntryWrapper<Murkiness> WaterMurkiness;
+
+        // Explosion and Radiation
+        public ConfigEntryWrapper<Difficulty3> ExplodeDepth;
+        public ConfigEntryWrapper<Timer> ExplosionTime;
+        public ConfigEntryWrapper<Difficulty4> RadiationDepth;
+        public ConfigEntryWrapper<RadiationVisuals> RadiationFX;
+
+        // Costs
+        public ConfigEntryWrapper<Difficulty4> BatteryCapacity;
+        public ConfigEntryWrapper<Difficulty3> BuilderCosts;
+        public ConfigEntryWrapper<Difficulty4> PowerCosts;
+        public ConfigEntryWrapper<Difficulty4> ScansRequired;
+        public ConfigEntryWrapper<VehicleDifficulty> VehicleCosts;
+        public ConfigEntryWrapper<Difficulty4> VehicleExitPowerLoss;
+        
+        // Challenges
+        public ConfigEntryWrapper<Difficulty3> FarmingChallenge;
+        public ConfigEntryWrapper<Difficulty3> FilterPumpChallenge;
+        public ConfigEntryWrapper<DietPreference> FoodChallenge;
+        public ConfigEntryWrapper<RelativeToExplosion> IslandFoodChallenge;
+        public ConfigEntryWrapper<bool> PacifistChallenge;
+        
+        // UI
+        public ConfigEntryWrapper<bool> ShowHighscores;
+        public ConfigEntryWrapper<bool> ShowHighscoreTips;
+        public ConfigEntryWrapper<Hints> ShowWarnings;
 
         public Config(ConfigFile configFile) : base(configFile) { }
         public Config(string path, BepInPlugin metadata) : base(path, metadata) { }
 
         protected override void RegisterOptions()
         {
-            BatteryCapacity = RegisterEntry(new ConfigEntryWrapper<Difficulty>(
+            BatteryCapacity = RegisterEntry(new ConfigEntryWrapper<Difficulty4>(
                 configFile: ConfigFile,
-                section: "Costs",
+                section: SectionCosts,
                 key: nameof(BatteryCapacity),
-                defaultValue: Difficulty.Deathrun,
+                defaultValue: Difficulty4.Deathrun,
                 description: ""
-                //acceptableValues: new AcceptableValueList<string>()
             ).WithDescription(
                 "Battery Cost",
                 ""
-                ));
-            DamageTaken = RegisterEntry(new ConfigEntryWrapper<int>(
-                configFile: ConfigFile,
-                section: "TestSection",
-                key: "Test",
-                defaultValue: 0,
-                description: "Hello."
-            ));
+            ).WithChoiceOptionStringsOverride(new []
+            {
+                "Very normal",
+                "A bit less normal",
+                "Ah. Not normal",
+                "TAKE ME BACK"
+            }));
         }
 
         protected override void RegisterControllingOptions() { }
@@ -42,9 +84,7 @@ namespace DeathrunRemade.Configuration
         public override void RegisterModOptions(string name, Transform separatorParent)
         {
             HootModOptions modOptions = new HootModOptions(name, this, separatorParent);
-            modOptions.AddItem(DamageTaken.ToModSliderOption(0f, 10f));
-            string[] yess = { "very normal", "not so normal", "oh no", "oh god oh fuck" };
-            modOptions.AddItem(BatteryCapacity.ToModChoiceOption(modOptions).ReplaceOptionStrings(yess));
+            modOptions.AddItem(BatteryCapacity.ToModChoiceOption(modOptions));
 
             OptionsPanelHandler.RegisterModOptions(modOptions);
         }

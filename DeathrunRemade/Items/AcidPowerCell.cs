@@ -11,7 +11,7 @@ namespace DeathrunRemade.Items
 {
     internal class AcidPowerCell : DeathrunPrefabBase
     {
-        public AcidPowerCell(Difficulty difficulty)
+        public AcidPowerCell(Difficulty4 difficulty)
         {
             var sprite = Hootils.LoadSprite("AcidPowerCell.png", true);
             _prefabInfo = Hootils.CreatePrefabInfo(
@@ -39,14 +39,14 @@ namespace DeathrunRemade.Items
             _prefab.Register();
         }
 
-        public int GetCapacityForDifficulty(Difficulty difficulty)
+        public int GetCapacityForDifficulty(Difficulty4 difficulty)
         {
             return difficulty switch
             {
-                Difficulty.Normal => 200,
-                Difficulty.Hard => 150,
-                Difficulty.Deathrun => 125,
-                Difficulty.Kharaa => 75,
+                Difficulty4.Normal => 200,
+                Difficulty4.Hard => 150,
+                Difficulty4.Deathrun => 125,
+                Difficulty4.Kharaa => 75,
                 _ => 200
             };
         }

@@ -46,7 +46,7 @@ namespace DeathrunRemade.Patches
         public static void SpawnWithoutBattery(EnergyMixin __instance, TechType techType)
         {
             // Don't apply this patch on low difficulty levels.
-            if (DeathrunInit._Config.BatteryCapacity.Value.Equals(Difficulty.Normal))
+            if (DeathrunInit._Config.BatteryCapacity.Value.Equals(Difficulty4.Normal))
                 return;
 
             if (techType != TechType.MapRoomCamera)
