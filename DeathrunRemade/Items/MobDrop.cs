@@ -18,7 +18,7 @@ namespace DeathrunRemade.Items
             ThermophileSample,
         }
 
-        public Variant DropVariant;
+        public Variant DropVariant { get; }
 
         public MobDrop(Variant variant)
         {
@@ -53,7 +53,7 @@ namespace DeathrunRemade.Items
                 Variant.ThermophileSample => TechType.LavaLarva,
                 _ => TechType.None
             };
-            CraftDataHandler.SetHarvestOutput(target, GetTechType());
+            CraftDataHandler.SetHarvestOutput(target, TechType);
             CraftDataHandler.SetHarvestType(target, HarvestType.DamageAlive);
         }
 

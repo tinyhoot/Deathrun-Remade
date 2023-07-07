@@ -7,12 +7,12 @@ namespace DeathrunRemade.Items
         protected PrefabInfo _prefabInfo;
         protected CustomPrefab _prefab;
 
-        public virtual string GetClassId() => _prefabInfo.ClassID;
+        public virtual string ClassId => _prefabInfo.ClassID;
 
-        public virtual CustomPrefab GetPrefab() => _prefab;
+        public virtual CustomPrefab Prefab => _prefab;
         
-        public virtual PrefabInfo GetPrefabInfo() => _prefabInfo;
+        public virtual PrefabInfo PrefabInfo => _prefabInfo;
 
-        public virtual TechType GetTechType() => _prefabInfo.TechType;
+        public virtual TechType TechType => _prefabInfo.TechType;
     }
 }

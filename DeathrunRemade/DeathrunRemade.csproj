@@ -122,6 +122,7 @@
     <ItemGroup>
         <Compile Include="Configuration\Config.cs" />
         <Compile Include="DeathrunInit.cs" />
+        <Compile Include="GameStartHandler.cs" />
         <Compile Include="Items\AcidBattery.cs" />
         <Compile Include="Items\AcidPowerCell.cs" />
         <Compile Include="Items\DeathrunPrefabBase.cs" />
@@ -131,7 +132,9 @@
         <Compile Include="Items\MobDrop.cs" />
         <Compile Include="Items\Suit.cs" />
         <Compile Include="Items\Tank.cs" />
+        <Compile Include="Monos\DeathrunTank.cs" />
         <Compile Include="Objects\Enums\Difficulty.cs" />
+        <Compile Include="Objects\Exceptions\DeathrunException.cs" />
         <Compile Include="Patches\BatteryPatcher.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>

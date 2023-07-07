@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DeathrunRemade.Items
 {
@@ -57,12 +58,21 @@ namespace DeathrunRemade.Items
         }
 
         /// <summary>
+        /// Get the prefab which was assigned the given TechType.
+        /// </summary>
+        /// <param name="techType">The Nautilus-generated TechType.</param>
+        public static DeathrunPrefabBase GetPrefabForTechType(TechType techType)
+        {
+            return Prefabs.Values.First(prefab => prefab.TechType.Equals(techType));
+        }
+
+        /// <summary>
         /// Get the TechType the item was assigned by Nautilus.
         /// </summary>
         /// <param name="item">The internal name of the item.</param>
         public static TechType GetTechTypeForItem(string item)
         {
-            return Prefabs.GetOrDefault(item, null)?.GetPrefabInfo().TechType ?? TechType.None;
+            return Prefabs.GetOrDefault(item, null)?.PrefabInfo.TechType ?? TechType.None;
         }
 
         /// <summary>

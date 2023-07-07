@@ -1,3 +1,4 @@
+using DeathrunRemade.Monos;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
@@ -18,8 +19,8 @@ namespace DeathrunRemade.Items
             PhotosynthesisTank,
             PhotosynthesisTankSmall,
         }
-
-        public Variant TankVariant;
+        
+        public Variant TankVariant { get; }
         
         public Tank(Variant variant)
         {

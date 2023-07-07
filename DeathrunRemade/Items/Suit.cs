@@ -19,7 +19,7 @@ namespace DeathrunRemade.Items
             ReinforcedFiltrationSuit,
         }
 
-        public Variant SuitVariant;
+        public Variant SuitVariant { get; }
         
         public Suit(Variant variant)
         {
