@@ -2,7 +2,7 @@ using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
 using Nautilus.Crafting;
-using SubnauticaCommons;
+using HootLib;
 using static CraftData;
 
 namespace DeathrunRemade.Items

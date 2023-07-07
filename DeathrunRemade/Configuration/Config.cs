@@ -2,7 +2,7 @@ using BepInEx;
 using BepInEx.Configuration;
 using DeathrunRemade.Objects.Enums;
 using Nautilus.Handlers;
-using SubnauticaCommons.Configuration;
+using HootLib.Configuration;
 using UnityEngine;
 
 namespace DeathrunRemade.Configuration
@@ -18,6 +18,8 @@ namespace DeathrunRemade.Configuration
         public static readonly string SectionUI = "UI";
         
         // Survival
+        // Only temporarily, so I can actually see when something else doesn't work.
+#pragma warning disable CS0649
         public ConfigEntryWrapper<Difficulty3> CrushDepth;
         public ConfigEntryWrapper<Difficulty4> DamageTaken;
         public ConfigEntryWrapper<Difficulty3> NitrogenBends;

@@ -2,7 +2,7 @@ using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
 using Nautilus.Handlers;
-using SubnauticaCommons;
+using HootLib;
 
 namespace DeathrunRemade.Items
 {

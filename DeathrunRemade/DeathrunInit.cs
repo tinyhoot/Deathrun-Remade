@@ -4,8 +4,8 @@ using DeathrunRemade.Configuration;
 using DeathrunRemade.Items;
 using HarmonyLib;
 using Nautilus.Handlers;
-using SubnauticaCommons;
-using SubnauticaCommons.Interfaces;
+using HootLib;
+using HootLib.Interfaces;
 
 namespace DeathrunRemade
 {

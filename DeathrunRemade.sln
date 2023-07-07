@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeathrunRemade", "DeathrunRemade\DeathrunRemade.csproj", "{90FCEBF6-4D0C-4BC7-BE23-F8CC436C9929}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SubnauticaCommons", "SubnauticaCommons\SubnauticaCommons\SubnauticaCommons.shproj", "{A1EF0757-EDA8-41DC-89D4-C41D81427D00}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "HootLib", "HootLib-Subnautica\HootLib\HootLib.shproj", "{A1EF0757-EDA8-41DC-89D4-C41D81427D00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

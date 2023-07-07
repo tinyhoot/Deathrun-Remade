@@ -175,7 +175,7 @@
       <Error Condition="!Exists('..\packages\BepInEx.Core.5.4.21\build\BepInEx.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\BepInEx.Core.5.4.21\build\BepInEx.Core.targets'))" />
     </Target>
     <Import Project="..\packages\BepInEx.Core.5.4.21\build\BepInEx.Core.targets" Condition="Exists('..\packages\BepInEx.Core.5.4.21\build\BepInEx.Core.targets')" />
-    <Import Project="..\SubnauticaCommons\SubnauticaCommons\SubnauticaCommons.projitems" Label="Shared" />
+    <Import Project="..\HootLib-Subnautica\HootLib\HootLib.projitems" Label="Shared" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
          Other similar extension points exist, see Microsoft.Common.targets.
     <Target Name="BeforeBuild">

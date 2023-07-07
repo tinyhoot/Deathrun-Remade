@@ -1,3 +1,3 @@
-[submodule "SubnauticaCommons"]
-	path = SubnauticaCommons
-	url = git@github.com:tinyhoot/SubnauticaCommons.git
+[submodule "HootLib-Subnautica"]
+	path = HootLib-Subnautica
+	url = git@github.com:tinyhoot/HootLib-Subnautica.git
