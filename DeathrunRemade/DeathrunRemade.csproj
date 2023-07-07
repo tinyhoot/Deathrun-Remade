@@ -139,6 +139,7 @@
       <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
+      <Content Include="todo_list.txt" />
       <EmbeddedResource Include="Assets\AcidBattery.png" />
       <EmbeddedResource Include="Assets\AcidPowerCell.png" />
       <EmbeddedResource Include="Assets\chemosynthesistank.png" />

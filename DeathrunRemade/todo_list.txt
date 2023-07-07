@@ -1,0 +1,19 @@
+Things that still need doing because if I don't write them down right now I'll forget
+
+Config
+- Skeleton exists, has to actually be implemented.
+- Some of the options could do with separating out into two.
+- Rename habitat builder to tool costs
+
+Items
+- Check whether putting them into slots and such actually works. Probably wait until items are fully functional.
+- Acid powercells not accepted in the charger?
+
+Monos
+- Maybe use those in more places than the original did?
+
+Patches
+- All of them. So many.
+
+New Ideas
+- Tanks do not refill by themselves. Refill at special point?
