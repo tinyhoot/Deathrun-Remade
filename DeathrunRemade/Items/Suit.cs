@@ -20,6 +20,9 @@ namespace DeathrunRemade.Items
         }
 
         public Variant SuitVariant { get; }
+        public static TechType ReinforcedFiltration;
+        public static TechType ReinforcedMk2;
+        public static TechType ReinforcedMk3;
         
         public Suit(Variant variant)
         {
@@ -31,6 +34,7 @@ namespace DeathrunRemade.Items
                 GetDescription(variant),
                 GetSprite(variant)
             );
+            AssignTechType(_prefabInfo, variant);
 
             _prefab = new CustomPrefab(_prefabInfo);
             _prefab.SetRecipe(GetRecipe(variant))
@@ -45,6 +49,22 @@ namespace DeathrunRemade.Items
             var template = new CloneTemplate(_prefabInfo, cloneType);
             _prefab.SetGameObject(template);
             _prefab.Register();
+        }
+
+        private void AssignTechType(PrefabInfo info, Variant variant)
+        {
+            switch (variant)
+            {
+                case Variant.ReinforcedFiltrationSuit:
+                    ReinforcedFiltration = info.TechType;
+                    break;
+                case Variant.ReinforcedSuitMk2:
+                    ReinforcedMk2 = info.TechType;
+                    break;
+                case Variant.ReinforcedSuitMk3:
+                    ReinforcedMk3 = info.TechType;
+                    break;
+            }
         }
 
         /// <summary>
@@ -89,15 +109,15 @@ namespace DeathrunRemade.Items
                     new Ingredient(TechType.ReinforcedDiveSuit, 1),
                     new Ingredient(TechType.AramidFibers, 1),
                     new Ingredient(TechType.AluminumOxide, 2),
-                    new Ingredient(ItemInfo.GetTechTypeForItem(nameof(MobDrop.Variant.SpineEelScale)), 2)),
+                    new Ingredient(MobDrop.SpineEelScale, 2)),
                 Variant.ReinforcedSuitMk3 => new RecipeData(
-                    new Ingredient(ItemInfo.GetTechTypeForItem(nameof(Variant.ReinforcedSuitMk2)), 1),
+                    new Ingredient(ReinforcedMk2, 1),
                     new Ingredient(TechType.AramidFibers, 1),
                     new Ingredient(TechType.Kyanite, 2),
-                    new Ingredient(ItemInfo.GetTechTypeForItem(nameof(MobDrop.Variant.LavaLizardScale)), 2)),
+                    new Ingredient(MobDrop.LavaLizardScale, 2)),
                 Variant.ReinforcedFiltrationSuit => new RecipeData(
                     new Ingredient(TechType.WaterFiltrationSuit, 1),
-                    new Ingredient(ItemInfo.GetTechTypeForItem(nameof(MobDrop.Variant.SpineEelScale)), 2),
+                    new Ingredient(MobDrop.SpineEelScale, 2),
                     new Ingredient(TechType.AramidFibers, 2)),
                 _ => null
             };
@@ -117,6 +137,38 @@ namespace DeathrunRemade.Items
                 _ => null
             };
             return Hootils.LoadSprite(filePath, true);
+        }
+
+        /// <summary>
+        /// Get the personal crushdepth for the given techtype.
+        /// </summary>
+        /// <param name="techtype">The TechType of one of the suits added by this mod.</param>
+        /// <param name="hardMode">Whether to apply DEATHRUN difficulty.</param>
+        public static float GetCrushDepth(TechType techtype, bool hardMode)
+        {
+            float depth = 0f;
+            if (techtype.Equals(ReinforcedFiltration))
+                depth = hardMode ? 1300f : Constants.InfiniteCrushDepth;
+            if (techtype.Equals(ReinforcedMk2))
+                depth = hardMode ? 1300f : Constants.InfiniteCrushDepth;
+            if (techtype.Equals(ReinforcedMk3))
+                depth = Constants.InfiniteCrushDepth;
+            return depth;
+        }
+
+        /// <summary>
+        /// Get the temperature limit of the given suit.
+        /// </summary>
+        public static float GetTemperatureLimit(TechType techType)
+        {
+            float tempLimit = Constants.MinTemperatureLimit;
+            if (techType.Equals(ReinforcedFiltration))
+                tempLimit += 15f;
+            if (techType.Equals(ReinforcedMk2))
+                tempLimit += 20f;
+            if (techType.Equals(ReinforcedMk3))
+                tempLimit += 30f;
+            return tempLimit;
         }
     }
 }

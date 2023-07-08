@@ -19,6 +19,9 @@ namespace DeathrunRemade.Items
         }
 
         public Variant DropVariant { get; }
+        public static TechType LavaLizardScale;
+        public static TechType SpineEelScale;
+        public static TechType ThermophileSample;
 
         public MobDrop(Variant variant)
         {
@@ -30,6 +33,7 @@ namespace DeathrunRemade.Items
                 GetDescription(variant),
                 GetSprite(variant)
             );
+            AssignTechType(_prefabInfo, variant);
 
             _prefab = new CustomPrefab(_prefabInfo);
             _prefab.SetPdaGroupCategory(TechGroup.Resources, TechCategory.BasicMaterials);
@@ -39,6 +43,22 @@ namespace DeathrunRemade.Items
             _prefab.Register();
             
             RegisterHarvestData(variant);
+        }
+        
+        private void AssignTechType(PrefabInfo info, Variant variant)
+        {
+            switch (variant)
+            {
+                case Variant.LavaLizardScale:
+                    LavaLizardScale = info.TechType;
+                    break;
+                case Variant.SpineEelScale:
+                    SpineEelScale = info.TechType;
+                    break;
+                case Variant.ThermophileSample:
+                    ThermophileSample = info.TechType;
+                    break;
+            }
         }
 
         /// <summary>

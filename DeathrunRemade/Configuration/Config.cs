@@ -63,6 +63,13 @@ namespace DeathrunRemade.Configuration
 
         protected override void RegisterOptions()
         {
+            CrushDepth = RegisterEntry(new ConfigEntryWrapper<Difficulty3>(
+                configFile: ConfigFile,
+                section: SectionSurvival,
+                key: nameof(CrushDepth),
+                defaultValue: Difficulty3.Deathrun,
+                description: ""
+            ));
             SurfaceAir = RegisterEntry(new ConfigEntryWrapper<Difficulty3>(
                 configFile: ConfigFile,
                 section: SectionSurvival,
@@ -94,6 +101,7 @@ namespace DeathrunRemade.Configuration
         public override void RegisterModOptions(string name, Transform separatorParent)
         {
             HootModOptions modOptions = new HootModOptions(name, this, separatorParent);
+            modOptions.AddItem(CrushDepth.ToModChoiceOption(modOptions));
             modOptions.AddItem(SurfaceAir.ToModChoiceOption(modOptions));
             modOptions.AddItem(BatteryCapacity.ToModChoiceOption(modOptions));
 

@@ -1,4 +1,3 @@
-using DeathrunRemade.Monos;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
@@ -21,6 +20,9 @@ namespace DeathrunRemade.Items
         }
         
         public Variant TankVariant { get; }
+        public static TechType ChemosynthesisTank;
+        public static TechType PhotosynthesisTank;
+        public static TechType PhotosynthesisTankSmall;
         
         public Tank(Variant variant)
         {
@@ -32,6 +34,7 @@ namespace DeathrunRemade.Items
                 GetDescription(variant),
                 GetSprite(variant)
             );
+            AssignTechType(_prefabInfo, variant);
 
             _prefab = new CustomPrefab(_prefabInfo);
             _prefab.SetRecipe(GetRecipe(variant))
@@ -48,6 +51,22 @@ namespace DeathrunRemade.Items
             var template = new CloneTemplate(_prefabInfo, cloneType);
             _prefab.SetGameObject(template);
             _prefab.Register();
+        }
+        
+        private void AssignTechType(PrefabInfo info, Variant variant)
+        {
+            switch (variant)
+            {
+                case Variant.ChemosynthesisTank:
+                    ChemosynthesisTank = info.TechType;
+                    break;
+                case Variant.PhotosynthesisTank:
+                    PhotosynthesisTank = info.TechType;
+                    break;
+                case Variant.PhotosynthesisTankSmall:
+                    PhotosynthesisTankSmall = info.TechType;
+                    break;
+            }
         }
         
         /// <summary>
@@ -87,7 +106,7 @@ namespace DeathrunRemade.Items
             {
                 Variant.ChemosynthesisTank => new RecipeData(
                     new Ingredient(TechType.PlasteelTank, 1),
-                    new Ingredient(ItemInfo.GetTechTypeForItem(nameof(MobDrop.Variant.ThermophileSample)), 4),
+                    new Ingredient(MobDrop.ThermophileSample, 4),
                     new Ingredient(TechType.Kyanite, 1)),
                 Variant.PhotosynthesisTank => new RecipeData(
                     new Ingredient(TechType.PlasteelTank, 1),

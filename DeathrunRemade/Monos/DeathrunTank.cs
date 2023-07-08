@@ -27,9 +27,9 @@ namespace DeathrunRemade.Monos
         {
             _tankTechTypes = new Dictionary<TechType, Tank.Variant>
             {
-                { ItemInfo.GetTechTypeForItem(nameof(Tank.Variant.ChemosynthesisTank)), Tank.Variant.ChemosynthesisTank },
-                { ItemInfo.GetTechTypeForItem(nameof(Tank.Variant.PhotosynthesisTank)), Tank.Variant.PhotosynthesisTank },
-                { ItemInfo.GetTechTypeForItem(nameof(Tank.Variant.PhotosynthesisTankSmall)), Tank.Variant.PhotosynthesisTankSmall }
+                { Tank.ChemosynthesisTank, Tank.Variant.ChemosynthesisTank },
+                { Tank.PhotosynthesisTank, Tank.Variant.PhotosynthesisTank },
+                { Tank.PhotosynthesisTankSmall, Tank.Variant.PhotosynthesisTankSmall }
             };
         }
 

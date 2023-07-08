@@ -1,15 +1,15 @@
 using HootLib.Interfaces;
 
-namespace DeathrunRemade
+namespace DeathrunRemade.Handlers
 {
     /// <summary>
     /// Everything that communicates directly with the player goes here.
     /// </summary>
-    internal class Notifications
+    internal class NotificationHandler
     {
         private ILogHandler _log;
         
-        public Notifications(ILogHandler logger)
+        public NotificationHandler(ILogHandler logger)
         {
             _log = logger;
         }

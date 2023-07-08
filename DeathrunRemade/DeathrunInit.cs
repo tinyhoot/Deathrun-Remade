@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using BepInEx;
 using DeathrunRemade.Configuration;
+using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
 using HarmonyLib;
 using Nautilus.Handlers;
@@ -19,13 +20,13 @@ namespace DeathrunRemade
 
         internal static Config _Config;
         internal static ILogHandler _Log;
-        internal static Notifications _Notifications;
+        internal static NotificationHandler _Notifications;
 
         private void Awake()
         {
             _Log = new HootLogger(NAME);
             _Log.Info($"{NAME} v{VERSION} starting up.");
-            _Notifications = new Notifications(_Log);
+            _Notifications = new NotificationHandler(_Log);
             
             // Registering config.
             _Config = new Config(Path.Combine(Paths.ConfigPath, Hootils.GetConfigFileName(NAME)),

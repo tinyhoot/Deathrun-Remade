@@ -1,7 +1,7 @@
 using DeathrunRemade.Monos;
 using HarmonyLib;
 
-namespace DeathrunRemade
+namespace DeathrunRemade.Handlers
 {
     [HarmonyPatch]
     public static class GameStartHandler
