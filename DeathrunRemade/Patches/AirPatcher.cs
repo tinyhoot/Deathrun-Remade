@@ -35,7 +35,7 @@ namespace DeathrunRemade.Patches
                 return true;
 
             // TODO: More detailed warnings depending on config.
-            DeathrunInit._Notifications.Message("The surface air is unbreathable!");
+            DeathrunInit._Log.InGameMessage("The surface air is unbreathable!");
             PlayerDamageSounds sounds = Player.main.GetComponent<PlayerDamageSounds>();
             if (sounds != null)
                 sounds.painSmoke.Play();

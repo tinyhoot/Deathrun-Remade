@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using BepInEx;
 using DeathrunRemade.Configuration;
 using DeathrunRemade.Handlers;
@@ -6,7 +7,9 @@ using DeathrunRemade.Items;
 using HarmonyLib;
 using Nautilus.Handlers;
 using HootLib;
-using HootLib.Interfaces;
+using HootLib.Objects;
+using UnityEngine;
+using ILogHandler = HootLib.Interfaces.ILogHandler;
 
 namespace DeathrunRemade
 {
@@ -22,6 +25,10 @@ namespace DeathrunRemade
         internal static ILogHandler _Log;
         internal static NotificationHandler _Notifications;
 
+        // Run Update() once per second.
+        private const float UpdateInterval = 1f;
+        private float _nextUpdate;
+
         private void Awake()
         {
             _Log = new HootLogger(NAME);
@@ -35,11 +42,36 @@ namespace DeathrunRemade
             
             SetupCraftTree();
             RegisterItems();
+            RegisterCommands();
             
             Harmony harmony = new Harmony(GUID);
             harmony.PatchAll(Hootils.GetAssembly());
             
             _Log.Info("Finished loading.");
+        }
+
+        private void Update()
+        {
+            // Only run this method every so often.
+            if (Time.time < _nextUpdate)
+                return;
+            _nextUpdate = Time.time + UpdateInterval;
+            
+            // Putting these things here prevents having to run them as MonoBehaviours too.
+            _Notifications.Update();
+        }
+
+        private void RegisterCommands()
+        {
+            ConsoleCommandsHandler.RegisterConsoleCommand<Action>("test", TestMe);
+        }
+
+        private void TestMe()
+        {
+            var x = _Notifications.CreateOrGetSlot("yeet");
+            //x.ShowMessage("YOOOOOO", 10f);
+            _Notifications.AddMessage("yeet", "This is a great test for testing purposes. Your oxygen is fucked btw")
+                .SetDuration(5, 3);
         }
 
         /// <summary>

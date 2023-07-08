@@ -17,7 +17,8 @@ Patches
 - Reintroduce easier filterpump placement. Was commented out in BreathingPatcher
 
 New Ideas
-- Tanks do not refill by themselves. Refill at special point?
+- Make tanks not refill by themselves. Refill at special point?
+- Add config options for moving the GUI elements relative to top/sides/wherever.
 
 Checks at the very end
 - All items craft properly and fit into their slots

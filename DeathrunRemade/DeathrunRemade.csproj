@@ -145,6 +145,7 @@
         <Compile Include="Monos\DeathrunTank.cs" />
         <Compile Include="Objects\Enums\Difficulty.cs" />
         <Compile Include="Objects\Exceptions\DeathrunException.cs" />
+        <Compile Include="Objects\Message.cs" />
         <Compile Include="Patches\AirPatcher.cs" />
         <Compile Include="Patches\BatteryPatcher.cs" />
         <Compile Include="Patches\CompassPatcher.cs" />
