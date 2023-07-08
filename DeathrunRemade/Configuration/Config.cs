@@ -63,6 +63,14 @@ namespace DeathrunRemade.Configuration
 
         protected override void RegisterOptions()
         {
+            SurfaceAir = RegisterEntry(new ConfigEntryWrapper<Difficulty3>(
+                configFile: ConfigFile,
+                section: SectionSurvival,
+                key: nameof(SurfaceAir),
+                defaultValue: Difficulty3.Hard,
+                description: ""
+            ));
+            
             BatteryCapacity = RegisterEntry(new ConfigEntryWrapper<Difficulty4>(
                 configFile: ConfigFile,
                 section: SectionCosts,
@@ -86,6 +94,7 @@ namespace DeathrunRemade.Configuration
         public override void RegisterModOptions(string name, Transform separatorParent)
         {
             HootModOptions modOptions = new HootModOptions(name, this, separatorParent);
+            modOptions.AddItem(SurfaceAir.ToModChoiceOption(modOptions));
             modOptions.AddItem(BatteryCapacity.ToModChoiceOption(modOptions));
 
             OptionsPanelHandler.RegisterModOptions(modOptions);

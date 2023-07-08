@@ -16,7 +16,7 @@ namespace DeathrunRemade.Patches
         /// </summary>
         [HarmonyPostfix]
         [HarmonyPatch(typeof(TooltipFactory), nameof(TooltipFactory.ItemCommons))]
-        public static void AddTooltipsToBatteries(StringBuilder sb, TechType techType, GameObject obj)
+        private static void AddTooltipsToBatteries(StringBuilder sb, TechType techType, GameObject obj)
         {
             IBattery battery = obj.GetComponent<IBattery>();
             if (battery != null)
@@ -29,7 +29,7 @@ namespace DeathrunRemade.Patches
         /// </summary>
         [HarmonyPostfix]
         [HarmonyPatch(typeof(EnergyMixin), nameof(EnergyMixin.NotifyHasBattery))]
-        public static void EnsureVisiblePowerCell(ref EnergyMixin __instance, InventoryItem item)
+        private static void EnsureVisiblePowerCell(ref EnergyMixin __instance, InventoryItem item)
         {
             // Additional null check because unity lifetime check shenanigans.
             if (item?.item is null)
@@ -43,7 +43,7 @@ namespace DeathrunRemade.Patches
         /// </summary>
         [HarmonyPrefix]
         [HarmonyPatch(typeof(EnergyMixin), nameof(EnergyMixin.OnCraftEnd))]
-        public static void SpawnWithoutBattery(EnergyMixin __instance, TechType techType)
+        private static void SpawnWithoutBattery(ref EnergyMixin __instance, TechType techType)
         {
             // Don't apply this patch on low difficulty levels.
             if (DeathrunInit._Config.BatteryCapacity.Value.Equals(Difficulty4.Normal))
@@ -61,7 +61,7 @@ namespace DeathrunRemade.Patches
         /// </summary>
         [HarmonyPrefix]
         [HarmonyPatch(typeof(PowerCellCharger), nameof(PowerCellCharger.Initialize))]
-        public static void UpdatePowerCellCharger(ref PowerCellCharger __instance)
+        private static void UpdatePowerCellCharger(ref PowerCellCharger __instance)
         {
             HashSet<TechType> compatibleTech = PowerCellCharger.compatibleTech;
             TechType powerCell = ItemInfo.GetTechTypeForItem(nameof(AcidPowerCell));
@@ -74,7 +74,7 @@ namespace DeathrunRemade.Patches
         /// </summary>
         [HarmonyPrefix]
         [HarmonyPatch(typeof(EnergyMixin), nameof(EnergyMixin.Awake))]
-        public static void UpdateValidBatteries(ref EnergyMixin __instance)
+        private static void UpdateValidBatteries(ref EnergyMixin __instance)
         {
             if (!__instance.allowBatteryReplacement)
                 return;

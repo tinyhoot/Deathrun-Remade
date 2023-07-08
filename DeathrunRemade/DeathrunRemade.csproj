@@ -106,6 +106,12 @@
         <Reference Include="UnityEngine.ImageConversionModule">
           <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.ImageConversionModule.dll</HintPath>
         </Reference>
+        <Reference Include="UnityEngine.TextCoreModule">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.TextCoreModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.TextRenderingModule">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.TextRenderingModule.dll</HintPath>
+        </Reference>
         <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\UnityEngine.UI.dll</HintPath>
           <Private>False</Private>
@@ -121,6 +127,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Configuration\Config.cs" />
+        <Compile Include="Configuration\ConfigUtils.cs" />
         <Compile Include="DeathrunInit.cs" />
         <Compile Include="GameStartHandler.cs" />
         <Compile Include="Items\AcidBattery.cs" />
@@ -133,8 +140,10 @@
         <Compile Include="Items\Suit.cs" />
         <Compile Include="Items\Tank.cs" />
         <Compile Include="Monos\DeathrunTank.cs" />
+        <Compile Include="Notifications.cs" />
         <Compile Include="Objects\Enums\Difficulty.cs" />
         <Compile Include="Objects\Exceptions\DeathrunException.cs" />
+        <Compile Include="Patches\AirPatcher.cs" />
         <Compile Include="Patches\BatteryPatcher.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>

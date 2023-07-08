@@ -19,11 +19,13 @@ namespace DeathrunRemade
 
         internal static Config _Config;
         internal static ILogHandler _Log;
+        internal static Notifications _Notifications;
 
         private void Awake()
         {
             _Log = new HootLogger(NAME);
             _Log.Info($"{NAME} v{VERSION} starting up.");
+            _Notifications = new Notifications(_Log);
             
             // Registering config.
             _Config = new Config(Path.Combine(Paths.ConfigPath, Hootils.GetConfigFileName(NAME)),
