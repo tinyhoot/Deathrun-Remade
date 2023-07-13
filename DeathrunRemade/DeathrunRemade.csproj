@@ -99,6 +99,9 @@
           <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.dll</HintPath>
           <Private>False</Private>
         </Reference>
+        <Reference Include="UnityEngine.AnimationModule">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.AnimationModule.dll</HintPath>
+        </Reference>
         <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.CoreModule.dll</HintPath>
           <Private>False</Private>
@@ -143,12 +146,14 @@
         <Compile Include="Items\Suit.cs" />
         <Compile Include="Items\Tank.cs" />
         <Compile Include="Monos\DeathrunTank.cs" />
+        <Compile Include="Monos\NitrogenBar.cs" />
         <Compile Include="Objects\Enums\Difficulty.cs" />
         <Compile Include="Objects\Exceptions\DeathrunException.cs" />
         <Compile Include="Objects\Message.cs" />
         <Compile Include="Patches\AirPatcher.cs" />
         <Compile Include="Patches\BatteryPatcher.cs" />
         <Compile Include="Patches\CompassPatcher.cs" />
+        <Compile Include="Patches\NitrogenPatcher.cs" />
         <Compile Include="Patches\SuitPatcher.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>

@@ -19,6 +19,8 @@ Patches
 New Ideas
 - Make tanks not refill by themselves. Refill at special point?
 - Add config options for moving the GUI elements relative to top/sides/wherever.
+- Self-updating score multiplier in the options menu, to show you what you'll get
+- Progressively worse Kharaa infection to counteract difficulty being too frontloaded
 
 Checks at the very end
 - All items craft properly and fit into their slots

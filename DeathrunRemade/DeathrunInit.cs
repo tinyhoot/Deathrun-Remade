@@ -5,9 +5,8 @@ using DeathrunRemade.Configuration;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
 using HarmonyLib;
-using Nautilus.Handlers;
 using HootLib;
-using HootLib.Objects;
+using Nautilus.Handlers;
 using UnityEngine;
 using ILogHandler = HootLib.Interfaces.ILogHandler;
 
@@ -68,10 +67,10 @@ namespace DeathrunRemade
 
         private void TestMe()
         {
-            var x = _Notifications.CreateOrGetSlot("yeet");
-            //x.ShowMessage("YOOOOOO", 10f);
-            _Notifications.AddMessage("yeet", "This is a great test for testing purposes. Your oxygen is fucked btw")
+            _Notifications.SetupSlots();
+            _Notifications.AddMessage(NotificationHandler.TopMiddle, "This is a great test for testing purposes. Your oxygen is gone btw")
                 .SetDuration(5, 3);
+            _Notifications.AddMessage(NotificationHandler.LeftMiddle, "N2 is a whole lot here oh god oh no");
         }
 
         /// <summary>

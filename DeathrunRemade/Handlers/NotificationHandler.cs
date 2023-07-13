@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DeathrunRemade.Objects;
 using HootLib;
 using Nautilus.Utility;
+using TMPro;
 using UnityEngine;
 using ILogHandler = HootLib.Interfaces.ILogHandler;
 using Object = UnityEngine.Object;
@@ -14,15 +15,29 @@ namespace DeathrunRemade.Handlers
     /// </summary>
     internal class NotificationHandler
     {
+        public const string TopMiddle = "top_middle";
+        public const string LeftMiddle = "left_middle";
+
+        public static NotificationHandler main;
+        
         private ILogHandler _log;
         private Dictionary<string, BasicText> _textSlots;
         private List<Message> _messages;
-        
+
         public NotificationHandler(ILogHandler logger)
         {
+            main = this;
             _log = logger;
             _textSlots = new Dictionary<string, BasicText>();
             _messages = new List<Message>();
+        }
+
+        public void SetupSlots()
+        {
+            RectTransform rect = (RectTransform)uGUI.main.intro.transform;
+            CreateSlot(TopMiddle, 0, (int)(rect.rect.height / 2) - 50);
+            CreateSlot(LeftMiddle, (int)(rect.rect.width / -2) + 20, 0)
+                .SetAlign(TextAlignmentOptions.Left);
         }
 
         /// <summary>
@@ -38,7 +53,6 @@ namespace DeathrunRemade.Handlers
             foreach (var message in _messages.ShallowCopy())
             {
                 MessageState state = message.UpdateState(Time.time);
-                DeathrunInit._Log.Debug($"Updated state: {state}");
                 switch (state)
                 {
                     case MessageState.Display:
@@ -96,18 +110,19 @@ namespace DeathrunRemade.Handlers
             var slot = GetSlot(message.SlotId);
             slot.ShowMessage(message.Text);
         }
-        
+
         /// <summary>
         /// Create a slot for text to appear in.
         /// </summary>
         /// <param name="id">The unique id to give to this slot.</param>
-        public BasicText CreateSlot(string id)
+        /// <param name="x">The x coordinate to anchor the slot to. Centered on the middle of the screen.</param>
+        /// <param name="y">The y coordinate to anchor the slot to. Centered on the middle of the screen.</param>
+        public BasicText CreateSlot(string id, int x = 0, int y = 0)
         {
             if (_textSlots.ContainsKey(id))
                 throw new ArgumentException($"Cannot create text slot with duplicate id {id}!");
-            RectTransform rect = (RectTransform)uGUI.main.intro.transform;
-            int y = (int)(rect.rect.height / 2) - 50;
-            BasicText text = new BasicText(0, y);
+            BasicText text = new BasicText(x, y);
+            text.SetAlign(TextAlignmentOptions.Center);
             _textSlots.Add(id, text);
             return text;
         }
