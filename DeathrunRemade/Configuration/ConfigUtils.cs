@@ -17,7 +17,7 @@ namespace DeathrunRemade.Configuration
         public static bool CanBreathe(Player player)
         {
             // Special cases like player bases, vehicles or alien bases should always be breathable.
-            if (player.IsInside() || player.IsInSub())
+            if (player.IsInsidePoweredSubOrVehicle() || player.precursorOutOfWater)
                 return true;
             
             // If at the surface, check for irradiated air.

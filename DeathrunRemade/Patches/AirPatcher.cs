@@ -31,7 +31,10 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(WaterAmbience), nameof(WaterAmbience.PlayReachSurfaceSound))]
         private static bool NotifySurfacePoisoned(ref WaterAmbience __instance)
         {
-            if (ConfigUtils.CanBreathe(Player.main))
+            if (Player.main.CanBreathe())
+                return true;
+            // Don't notify when inside a powered-down vehicle or an alien base.
+            if (Player.main.IsInsideSubOrVehicle() || Player.main.motorMode == Player.MotorMode.Walk)
                 return true;
 
             // TODO: More detailed warnings depending on config.

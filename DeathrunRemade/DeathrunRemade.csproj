@@ -134,6 +134,7 @@
         <Compile Include="Configuration\ConfigUtils.cs" />
         <Compile Include="Constants.cs" />
         <Compile Include="DeathrunInit.cs" />
+        <Compile Include="DeathrunUtils.cs" />
         <Compile Include="Handlers\GameEventHandler.cs" />
         <Compile Include="Handlers\HighscoreHandler.cs" />
         <Compile Include="Handlers\NitrogenHandler.cs" />
