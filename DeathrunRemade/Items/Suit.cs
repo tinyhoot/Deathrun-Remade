@@ -1,8 +1,8 @@
+using HootLib;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
 using Nautilus.Crafting;
-using HootLib;
 using static CraftData;
 
 namespace DeathrunRemade.Items
@@ -29,7 +29,7 @@ namespace DeathrunRemade.Items
             SuitVariant = variant;
             
             _prefabInfo = Hootils.CreatePrefabInfo(
-                ItemInfo.GetIdForItem(variant.ToString()),
+                GetClassId(variant),
                 GetDisplayName(variant),
                 GetDescription(variant),
                 GetSprite(variant)
@@ -39,7 +39,7 @@ namespace DeathrunRemade.Items
             _prefab = new CustomPrefab(_prefabInfo);
             _prefab.SetRecipe(GetRecipe(variant))
                 .WithFabricatorType(CraftTree.Type.Workbench)
-                .WithStepsToFabricatorTab(ItemInfo.GetSuitCraftTabId());
+                .WithStepsToFabricatorTab(Constants.WorkbenchSuitTab);
             _prefab.SetPdaGroupCategory(TechGroup.Personal, TechCategory.Equipment);
             _prefab.SetEquipment(EquipmentType.Body);
             _prefabInfo.WithSizeInInventory(new Vector2int(2, 2));
@@ -65,6 +65,21 @@ namespace DeathrunRemade.Items
                     ReinforcedMk3 = info.TechType;
                     break;
             }
+        }
+        
+        /// <summary>
+        /// Get the class id for the type of suit.
+        /// </summary>
+        private string GetClassId(Variant variant)
+        {
+            string id = variant switch
+            {
+                Variant.ReinforcedFiltrationSuit => "reinforcedfiltrationsuit",
+                Variant.ReinforcedSuitMk2 => "reinforcedsuit2",
+                Variant.ReinforcedSuitMk3 => "reinforcedsuit3",
+                _ => null
+            };
+            return $"{Constants.ClassIdPrefix}{id}";
         }
 
         /// <summary>

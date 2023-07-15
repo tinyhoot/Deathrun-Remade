@@ -1,25 +1,28 @@
 using DeathrunRemade.Objects.Enums;
+using HootLib;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
 using Nautilus.Crafting;
 using Nautilus.Handlers;
-using HootLib;
 using static CraftData;
 
 namespace DeathrunRemade.Items
 {
     internal class AcidBattery : DeathrunPrefabBase
     {
+        public new static TechType TechType;
+        
         public AcidBattery(Difficulty4 difficulty)
         {
             var sprite = Hootils.LoadSprite("AcidBattery.png", true);
             _prefabInfo = Hootils.CreatePrefabInfo(
-                ItemInfo.GetIdForItem(nameof(AcidBattery)),
+                Constants.ClassIdPrefix + "acidbattery",
                 "Copper/Zinc Battery",
                 "A very basic mobile power source, and NOT rechargeable. Please dispose of safely.",
                 sprite
             );
+            TechType = _prefabInfo.TechType;
 
             _prefab = new CustomPrefab(_prefabInfo);
             _prefab.SetRecipe(new RecipeData(

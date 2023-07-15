@@ -31,7 +31,7 @@ namespace DeathrunRemade.Items
             TankVariant = variant;
             
             _prefabInfo = Hootils.CreatePrefabInfo(
-                ItemInfo.GetIdForItem(variant.ToString()),
+                GetClassId(variant),
                 GetDisplayName(variant),
                 GetDescription(variant),
                 GetSprite(variant)
@@ -41,7 +41,7 @@ namespace DeathrunRemade.Items
             _prefab = new CustomPrefab(_prefabInfo);
             _prefab.SetRecipe(GetRecipe(variant))
                 .WithFabricatorType(CraftTree.Type.Workbench)
-                .WithStepsToFabricatorTab(ItemInfo.GetTankCraftTabId());
+                .WithStepsToFabricatorTab(Constants.WorkbenchTankTab);
             _prefab.SetPdaGroupCategory(TechGroup.Personal, TechCategory.Equipment);
             _prefab.SetEquipment(EquipmentType.Tank);
             _prefabInfo.WithSizeInInventory(new Vector2int(2, 3));
@@ -72,6 +72,21 @@ namespace DeathrunRemade.Items
                     PhotosynthesisTankSmall = info.TechType;
                     break;
             }
+        }
+        
+        /// <summary>
+        /// Get the class id for the type of tank.
+        /// </summary>
+        private string GetClassId(Variant variant)
+        {
+            string id = variant switch
+            {
+                Variant.ChemosynthesisTank => "chemosynthesistank",
+                Variant.PhotosynthesisTank => "photosynthesistank",
+                Variant.PhotosynthesisTankSmall => "photosynthesistanksmall",
+                _ => null
+            };
+            return $"{Constants.ClassIdPrefix}{id}";
         }
         
         /// <summary>

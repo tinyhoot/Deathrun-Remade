@@ -71,7 +71,7 @@ namespace DeathrunRemade.Configuration
             // If this doesn't pass the game is not yet done loading.
             if (Inventory.main is null || Inventory.main.equipment is null)
                 return true;
-            if (Inventory.main.equipment.GetCount(ItemInfo.GetTechTypeForItem(nameof(FilterChip))) > 0)
+            if (Inventory.main.equipment.GetCount(FilterChip.TechType) > 0)
                 return true;
 
             // Surface air without a filter is always unbreathable on high difficulties.

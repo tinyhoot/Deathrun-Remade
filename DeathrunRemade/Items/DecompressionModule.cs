@@ -1,25 +1,28 @@
+using HootLib;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
 using Nautilus.Crafting;
 using Nautilus.Handlers;
-using HootLib;
 using static CraftData;
 
 namespace DeathrunRemade.Items
 {
     internal class DecompressionModule : DeathrunPrefabBase
     {
+        public new static TechType TechType;
+        
         public DecompressionModule()
         {
             var sprite = Hootils.GetSprite(TechType.PowerUpgradeModule);
             _prefabInfo = Hootils.CreatePrefabInfo(
-                ItemInfo.GetIdForItem(nameof(DecompressionModule)),
+                Constants.ClassIdPrefix + "decompressionmodule",
                 "Nano Decompression Module",
                 "Eliminates nitrogen from the bloodstream of vehicle pilot. Reduces energy expended when "
                 + "exiting the vehicle. Stacking multiple modules increases the benefit.",
                 sprite
             );
+            TechType = _prefabInfo.TechType;
 
             _prefab = new CustomPrefab(_prefabInfo);
             _prefab.SetRecipe(new RecipeData(

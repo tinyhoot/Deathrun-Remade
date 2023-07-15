@@ -1,26 +1,29 @@
 using DeathrunRemade.Objects.Enums;
+using HootLib;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
 using Nautilus.Crafting;
 using Nautilus.Handlers;
-using HootLib;
 using static CraftData;
 
 namespace DeathrunRemade.Items
 {
     internal class AcidPowerCell : DeathrunPrefabBase
     {
+        public new static TechType TechType;
+        
         public AcidPowerCell(Difficulty4 difficulty)
         {
             var sprite = Hootils.LoadSprite("AcidPowerCell.png", true);
             _prefabInfo = Hootils.CreatePrefabInfo(
-                ItemInfo.GetIdForItem(nameof(AcidPowerCell)),
+                Constants.ClassIdPrefix + "acidpowercell",
                 "Lead Acid Power Cell",
                 "A basic lead/acid vehicle power source - not super powerful, but it IS rechargeable. "
                 + "Keep fully charged during winter months!",
                 sprite
             );
+            TechType = _prefabInfo.TechType;
 
             _prefab = new CustomPrefab(_prefabInfo);
             _prefab.SetRecipe(new RecipeData(

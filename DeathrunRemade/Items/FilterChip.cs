@@ -1,24 +1,27 @@
+using HootLib;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
 using Nautilus.Crafting;
 using Nautilus.Handlers;
-using HootLib;
 
 namespace DeathrunRemade.Items
 {
     internal class FilterChip : DeathrunPrefabBase
     {
+        public new static TechType TechType;
+        
         public FilterChip()
         {
             var sprite = Hootils.GetSprite(TechType.ComputerChip);
             _prefabInfo = Hootils.CreatePrefabInfo(
-                ItemInfo.GetIdForItem(nameof(FilterChip)),
+                Constants.ClassIdPrefix + "filterchip",
                 "Integrated Air Filter",
                 "Makes surface air breathable and purges nitrogen from the bloodstream while indoors. "
                 + "Comes with an integrated Compass.",
                 sprite
             );
+            TechType = _prefabInfo.TechType;
 
             _prefab = new CustomPrefab(_prefabInfo);
             _prefab.SetRecipe(new RecipeData(

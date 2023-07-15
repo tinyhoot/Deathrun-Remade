@@ -1,8 +1,8 @@
+using HootLib;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
 using Nautilus.Handlers;
-using HootLib;
 
 namespace DeathrunRemade.Items
 {
@@ -28,7 +28,7 @@ namespace DeathrunRemade.Items
             DropVariant = variant;
             
             _prefabInfo = Hootils.CreatePrefabInfo(
-                ItemInfo.GetIdForItem(variant.ToString()),
+                GetClassId(variant),
                 GetDisplayName(variant),
                 GetDescription(variant),
                 GetSprite(variant)
@@ -75,6 +75,21 @@ namespace DeathrunRemade.Items
             };
             CraftDataHandler.SetHarvestOutput(target, TechType);
             CraftDataHandler.SetHarvestType(target, HarvestType.DamageAlive);
+        }
+
+        /// <summary>
+        /// Get the class id for the type of drop.
+        /// </summary>
+        private string GetClassId(Variant variant)
+        {
+            string id = variant switch
+            {
+                Variant.LavaLizardScale => "lavalizardscale",
+                Variant.SpineEelScale => "spineeelscale",
+                Variant.ThermophileSample => "thermophilsample",
+                _ => null
+            };
+            return $"{Constants.ClassIdPrefix}{id}";
         }
 
         /// <summary>

@@ -34,7 +34,7 @@ namespace DeathrunRemade.Patches
             // Additional null check because unity lifetime check shenanigans.
             if (item?.item is null)
                 return;
-            if (item.item.GetTechType() == ItemInfo.GetTechTypeForItem(nameof(AcidPowerCell)))
+            if (item.item.GetTechType().Equals(AcidPowerCell.TechType))
                 __instance.batteryModels[0].model.SetActive(true);
         }
 
@@ -64,9 +64,8 @@ namespace DeathrunRemade.Patches
         private static void UpdatePowerCellCharger(ref PowerCellCharger __instance)
         {
             HashSet<TechType> compatibleTech = PowerCellCharger.compatibleTech;
-            TechType powerCell = ItemInfo.GetTechTypeForItem(nameof(AcidPowerCell));
             // It's a hashset, checking whether the techtype already exists is superfluous.
-            compatibleTech.Add(powerCell);
+            compatibleTech.Add(AcidPowerCell.TechType);
         }
 
         /// <summary>
@@ -82,13 +81,13 @@ namespace DeathrunRemade.Patches
             if (__instance.compatibleBatteries.Contains(TechType.Battery)
                 || __instance.compatibleBatteries.Contains(TechType.PrecursorIonBattery))
             {
-                __instance.compatibleBatteries.Add(ItemInfo.GetTechTypeForItem(nameof(AcidBattery)));
+                __instance.compatibleBatteries.Add(AcidBattery.TechType);
             }
 
             if (__instance.compatibleBatteries.Contains(TechType.PowerCell)
                 || __instance.compatibleBatteries.Contains(TechType.PrecursorIonPowerCell))
             {
-                __instance.compatibleBatteries.Add(ItemInfo.GetTechTypeForItem(nameof(AcidPowerCell)));
+                __instance.compatibleBatteries.Add(AcidPowerCell.TechType);
             }
         }
     }

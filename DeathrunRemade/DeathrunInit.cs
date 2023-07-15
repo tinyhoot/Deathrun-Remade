@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using BepInEx;
 using DeathrunRemade.Components;
@@ -104,21 +105,23 @@ namespace DeathrunRemade
         /// </summary>
         private void RegisterItems()
         {
+            // Not convinced I'm keeping this list but let's have it ready for now.
+            List<DeathrunPrefabBase> prefabs = new List<DeathrunPrefabBase>();
             // Very basic items first, so later items can rely on them for recipes.
-            ItemInfo.AddPrefab(new MobDrop(MobDrop.Variant.LavaLizardScale), nameof(MobDrop.Variant.LavaLizardScale));
-            ItemInfo.AddPrefab(new MobDrop(MobDrop.Variant.SpineEelScale), nameof(MobDrop.Variant.SpineEelScale));
-            ItemInfo.AddPrefab(new MobDrop(MobDrop.Variant.ThermophileSample), nameof(MobDrop.Variant.ThermophileSample));
+            prefabs.Add(new MobDrop(MobDrop.Variant.LavaLizardScale));
+            prefabs.Add(new MobDrop(MobDrop.Variant.SpineEelScale));
+            prefabs.Add(new MobDrop(MobDrop.Variant.ThermophileSample));
             
-            ItemInfo.AddPrefab(new AcidBattery(_Config.BatteryCapacity.Value));
-            ItemInfo.AddPrefab(new AcidPowerCell(_Config.BatteryCapacity.Value));
-            ItemInfo.AddPrefab(new DecompressionModule());
-            ItemInfo.AddPrefab(new FilterChip());
-            ItemInfo.AddPrefab(new Suit(Suit.Variant.ReinforcedFiltrationSuit), nameof(Suit.Variant.ReinforcedFiltrationSuit));
-            ItemInfo.AddPrefab(new Suit(Suit.Variant.ReinforcedSuitMk2), nameof(Suit.Variant.ReinforcedSuitMk2));
-            ItemInfo.AddPrefab(new Suit(Suit.Variant.ReinforcedSuitMk3), nameof(Suit.Variant.ReinforcedSuitMk3));
-            ItemInfo.AddPrefab(new Tank(Tank.Variant.ChemosynthesisTank), nameof(Tank.Variant.ChemosynthesisTank));
-            ItemInfo.AddPrefab(new Tank(Tank.Variant.PhotosynthesisTank), nameof(Tank.Variant.PhotosynthesisTank));
-            ItemInfo.AddPrefab(new Tank(Tank.Variant.PhotosynthesisTankSmall), nameof(Tank.Variant.PhotosynthesisTankSmall));
+            prefabs.Add(new AcidBattery(_Config.BatteryCapacity.Value));
+            prefabs.Add(new AcidPowerCell(_Config.BatteryCapacity.Value));
+            prefabs.Add(new DecompressionModule());
+            prefabs.Add(new FilterChip());
+            prefabs.Add(new Suit(Suit.Variant.ReinforcedFiltrationSuit));
+            prefabs.Add(new Suit(Suit.Variant.ReinforcedSuitMk2));
+            prefabs.Add(new Suit(Suit.Variant.ReinforcedSuitMk3));
+            prefabs.Add(new Tank(Tank.Variant.ChemosynthesisTank));
+            prefabs.Add(new Tank(Tank.Variant.PhotosynthesisTank));
+            prefabs.Add(new Tank(Tank.Variant.PhotosynthesisTankSmall));
         }
 
         /// <summary>
@@ -129,9 +132,9 @@ namespace DeathrunRemade
             Atlas.Sprite suitIcon = Hootils.LoadSprite("SuitTabIcon.png", true);
             Atlas.Sprite tankIcon = Hootils.LoadSprite("TankTabIcon.png", true);
 
-            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, ItemInfo.GetSuitCraftTabId(),
+            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, Constants.WorkbenchSuitTab,
                 "Dive Suit Upgrades", suitIcon);
-            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, ItemInfo.GetTankCraftTabId(),
+            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, Constants.WorkbenchTankTab,
                 "Specialty O2 Tanks", tankIcon);
         }
     }
