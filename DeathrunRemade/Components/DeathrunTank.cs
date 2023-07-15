@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using DeathrunRemade.Items;
 using UnityEngine;
 
-namespace DeathrunRemade.Monos
+namespace DeathrunRemade.Components
 {
     /// <summary>
     /// This component is added to the player and from there controls the special tanks' unique behaviour.

@@ -25,3 +25,7 @@ New Ideas
 Checks at the very end
 - All items craft properly and fit into their slots
 - Breathing works as it should in bases, alien bases, vehicles, open water
+
+Substantial changes from the original
+- Photosynthetic tanks always work in sunlight, including the surface
+- Completely custom implementation of nitrogen without relying on the game

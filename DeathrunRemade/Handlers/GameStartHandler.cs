@@ -1,4 +1,4 @@
-using DeathrunRemade.Monos;
+using DeathrunRemade.Components;
 using HarmonyLib;
 
 namespace DeathrunRemade.Handlers

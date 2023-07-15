@@ -1,5 +1,6 @@
-using DeathrunRemade.Monos;
+using DeathrunRemade.Components;
 using HarmonyLib;
+using HootLib.Components;
 using UnityEngine;
 
 namespace DeathrunRemade.Patches
@@ -11,7 +12,8 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(Player), nameof(Player.Awake))]
         private static void test()
         {
-            NitrogenBar.Create<NitrogenBar>("NitrogenBar", -45, out GameObject gameObject);
+            HootHudBar.Create<NitrogenBar>("NitrogenBar", -45, out GameObject _);
+            SafeDepthHud.Create(out GameObject _);
         }
 
         [HarmonyPostfix]

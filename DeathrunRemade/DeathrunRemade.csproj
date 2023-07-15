@@ -129,12 +129,14 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Components\SafeDepthHud.cs" />
         <Compile Include="Configuration\Config.cs" />
         <Compile Include="Configuration\ConfigUtils.cs" />
         <Compile Include="Constants.cs" />
         <Compile Include="DeathrunInit.cs" />
         <Compile Include="Handlers\GameStartHandler.cs" />
         <Compile Include="Handlers\HighscoreHandler.cs" />
+        <Compile Include="Handlers\NitrogenHandler.cs" />
         <Compile Include="Handlers\NotificationHandler.cs" />
         <Compile Include="Items\AcidBattery.cs" />
         <Compile Include="Items\AcidPowerCell.cs" />
@@ -145,11 +147,13 @@
         <Compile Include="Items\MobDrop.cs" />
         <Compile Include="Items\Suit.cs" />
         <Compile Include="Items\Tank.cs" />
-        <Compile Include="Monos\DeathrunTank.cs" />
-        <Compile Include="Monos\NitrogenBar.cs" />
+        <Compile Include="Components\DeathrunTank.cs" />
+        <Compile Include="Components\NitrogenBar.cs" />
         <Compile Include="Objects\Enums\Difficulty.cs" />
+        <Compile Include="Objects\Enums\SafeDepthStatus.cs" />
         <Compile Include="Objects\Exceptions\DeathrunException.cs" />
         <Compile Include="Objects\Message.cs" />
+        <Compile Include="Objects\SaveData.cs" />
         <Compile Include="Patches\AirPatcher.cs" />
         <Compile Include="Patches\BatteryPatcher.cs" />
         <Compile Include="Patches\CompassPatcher.cs" />
@@ -169,7 +173,6 @@
       <EmbeddedResource Include="Assets\CraftingTabIcon.png" />
       <EmbeddedResource Include="Assets\lavalizardscale.png" />
       <Content Include="Assets\lavalizardscale.psd" />
-      <Content Include="Assets\n2warning" />
       <EmbeddedResource Include="Assets\photosynthesissmalltank.png" />
       <Content Include="Assets\photosynthesissmalltank.psd" />
       <EmbeddedResource Include="Assets\photosynthesistank.png" />

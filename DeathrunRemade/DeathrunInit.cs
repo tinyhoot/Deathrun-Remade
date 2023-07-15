@@ -4,9 +4,11 @@ using BepInEx;
 using DeathrunRemade.Configuration;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
+using DeathrunRemade.Objects;
 using HarmonyLib;
 using HootLib;
 using Nautilus.Handlers;
+using Nautilus.Utility;
 using UnityEngine;
 using ILogHandler = HootLib.Interfaces.ILogHandler;
 
@@ -22,6 +24,7 @@ namespace DeathrunRemade
 
         internal static Config _Config;
         internal static ILogHandler _Log;
+        internal static NitrogenHandler _Nitrogen;
         internal static NotificationHandler _Notifications;
 
         // Run Update() once per second.
@@ -32,20 +35,24 @@ namespace DeathrunRemade
         {
             _Log = new HootLogger(NAME);
             _Log.Info($"{NAME} v{VERSION} starting up.");
-            _Notifications = new NotificationHandler(_Log);
             
             // Registering config.
             _Config = new Config(Path.Combine(Paths.ConfigPath, Hootils.GetConfigFileName(NAME)),
                 Info.Metadata);
             _Config.RegisterModOptions(NAME, transform);
             
+            InitHandlers();
             SetupCraftTree();
             RegisterItems();
             RegisterCommands();
             
             Harmony harmony = new Harmony(GUID);
             harmony.PatchAll(Hootils.GetAssembly());
-            
+
+            // Register the save game and ensure Nautilus marks it as ready as soon as the player enters the game.
+            SaveData.Main = SaveDataHandler.RegisterSaveDataCache<SaveData>();
+            SaveUtils.RegisterOnLoadEvent(() => SaveData.Main.Ready = true);
+
             _Log.Info("Finished loading.");
         }
 
@@ -57,7 +64,14 @@ namespace DeathrunRemade
             _nextUpdate = Time.time + UpdateInterval;
             
             // Putting these things here prevents having to run them as MonoBehaviours too.
+            _Nitrogen.Update();
             _Notifications.Update();
+        }
+
+        private void InitHandlers()
+        {
+            _Nitrogen = new NitrogenHandler();
+            _Notifications = new NotificationHandler(_Log);
         }
 
         private void RegisterCommands()
