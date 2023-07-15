@@ -1,8 +1,10 @@
+using DeathrunRemade.Components;
+using DeathrunRemade.Handlers;
+using HootLib;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
 using Nautilus.Crafting;
-using HootLib;
 using static CraftData;
 
 namespace DeathrunRemade.Items
@@ -51,6 +53,9 @@ namespace DeathrunRemade.Items
             var template = new CloneTemplate(_prefabInfo, cloneType);
             _prefab.SetGameObject(template);
             _prefab.Register();
+
+            // Add the special tank behaviour to the player as soon as they're ready.
+            GameEventHandler.OnPlayerAwake += player => player.gameObject.EnsureComponent<DeathrunTank>();
         }
         
         private void AssignTechType(PrefabInfo info, Variant variant)

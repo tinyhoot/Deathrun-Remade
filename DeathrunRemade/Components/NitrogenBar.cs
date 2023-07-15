@@ -1,3 +1,4 @@
+using DeathrunRemade.Handlers;
 using HootLib.Components;
 using TMPro;
 using UnityEngine;
@@ -11,11 +12,11 @@ namespace DeathrunRemade.Components
 
         protected void Start()
         {
-            //base.Awake();
             Main = this;
             ReplaceNitrogenIcon(_icon);
             AddBackground(_hud.backgroundBarsDouble, _angle);
             PreparePulseCurves();
+            GameEventHandler.OnHudUpdate += HarmonyUpdateHudElements;
         }
 
         /// <summary>

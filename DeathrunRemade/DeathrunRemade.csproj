@@ -134,7 +134,7 @@
         <Compile Include="Configuration\ConfigUtils.cs" />
         <Compile Include="Constants.cs" />
         <Compile Include="DeathrunInit.cs" />
-        <Compile Include="Handlers\GameStartHandler.cs" />
+        <Compile Include="Handlers\GameEventHandler.cs" />
         <Compile Include="Handlers\HighscoreHandler.cs" />
         <Compile Include="Handlers\NitrogenHandler.cs" />
         <Compile Include="Handlers\NotificationHandler.cs" />
@@ -157,6 +157,7 @@
         <Compile Include="Patches\AirPatcher.cs" />
         <Compile Include="Patches\BatteryPatcher.cs" />
         <Compile Include="Patches\CompassPatcher.cs" />
+        <Compile Include="Patches\GameEventPatcher.cs" />
         <Compile Include="Patches\NitrogenPatcher.cs" />
         <Compile Include="Patches\SuitPatcher.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

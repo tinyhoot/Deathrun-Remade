@@ -56,9 +56,12 @@ namespace DeathrunRemade.Components
             SetPosition();
             transform.localScale *= HudScale;
 
+            // Register all necessary events.
+            GameEventHandler.OnHudUpdate += OnHudUpdate;
             DeathrunInit._Nitrogen.OnSafeDepthEnabled += OnSafeDepthEnabled;
             DeathrunInit._Nitrogen.OnSafeDepthDisabled += OnSafeDepthDisabled;
             Language.OnLanguageChanged += OnLanguageChanged;
+            // Trigger once just to set the default correctly.
             OnLanguageChanged();
             
             SetVisible(false);
@@ -79,8 +82,6 @@ namespace DeathrunRemade.Components
             };
             UpdateTextColor(textColor);
             UpdateSprites(status != SafeDepthStatus.Safe);
-            if (_hud._active && Enabled != Visible)
-                SetVisible(_hud._active && Enabled);
         }
 
         /// <summary>
@@ -100,6 +101,14 @@ namespace DeathrunRemade.Components
             Transform textObjectHolder = transform.Find("PlayerDepth-Layout");
             _depthText = textObjectHolder.Find("DepthNumberText").GetComponent<TextMeshProUGUI>();
             _suffixText = textObjectHolder.Find("DepthSuffixText").GetComponent<TextMeshProUGUI>();
+        }
+
+        /// <summary>
+        /// When the hud updates its vanilla elements, ensure this component is altered to match.
+        /// </summary>
+        private void OnHudUpdate(uGUI_SceneHUD hud)
+        {
+            SetVisible(hud._active && Enabled);
         }
 
         /// <summary>

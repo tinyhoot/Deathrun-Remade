@@ -29,3 +29,5 @@ Checks at the very end
 Substantial changes from the original
 - Photosynthetic tanks always work in sunlight, including the surface
 - Completely custom implementation of nitrogen without relying on the game
+- Save data is now per save slot. Deathrun no longer messes with your vanilla saves. Should also help with 
+  issues with autosave mods.

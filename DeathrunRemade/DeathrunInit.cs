@@ -1,12 +1,14 @@
 ﻿using System;
 using System.IO;
 using BepInEx;
+using DeathrunRemade.Components;
 using DeathrunRemade.Configuration;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using HarmonyLib;
 using HootLib;
+using HootLib.Components;
 using Nautilus.Handlers;
 using Nautilus.Utility;
 using UnityEngine;
@@ -45,6 +47,7 @@ namespace DeathrunRemade
             SetupCraftTree();
             RegisterItems();
             RegisterCommands();
+            RegisterGameEvents();
             
             Harmony harmony = new Harmony(GUID);
             harmony.PatchAll(Hootils.GetAssembly());
@@ -77,6 +80,15 @@ namespace DeathrunRemade
         private void RegisterCommands()
         {
             ConsoleCommandsHandler.RegisterConsoleCommand<Action>("test", TestMe);
+        }
+
+        private void RegisterGameEvents()
+        {
+            GameEventHandler.OnPlayerAwake += _ =>
+            {
+                HootHudBar.Create<NitrogenBar>("NitrogenBar", -45, out GameObject _);
+                SafeDepthHud.Create(out GameObject _); 
+            };
         }
 
         private void TestMe()
