@@ -9,14 +9,14 @@ Items that are ticked off are complete. Yellow circles mark work in progress.
 
 - [ ] 🟡 Config
 - [x] Custom Items
-- [ ] Harmony Patches
-  - [ ] Additional Item Behaviour
+- [ ] 🟡 Harmony Patches
+  - [x] Additional Item Behaviour
   - [ ] Aurora and Explosion
   - [ ] Challenges and misc. config options
   - [ ] Main Menu and High Scores
-  - [ ] Nitrogen
-  - [ ] Radiation
+  - [ ] 🟡 Nitrogen
+  - [ ] 🟡 Radiation
   - [ ] Random Start and Lifepod
-  - [ ] UI
+  - [ ] 🟡 UI
 - [ ] 🟡 MonoBehaviours
 - [ ] 🟡 Plugin loading and organisation
