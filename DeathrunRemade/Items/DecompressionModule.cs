@@ -14,7 +14,7 @@ namespace DeathrunRemade.Items
         
         public DecompressionModule()
         {
-            var sprite = Hootils.GetSprite(TechType.PowerUpgradeModule);
+            var sprite = SpriteManager.Get(TechType.PowerUpgradeModule);
             _prefabInfo = Hootils.CreatePrefabInfo(
                 Constants.ClassIdPrefix + "decompressionmodule",
                 "Nano Decompression Module",

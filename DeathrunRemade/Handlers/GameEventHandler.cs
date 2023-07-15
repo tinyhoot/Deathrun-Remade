@@ -1,4 +1,5 @@
 using System;
+using HarmonyLib;
 
 namespace DeathrunRemade.Handlers
 {
@@ -6,19 +7,25 @@ namespace DeathrunRemade.Handlers
     /// A messaging class to prevent every single object needing to have its own patcher to hook into the same
     /// few common methods.
     /// </summary>
+    [HarmonyPatch]
     internal static class GameEventHandler
     {
         public static event Action<uGUI_SceneHUD> OnHudUpdate;
         public static event Action<Player> OnPlayerAwake;
 
-        public static void TriggerHudUpdate(uGUI_SceneHUD hud)
+        
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(uGUI_SceneHUD), nameof(uGUI_SceneHUD.UpdateElements))]
+        private static void TriggerHudUpdate(uGUI_SceneHUD __instance)
         {
-            OnHudUpdate?.Invoke(hud);
+            OnHudUpdate?.Invoke(__instance);
         }
         
-        public static void TriggerPlayerAwake(Player player)
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(Player), nameof(Player.Awake))]
+        private static void TriggerPlayerAwake(Player __instance)
         {
-            OnPlayerAwake?.Invoke(player);
+            OnPlayerAwake?.Invoke(__instance);
         }
     }
 }

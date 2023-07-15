@@ -13,7 +13,7 @@ namespace DeathrunRemade.Items
         
         public FilterChip()
         {
-            var sprite = Hootils.GetSprite(TechType.ComputerChip);
+            var sprite = SpriteManager.Get(TechType.ComputerChip);
             _prefabInfo = Hootils.CreatePrefabInfo(
                 Constants.ClassIdPrefix + "filterchip",
                 "Integrated Air Filter",

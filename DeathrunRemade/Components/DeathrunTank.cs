@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using DeathrunRemade.Items;
 using UnityEngine;
 
@@ -17,21 +16,10 @@ namespace DeathrunRemade.Components
         private const float MinTemp = 30f;
         private float _nextUpdate;
         private Equipment _equipment;
-        private Dictionary<TechType, Tank.Variant> _tankTechTypes;
 
         private DayNightCycle _dayNightCycle;
         private OxygenManager _oxygenManager;
         private WaterTemperatureSimulation _waterTemperature;
-
-        private void Awake()
-        {
-            _tankTechTypes = new Dictionary<TechType, Tank.Variant>
-            {
-                { Tank.ChemosynthesisTank, Tank.Variant.ChemosynthesisTank },
-                { Tank.PhotosynthesisTank, Tank.Variant.PhotosynthesisTank },
-                { Tank.PhotosynthesisTankSmall, Tank.Variant.PhotosynthesisTankSmall }
-            };
-        }
 
         private void Start()
         {
@@ -48,10 +36,9 @@ namespace DeathrunRemade.Components
             _nextUpdate = Time.time + UpdateInterval;
             // Unequipped tanks do not fill up.
             TechType techType = _equipment.GetItemInSlot("Tank")?.techType ?? TechType.None;
-            if (!_tankTechTypes.TryGetValue(techType, out Tank.Variant variant))
+            if (techType.Equals(TechType.None))
                 return;
-            
-            if (variant == Tank.Variant.ChemosynthesisTank)
+            if (techType.Equals(Tank.ChemosynthesisTank))
                 UpdateChemosynthesisTank();
             else
                 UpdatePhotoSynthesisTank();
