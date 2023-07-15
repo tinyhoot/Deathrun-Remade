@@ -14,6 +14,7 @@ namespace DeathrunRemade.Components
     {
         private const float HudScale = 0.6f;
         private const float HudPosMult = 1.15f;
+        private const float FadeScalar = 0.016f;  // Take around one second to fully fade in/out.
         private readonly Color _damageColor = Color.red;
         private readonly Color _warningColor = Color.yellow;
         private readonly Color _normalColor = Color.white;
@@ -28,8 +29,9 @@ namespace DeathrunRemade.Components
         private TextMeshProUGUI _depthText;
         private TextMeshProUGUI _suffixText;
         private string _meterSuffix;
+        private float _fadeModifier;
+        private float _alpha;
 
-        public bool Enabled;
         public bool Visible;
         
         /// <summary>
@@ -55,16 +57,20 @@ namespace DeathrunRemade.Components
             CopyFromOriginal();
             SetPosition();
             transform.localScale *= HudScale;
-
-            // Register all necessary events.
-            GameEventHandler.OnHudUpdate += OnHudUpdate;
-            DeathrunInit._Nitrogen.OnSafeDepthEnabled += OnSafeDepthEnabled;
-            DeathrunInit._Nitrogen.OnSafeDepthDisabled += OnSafeDepthDisabled;
+            
             Language.OnLanguageChanged += OnLanguageChanged;
             // Trigger once just to set the default correctly.
             OnLanguageChanged();
             
-            SetVisible(false);
+            SetVisible(true);
+        }
+
+        private void Start()
+        {
+            // Register these events here just to be sure those components had the chance to start up.
+            GameEventHandler.OnHudUpdate += OnHudUpdate;
+            // NitrogenHandler.Main.OnSafeDepthEnabled += OnSafeDepthEnabled;
+            // NitrogenHandler.Main.OnSafeDepthDisabled += OnSafeDepthDisabled;
         }
 
         private void Update()
@@ -82,6 +88,7 @@ namespace DeathrunRemade.Components
             };
             UpdateTextColor(textColor);
             UpdateSprites(status != SafeDepthStatus.Safe);
+            UpdateOpacity();
         }
 
         /// <summary>
@@ -104,11 +111,27 @@ namespace DeathrunRemade.Components
         }
 
         /// <summary>
+        /// Fade in the hud, if it wasn't visible already.
+        /// </summary>
+        public void FadeIn()
+        {
+            _fadeModifier = FadeScalar;
+        }
+        
+        /// <summary>
+        /// Fade out the hud, if it wasn't hidden already.
+        /// </summary>
+        public void FadeOut()
+        {
+            _fadeModifier = -FadeScalar;
+        }
+
+        /// <summary>
         /// When the hud updates its vanilla elements, ensure this component is altered to match.
         /// </summary>
         private void OnHudUpdate(uGUI_SceneHUD hud)
         {
-            SetVisible(hud._active && Enabled);
+            SetVisible(hud._active);
         }
 
         /// <summary>
@@ -123,14 +146,27 @@ namespace DeathrunRemade.Components
             _depthText.text = _meterSuffix;
         }
 
-        private void OnSafeDepthEnabled()
-        {
-            Enabled = true;
-        }
+        // private void OnSafeDepthEnabled()
+        // {
+        //     Enabled = true;
+        // }
+        //
+        // private void OnSafeDepthDisabled()
+        // {
+        //     Enabled = false;
+        // }
 
-        private void OnSafeDepthDisabled()
+        /// <summary>
+        /// Adjust the opacity of the whole component.
+        /// </summary>
+        /// <param name="alpha">Low values are more see-through. Higher values for more opacity.</param>
+        private void SetAlpha(float alpha)
         {
-            Enabled = false;
+            alpha = Mathf.Clamp01(alpha);
+            _halfMoon.color = _halfMoon.color.WithAlpha(alpha);
+            _shadow.color = _shadow.color.WithAlpha(alpha);
+            _depthText.color = _depthText.color.WithAlpha(alpha);
+            _suffixText.color = _suffixText.color.WithAlpha(alpha);
         }
 
         /// <summary>
@@ -158,8 +194,8 @@ namespace DeathrunRemade.Components
 
         private void UpdateTextColor(Color color)
         {
-            _depthText.color = color;
-            _suffixText.color = color;
+            _depthText.color = color.WithAlpha(_alpha);
+            _suffixText.color = color.WithAlpha(_alpha);
         }
 
         /// <summary>
@@ -177,6 +213,22 @@ namespace DeathrunRemade.Components
                 _halfMoon.sprite = _halfMoonNormal;
                 _shadow.sprite = _shadowNormal;
             }
+        }
+
+        /// <summary>
+        /// Alter the hud's opacity one step in the desired direction.
+        /// </summary>
+        private void UpdateOpacity()
+        {
+            // No changes necessary.
+            if (_fadeModifier == 0)
+                return;
+
+            _alpha = Mathf.Clamp01(_alpha + _fadeModifier);
+            SetAlpha(_alpha);
+            // Stop making changes on future frames if we already reached one of the extremes.
+            if (_alpha >= 1 || _alpha <= 0)
+                _fadeModifier = 0f;
         }
     }
 }

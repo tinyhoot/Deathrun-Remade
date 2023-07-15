@@ -10,6 +10,7 @@ using DeathrunRemade.Objects;
 using HarmonyLib;
 using HootLib;
 using HootLib.Components;
+using HootLib.Objects;
 using Nautilus.Handlers;
 using Nautilus.Utility;
 using UnityEngine;
@@ -27,17 +28,19 @@ namespace DeathrunRemade
 
         internal static Config _Config;
         internal static ILogHandler _Log;
-        internal static NitrogenHandler _Nitrogen;
         internal static NotificationHandler _Notifications;
+        internal static SafeDepthHud _DepthHud;
 
         // Run Update() once per second.
         private const float UpdateInterval = 1f;
-        private float _nextUpdate;
+        private Hootimer _updateTimer;
 
         private void Awake()
         {
             _Log = new HootLogger(NAME);
             _Log.Info($"{NAME} v{VERSION} starting up.");
+
+            _updateTimer = new Hootimer(() => Time.deltaTime, UpdateInterval);
             
             // Registering config.
             _Config = new Config(Path.Combine(Paths.ConfigPath, Hootils.GetConfigFileName(NAME)),
@@ -63,18 +66,15 @@ namespace DeathrunRemade
         private void Update()
         {
             // Only run this method every so often.
-            if (Time.time < _nextUpdate)
+            if (!_updateTimer.Tick())
                 return;
-            _nextUpdate = Time.time + UpdateInterval;
             
             // Putting these things here prevents having to run them as MonoBehaviours too.
-            _Nitrogen.Update();
             _Notifications.Update();
         }
 
         private void InitHandlers()
         {
-            _Nitrogen = new NitrogenHandler();
             _Notifications = new NotificationHandler(_Log);
         }
 
@@ -85,10 +85,11 @@ namespace DeathrunRemade
 
         private void RegisterGameEvents()
         {
-            GameEventHandler.OnPlayerAwake += _ =>
+            GameEventHandler.OnPlayerAwake += player =>
             {
                 HootHudBar.Create<NitrogenBar>("NitrogenBar", -45, out GameObject _);
-                SafeDepthHud.Create(out GameObject _); 
+                _DepthHud = SafeDepthHud.Create(out GameObject _);
+                player.gameObject.AddComponent<NitrogenHandler>();
             };
         }
 

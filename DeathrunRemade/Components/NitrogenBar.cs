@@ -1,4 +1,5 @@
 using DeathrunRemade.Handlers;
+using DeathrunRemade.Objects;
 using HootLib.Components;
 using TMPro;
 using UnityEngine;
@@ -17,6 +18,18 @@ namespace DeathrunRemade.Components
             AddBackground(_hud.backgroundBarsDouble, _angle);
             PreparePulseCurves();
             GameEventHandler.OnHudUpdate += HarmonyUpdateHudElements;
+        }
+
+        protected override void LateUpdate()
+        {
+            // If the save isn't ready yet, substitute a dummy value.
+            // This prevents the bar from just straight up breaking. I don't know why, but it cannot handle
+            // being initialised with zero.
+            if (!SaveData.Main.Ready)
+                Value = 1;
+            else
+                Value = SaveData.Main.Nitrogen.nitrogen;
+            base.LateUpdate();
         }
 
         /// <summary>
