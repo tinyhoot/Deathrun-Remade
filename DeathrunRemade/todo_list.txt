@@ -21,6 +21,8 @@ New Ideas
 - Add config options for moving the GUI elements relative to top/sides/wherever.
 - Self-updating score multiplier in the options menu, to show you what you'll get
 - Progressively worse Kharaa infection to counteract difficulty being too frontloaded
+- WorldForces.DoFixedUpdate has a shockwave-esque thing to apply to everything on explosion. Could transpile some damage into it too?
+- DealDamageOnImpact.OnCollisionEnter can be transpiled to not allow dealing damage by ramming stuff with vehicles on Pacifist
 
 Checks at the very end
 - All items craft properly and fit into their slots

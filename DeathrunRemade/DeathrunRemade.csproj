@@ -27,36 +27,6 @@
         <Optimize>true</Optimize>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
-
-    <!-- Define important extra files needed in the final distribution. -->
-    <!--<PropertyGroup>
-        <DataDir>DataFiles</DataDir>
-    </PropertyGroup>
-    <ItemGroup>
-        <DataFiles Include="$(SolutionDir)\$(DataDir)\*" />
-    </ItemGroup>-->
-
-    <!-- Copy newly built files to the game directory. -->
-    <Target Name="CopyToGameFolder" AfterTargets="Build">
-        <Message Importance="high" Text="Copying files to game directory." />
-        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(SUBNAUTICA_DIR)\BepInEx\plugins\$(AssemblyName)" />
-        <!--<Copy SourceFiles="@(DataFiles)" DestinationFolder="$(SUBNAUTICA_DIR)\BepInEx\plugins\$(AssemblyName)\$(DataDir)" />-->
-    </Target>
-
-    <!-- Automatically create the zip file, ready for distribution. -->
-    <Target Name="PrepareZip" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
-        <Message Importance="normal" Text="Copying files to temporary directory." />
-        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(OutputPath)\zipper\plugins\$(AssemblyName)" />
-        <!--<Copy SourceFiles="@(DataFiles)" DestinationFolder="$(OutputPath)\zipper\plugins\$(AssemblyName)\$(DataDir)" />-->
-    </Target>
-    <Target Name="CreateZip" AfterTargets="PrepareZip" Condition="'$(Configuration)' == 'Release'">
-        <Message Importance="high" Text="Zipping project for distribution." />
-        <ZipDirectory DestinationFile="$(OutputPath)\$(AssemblyName).zip" SourceDirectory="$(OutputPath)\zipper" Overwrite="true" />
-    </Target>
-    <Target Name="Cleanup" AfterTargets="CreateZip" Condition="'$(Configuration)' == 'Release'">
-        <Message Importance="normal" Text="Cleaning up." />
-        <RemoveDir Directories="$(OutputPath)\zipper" />
-    </Target>
     
     <ItemGroup>
         <Reference Include="0Harmony, Version=2.7.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -101,6 +71,7 @@
         </Reference>
         <Reference Include="UnityEngine.AnimationModule">
           <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.AnimationModule.dll</HintPath>
+          <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.CoreModule.dll</HintPath>
@@ -108,12 +79,15 @@
         </Reference>
         <Reference Include="UnityEngine.ImageConversionModule">
           <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.ImageConversionModule.dll</HintPath>
+          <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.TextCoreModule">
           <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.TextCoreModule.dll</HintPath>
+          <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.TextRenderingModule">
           <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.TextRenderingModule.dll</HintPath>
+          <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\UnityEngine.UI.dll</HintPath>
@@ -208,5 +182,4 @@
     <Target Name="AfterBuild">
     </Target>
     -->
-
 </Project>
