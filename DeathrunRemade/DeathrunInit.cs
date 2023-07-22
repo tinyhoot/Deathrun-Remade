@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using BepInEx;
 using DeathrunRemade.Components;
 using DeathrunRemade.Configuration;
@@ -43,8 +42,7 @@ namespace DeathrunRemade
             _updateTimer = new Hootimer(() => Time.deltaTime, UpdateInterval);
             
             // Registering config.
-            _Config = new Config(Path.Combine(Paths.ConfigPath, Hootils.GetConfigFileName(NAME)),
-                Info.Metadata);
+            _Config = new Config(Hootils.GetConfigFilePath(NAME), Info.Metadata);
             _Config.RegisterModOptions(NAME, transform);
             
             InitHandlers();

@@ -1,8 +1,8 @@
 using BepInEx;
 using BepInEx.Configuration;
 using DeathrunRemade.Objects.Enums;
-using Nautilus.Handlers;
 using HootLib.Configuration;
+using Nautilus.Handlers;
 using UnityEngine;
 
 namespace DeathrunRemade.Configuration
@@ -63,23 +63,20 @@ namespace DeathrunRemade.Configuration
 
         protected override void RegisterOptions()
         {
-            CrushDepth = RegisterEntry(new ConfigEntryWrapper<Difficulty3>(
-                configFile: ConfigFile,
+            CrushDepth = RegisterEntry(
                 section: SectionSurvival,
                 key: nameof(CrushDepth),
                 defaultValue: Difficulty3.Deathrun,
                 description: ""
-            ));
-            SurfaceAir = RegisterEntry(new ConfigEntryWrapper<Difficulty3>(
-                configFile: ConfigFile,
+            );
+            SurfaceAir = RegisterEntry(
                 section: SectionSurvival,
                 key: nameof(SurfaceAir),
                 defaultValue: Difficulty3.Hard,
                 description: ""
-            ));
+            );
             
-            BatteryCapacity = RegisterEntry(new ConfigEntryWrapper<Difficulty4>(
-                configFile: ConfigFile,
+            BatteryCapacity = RegisterEntry(
                 section: SectionCosts,
                 key: nameof(BatteryCapacity),
                 defaultValue: Difficulty4.Deathrun,
@@ -93,12 +90,12 @@ namespace DeathrunRemade.Configuration
                 "A bit less normal",
                 "Ah. Not normal",
                 "TAKE ME BACK"
-            }));
+            });
         }
 
         protected override void RegisterControllingOptions() { }
 
-        public override void RegisterModOptions(string name, Transform separatorParent)
+        public override void RegisterModOptions(string name, Transform separatorParent = null)
         {
             HootModOptions modOptions = new HootModOptions(name, this, separatorParent);
             modOptions.AddItem(CrushDepth.ToModChoiceOption(modOptions));
