@@ -139,7 +139,7 @@ namespace DeathrunRemade.Handlers
                 DeathrunInit._DepthHud.FadeIn();
                 return;
             }
-            if (newSafeDepth < GraceDepth)
+            if (newSafeDepth < 3f)
                 DeathrunInit._DepthHud.FadeOut();
         }
 
@@ -196,6 +196,13 @@ namespace DeathrunRemade.Handlers
             if (nitrogen >= 100f)
                 // Safe depth will always tend towards around 3/4 of your current depth.
                 safeDepth = CalculateSafeDepth(currentDepth);
+            // If we're going up, make the last few meters very fast to disappear.
+            if (safeDepth <= GraceDepth)
+            {
+                modifier *= 5f;
+                safeDepth = 0f;
+            }
+
             // If we're going down, apply modifiers from equipment to slow the adjustment rate.
             float equipMult = 1f;
             if (safeDepth > lastSafeDepth)
