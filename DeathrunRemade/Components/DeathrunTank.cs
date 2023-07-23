@@ -36,11 +36,9 @@ namespace DeathrunRemade.Components
             _nextUpdate = Time.time + UpdateInterval;
             // Unequipped tanks do not fill up.
             TechType techType = _equipment.GetItemInSlot("Tank")?.techType ?? TechType.None;
-            if (techType.Equals(TechType.None))
-                return;
             if (techType.Equals(Tank.ChemosynthesisTank))
                 UpdateChemosynthesisTank();
-            else
+            if (techType.Equals(Tank.PhotosynthesisTank) || techType.Equals(Tank.PhotosynthesisTankSmall))
                 UpdatePhotoSynthesisTank();
         }
 
