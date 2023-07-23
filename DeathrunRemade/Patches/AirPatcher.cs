@@ -75,15 +75,11 @@ namespace DeathrunRemade.Patches
         /// The "swim to surface" message is a bit weird when the surface is poisoned and doesn't make much sense
         /// at 300m down.
         /// </summary>
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(uGUI_PopupMessage), nameof(uGUI_PopupMessage.SetText))]
-        private static void SwimToSurfaceText(ref string message)
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(HintSwimToSurface), nameof(HintSwimToSurface.OnLanguageChanged))]
+        private static void SwimToSurfaceText(ref HintSwimToSurface __instance)
         {
-            if (Language.main.Get("SwimToSurface").Equals(message))
-            {
-                if (!ConfigUtils.IsAirBreathable() || Player.main.GetDepth() > 100)
-                    message = "Out of Air!";
-            }
+            __instance.message = "Out of Air!";
         }
     }
 }
