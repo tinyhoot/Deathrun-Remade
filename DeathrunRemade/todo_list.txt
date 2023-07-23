@@ -15,6 +15,8 @@ Monos
 Patches
 - All of them. So many.
 - Reintroduce easier filterpump placement. Was commented out in BreathingPatcher
+- Changing the Lifepod's RigidBody to enable interpolation might solve the stuttering issues caused by low physics update rate.
+  Also, you can change the rate even at runtime! Time.fixeddeltatime
 
 New Ideas
 - Make tanks not refill by themselves. Refill at special point?
@@ -30,6 +32,7 @@ Checks at the very end
 
 Substantial changes from the original
 - Photosynthetic tanks always work in sunlight, including the surface
-- Completely custom implementation of nitrogen without relying on the game
+- Completely custom implementation of nitrogen without relying on the game. Some of the math and speeds is different
+  as a result.
 - Save data is now per save slot. Deathrun no longer messes with your vanilla saves. Should also help with 
   issues with autosave mods.

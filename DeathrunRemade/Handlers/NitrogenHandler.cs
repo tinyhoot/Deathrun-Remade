@@ -1,4 +1,3 @@
-using System;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
@@ -13,9 +12,6 @@ namespace DeathrunRemade.Handlers
     internal class NitrogenHandler : MonoBehaviour
     {
         public static NitrogenHandler Main;
-        
-        public event Action OnSafeDepthEnabled;
-        public event Action OnSafeDepthDisabled;
 
         private const float AccumulationScalar = 10f * UpdateInterval;
         private const float GraceDepth = 10f; // Consider this value and below as completely safe, no bends.
@@ -58,7 +54,7 @@ namespace DeathrunRemade.Handlers
             float intensity = GetDepthIntensity(currentDepth);
             save.Nitrogen.nitrogen = UpdateNitrogen(currentDepth, save.Nitrogen.safeDepth, save.Nitrogen.nitrogen);
             float oldSafeDepth = save.Nitrogen.safeDepth;
-            save.Nitrogen.safeDepth = UpdateSafeDepth(currentDepth, save.Nitrogen.safeDepth, intensity);
+            save.Nitrogen.safeDepth = UpdateSafeDepth(currentDepth, save.Nitrogen.safeDepth, intensity, save.Nitrogen.nitrogen);
             UpdateHud(oldSafeDepth, save.Nitrogen.safeDepth);
         }
 
@@ -79,7 +75,11 @@ namespace DeathrunRemade.Handlers
         /// </summary>
         public static float CalculateSafeDepth(float depth)
         {
-            return depth * 3 / 4;
+            float safeDepth = depth * 3 / 4;
+            // Make ascending just that tiny bit less annoying in the last few meters.
+            if (depth < GraceDepth * 2)
+                safeDepth -= 2;
+            return safeDepth;
         }
 
         /// <summary>
@@ -151,19 +151,22 @@ namespace DeathrunRemade.Handlers
         /// <param name="lastNitrogen">The nitrogen level on the last update.</param>
         private float UpdateNitrogen(float depth, float safeDepth, float lastNitrogen)
         {
-            // What nitrogen value do we want?
-            float target = 0f;
-            if (depth <= GraceDepth || safeDepth <= GraceDepth)
+            // Nitrogen always fills up before safe depth lowers, and only empties after safe depth is gone.
+            float target;
+            if (depth <= GraceDepth)
                 target = 0f;
-            else
+            else if (safeDepth <= GraceDepth / 2)
                 target = (depth - GraceDepth) * 10;
+            else
+                // Do not start dissipating Nitrogen until the safe depth is back within reasonable bounds.
+                target = 100f;
             target = Mathf.Clamp(target, 0f, 100f);
             
             // Shortcut this if there is nothing to update.
             if (Mathf.Approximately(target, lastNitrogen))
                 return lastNitrogen;
 
-            // How quickly should it get there?
+            // Be a bit more lenient in shallow depths but then quickly get harsher the lower the player goes.
             float time;
             if (depth <= GraceDepth * 2)
             {
@@ -178,17 +181,21 @@ namespace DeathrunRemade.Handlers
             float rate = _nitrogenCurve.Evaluate(time);
             return UWE.Utils.Slerp(lastNitrogen, target, rate);
         }
-        
+
         /// <summary>
         /// Calculate the safe depth and return a depth approaching it by one time step from the current depth.
         /// </summary>
         /// <param name="currentDepth">The current depth.</param>
         /// <param name="lastSafeDepth">The safe depth on the last update.</param>
         /// <param name="modifier">A modifier to influence how quickly the result adjusts to the safe depth.</param>
-        private float UpdateSafeDepth(float currentDepth, float lastSafeDepth, float modifier)
+        /// <param name="nitrogen">The current nitrogen level.</param>
+        private float UpdateSafeDepth(float currentDepth, float lastSafeDepth, float modifier, float nitrogen)
         {
-            // Safe depth will always tend towards around 3/4 of your current depth.
-            float safeDepth = CalculateSafeDepth(currentDepth);
+            float safeDepth = 0f;
+            // Use nitrogen as a buffer before safe depth really comes into play.
+            if (nitrogen >= 100f)
+                // Safe depth will always tend towards around 3/4 of your current depth.
+                safeDepth = CalculateSafeDepth(currentDepth);
             // If we're going down, apply modifiers from equipment to slow the adjustment rate.
             float equipMult = 1f;
             if (safeDepth > lastSafeDepth)
