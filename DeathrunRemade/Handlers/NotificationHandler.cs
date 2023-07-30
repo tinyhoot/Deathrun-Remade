@@ -17,8 +17,9 @@ namespace DeathrunRemade.Handlers
     {
         public const string TopMiddle = "top_middle";
         public const string LeftMiddle = "left_middle";
+        public const string Centre = "centre";
 
-        public static NotificationHandler main;
+        public static NotificationHandler Main;
         
         private ILogHandler _log;
         private Dictionary<string, BasicText> _textSlots;
@@ -26,7 +27,7 @@ namespace DeathrunRemade.Handlers
 
         public NotificationHandler(ILogHandler logger)
         {
-            main = this;
+            Main = this;
             _log = logger;
             _textSlots = new Dictionary<string, BasicText>();
             _messages = new List<Message>();
@@ -35,9 +36,10 @@ namespace DeathrunRemade.Handlers
         public void SetupSlots()
         {
             RectTransform rect = (RectTransform)uGUI.main.intro.transform;
-            CreateSlot(TopMiddle, 0, (int)(rect.rect.height / 2) - 50);
+            CreateSlot(TopMiddle, 0, (int)(rect.rect.height / 2) - 100);
             CreateSlot(LeftMiddle, (int)(rect.rect.width / -2) + 20, 0)
                 .SetAlign(TextAlignmentOptions.Left);
+            CreateSlot(Centre, 0, 75);
         }
 
         /// <summary>
@@ -71,12 +73,17 @@ namespace DeathrunRemade.Handlers
         /// <summary>
         /// Add a message to be displayed later.
         /// </summary>
+        /// <exception cref="ArgumentException">Thrown if the slot id does not exist.</exception>
         public Message AddMessage(string slotId, string text, bool showImmediately = true)
         {
+            if (!_textSlots.ContainsKey(slotId))
+                throw new ArgumentException($"No text slot with id {slotId} exists!");
+            
             var message = new Message(slotId, text);
             _messages.Add(message);
             if (showImmediately)
                 message.SetDisplayTime(Time.time);
+            _log.Debug($"[{message.SlotId}] {message.Text}");
             return message;
         }
 
@@ -125,6 +132,19 @@ namespace DeathrunRemade.Handlers
             text.SetAlign(TextAlignmentOptions.Center);
             _textSlots.Add(id, text);
             return text;
+        }
+
+        /// <summary>
+        /// Check whether a message is currently being shown in the given slot id.
+        /// </summary>
+        public bool IsShowingMessage(string slotId)
+        {
+            var slot = GetSlot(slotId);
+            uGUI_TextFade fade = slot.GetTextFade();
+            GameObject text = slot.GetTextObject();
+            if (fade is null || text is null)
+                return false;
+            return slot.GetTextFade().enabled && slot.GetTextObject().activeSelf;
         }
 
         /// <summary>

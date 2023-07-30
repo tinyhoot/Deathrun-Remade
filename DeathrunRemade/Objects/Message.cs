@@ -33,6 +33,12 @@ namespace DeathrunRemade.Objects
             Update();
         }
 
+        public void SetDuration(float display)
+        {
+            DisplayDuration = display;
+            Update();
+        }
+
         public void SetDuration(float display, float fadeOut)
         {
             DisplayDuration = display;

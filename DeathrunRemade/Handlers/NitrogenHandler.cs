@@ -1,3 +1,4 @@
+using DeathrunRemade.Configuration;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
@@ -15,6 +16,9 @@ namespace DeathrunRemade.Handlers
 
         private const float AccumulationScalar = 10f * UpdateInterval;
         private const float GraceDepth = 10f; // Consider this value and below as completely safe, no bends.
+        private const int TicksBeforeDamage = (int)(2f / UpdateInterval); // Number of seconds relative to ups.
+        private const float UpdateInterval = 0.25f;
+        
         private readonly AnimationCurve _intensityCurve = new AnimationCurve(new[]
         {
             new Keyframe(0f, 0.20f),
@@ -28,14 +32,26 @@ namespace DeathrunRemade.Handlers
             new Keyframe(GraceDepth / 50, 1.25f), // After grace depth *2, let loose.
             new Keyframe(1f, 10f) // Maximum speed at 2000 depth.
         });
-
-        private const float UpdateInterval = 0.25f;
+        
+        private float _ascentRate;
+        private int _damageTicks;
+        private NotificationHandler _notifications;
         private Hootimer _timer;
 
         private void Awake()
         {
             Main = this;
+            _notifications = DeathrunInit._Notifications;
             _timer = new Hootimer(PDA.GetDeltaTime, UpdateInterval);
+        }
+
+        private void FixedUpdate()
+        {
+            Player player = Player.main;
+            if (player is null)
+                return;
+            
+            UpdateAscentRate(player);
         }
 
         private void Update()
@@ -56,6 +72,7 @@ namespace DeathrunRemade.Handlers
             float oldSafeDepth = save.Nitrogen.safeDepth;
             save.Nitrogen.safeDepth = UpdateSafeDepth(currentDepth, save.Nitrogen.safeDepth, intensity, save.Nitrogen.nitrogen);
             UpdateHud(oldSafeDepth, save.Nitrogen.safeDepth);
+            CheckForBendsDamage(player, save, currentDepth, save.Nitrogen.safeDepth, save.Nitrogen.nitrogen);
         }
 
         /// <summary>
@@ -82,6 +99,45 @@ namespace DeathrunRemade.Handlers
             return safeDepth;
         }
 
+        private void CheckForAscentDamage(SaveData save)
+        {
+            // Do nothing if we're moving at comfortable speeds.
+            if (_ascentRate <= 2)
+                return;
+            
+            if (ConfigUtils.ShouldShowWarning(Warning.AscentSpeed, 3f))
+            {
+                save.Warnings.lastAscentWarningTime = Time.time;
+                _notifications.AddMessage(NotificationHandler.TopMiddle, "Ascending too quickly!").SetDuration(3f);
+            }
+        }
+
+        /// <summary>
+        /// Check whether the player needs to take damage from rapid decompression this update.
+        /// </summary>
+        private void CheckForBendsDamage(Player player, SaveData save, float depth, float safeDepth, float nitrogen)
+        {
+            if (depth >= safeDepth - 1 || safeDepth <= GraceDepth || nitrogen < 100f)
+                return;
+            // No consequences for any of this happening inside vehicles or bases.
+            if (player.IsInsidePoweredSubOrVehicle())
+                return;
+            
+            if (ConfigUtils.ShouldShowWarning(Warning.Decompression, 3f) && !_notifications.IsShowingMessage(NotificationHandler.Centre))
+            {
+                save.Warnings.lastDecompressionWarningTime = Time.time;
+                _notifications.AddMessage(NotificationHandler.Centre, "Decompression Warning\n"
+                                                                      + "Dive to Safe Depth!").SetDuration(3f);
+            }
+
+            _damageTicks++;
+            if (_damageTicks > TicksBeforeDamage)
+            {
+                TakeDamage(player, save, depth);
+                _damageTicks = 0;
+            }
+        }
+
         /// <summary>
         /// Calculate the modifier for how quickly the player accumulates nitrogen. Better suits accumulate nitrogen
         /// more slowly.
@@ -99,12 +155,12 @@ namespace DeathrunRemade.Handlers
                 TechType.ReinforcedDiveSuit => 0.85f,
                 _ => 1f
             };
-            if (suit.Equals(Suit.ReinforcedMk2) || suit.Equals(Suit.ReinforcedFiltration))
+            if (suit == Suit.ReinforcedMk2 || suit == Suit.ReinforcedFiltration)
                 modifier = 0.75f;
-            if (suit.Equals(Suit.ReinforcedMk3))
+            if (suit == Suit.ReinforcedMk3)
                 modifier = 0.55f;
             // Slightly lowered if wearing the rebreather.
-            if (mask.Equals(TechType.Rebreather))
+            if (mask == TechType.Rebreather)
                 modifier -= 0.05f;
 
             return modifier;
@@ -127,6 +183,51 @@ namespace DeathrunRemade.Handlers
         {
             float diff = depth - safeDepth;
             return diff < 10 || diff / safeDepth < 0.08f;
+        }
+
+        /// <summary>
+        /// Take bends damage based on how far apart the current and safe depth are.
+        /// </summary>
+        private void TakeDamage(Player player, SaveData save, float currentDepth)
+        {
+            LiveMixin health = player.GetComponent<LiveMixin>();
+            float depthDiff = save.Nitrogen.safeDepth - currentDepth;
+            
+            int baseDamage = ConfigUtils.GetBendsDamage();
+            // Make the damage more manageable for small transgressions.
+            if (depthDiff < 5)
+            {
+                if (depthDiff < 2)
+                    baseDamage /= 4;
+                else
+                    baseDamage /= 2;
+            }
+
+            float damage = baseDamage + (Random.value * baseDamage) + depthDiff;
+            // Don't oneshot the player from like half health.
+            if (health.health > 0.1f)
+                damage = Mathf.Min(damage, health.health - 0.05f);
+
+            if (ConfigUtils.ShouldShowWarning(Warning.DecompressionDamage, 3f))
+            {
+                save.Warnings.lastDecoDamageWarningTime = Time.time;
+                _notifications.AddMessage(NotificationHandler.Centre, "You have the bends! "
+                                                                      + "Slow your ascent!").SetDuration(3f);
+            }
+            health.TakeDamage(damage, type: DamageType.Starve);
+            // After damage, adjust the safe depth upwards a bit.
+            save.Nitrogen.safeDepth = Mathf.Max(Mathf.Min(currentDepth, GraceDepth),
+                CalculateSafeDepth(save.Nitrogen.safeDepth));
+        }
+
+        /// <summary>
+        /// Average the player's vertical speed over the past second.
+        /// </summary>
+        private void UpdateAscentRate(Player player)
+        {
+            float speed = player.GetComponent<Rigidbody>().velocity.y;
+            float ups = (1 / Time.fixedDeltaTime);
+            _ascentRate = (_ascentRate * (ups - 1) + speed) / ups;
         }
 
         /// <summary>
@@ -153,7 +254,7 @@ namespace DeathrunRemade.Handlers
         {
             // Nitrogen always fills up before safe depth lowers, and only empties after safe depth is gone.
             float target;
-            if (depth <= GraceDepth)
+            if (depth <= GraceDepth && safeDepth == 0)
                 target = 0f;
             else if (safeDepth <= GraceDepth / 2)
                 target = (depth - GraceDepth) * 10;
@@ -197,7 +298,7 @@ namespace DeathrunRemade.Handlers
                 // Safe depth will always tend towards around 3/4 of your current depth.
                 safeDepth = CalculateSafeDepth(currentDepth);
             // If we're going up, make the last few meters very fast to disappear.
-            if (safeDepth <= GraceDepth)
+            if (safeDepth <= GraceDepth && lastSafeDepth <= GraceDepth * 1.5f)
             {
                 modifier *= 5f;
                 safeDepth = 0f;

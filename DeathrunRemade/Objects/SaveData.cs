@@ -11,6 +11,7 @@ namespace DeathrunRemade.Objects
         public bool Ready;
         
         public NitrogenSave Nitrogen;
+        public WarningSave Warnings;
     }
 
     [Serializable]
@@ -18,5 +19,14 @@ namespace DeathrunRemade.Objects
     {
         public float nitrogen;
         public float safeDepth;
+    }
+
+    [Serializable]
+    internal struct WarningSave
+    {
+        public float lastAscentWarningTime;
+        public float lastBreathWarningTime;
+        public float lastDecompressionWarningTime;
+        public float lastDecoDamageWarningTime;
     }
 }

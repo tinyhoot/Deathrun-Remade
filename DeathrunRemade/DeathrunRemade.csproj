@@ -81,6 +81,9 @@
           <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.ImageConversionModule.dll</HintPath>
           <Private>False</Private>
         </Reference>
+        <Reference Include="UnityEngine.PhysicsModule">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.PhysicsModule.dll</HintPath>
+        </Reference>
         <Reference Include="UnityEngine.TextCoreModule">
           <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.TextCoreModule.dll</HintPath>
           <Private>False</Private>
@@ -125,6 +128,7 @@
         <Compile Include="Components\NitrogenBar.cs" />
         <Compile Include="Objects\Enums\Difficulty.cs" />
         <Compile Include="Objects\Enums\SafeDepthStatus.cs" />
+        <Compile Include="Objects\Enums\Warning.cs" />
         <Compile Include="Objects\Exceptions\DeathrunException.cs" />
         <Compile Include="Objects\Message.cs" />
         <Compile Include="Objects\SaveData.cs" />

@@ -85,6 +85,8 @@ namespace DeathrunRemade
         {
             GameEventHandler.OnPlayerAwake += player =>
             {
+                _Notifications.SetupSlots();
+                // Nitrogen and UI handling.
                 HootHudBar.Create<NitrogenBar>("NitrogenBar", -45, out GameObject _);
                 _DepthHud = SafeDepthHud.Create(out GameObject _);
                 player.gameObject.AddComponent<NitrogenHandler>();
@@ -93,10 +95,11 @@ namespace DeathrunRemade
 
         private void TestMe()
         {
-            _Notifications.SetupSlots();
-            _Notifications.AddMessage(NotificationHandler.TopMiddle, "This is a great test for testing purposes. Your oxygen is gone btw")
+            //_Notifications.SetupSlots();
+            _Notifications.AddMessage(NotificationHandler.TopMiddle, "This is a great test for testing purposes.\nYour oxygen is gone btw")
                 .SetDuration(5, 3);
             _Notifications.AddMessage(NotificationHandler.LeftMiddle, "N2 is a whole lot here oh god oh no");
+            _Notifications.AddMessage(NotificationHandler.Centre, "swim up!").SetDuration(3f);
         }
 
         /// <summary>

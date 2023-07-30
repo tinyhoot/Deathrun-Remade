@@ -1,6 +1,10 @@
 using System;
+using System.IO;
 using DeathrunRemade.Items;
+using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
+using UnityEngine;
+using ILogHandler = HootLib.Interfaces.ILogHandler;
 
 namespace DeathrunRemade.Configuration
 {
@@ -10,6 +14,7 @@ namespace DeathrunRemade.Configuration
     internal static class ConfigUtils
     {
         private static Config _config => DeathrunInit._Config;
+        private static ILogHandler _log => DeathrunInit._Log;
 
         /// <summary>
         /// Checks whether the player is able to breathe at their current location.
@@ -22,6 +27,20 @@ namespace DeathrunRemade.Configuration
             
             // If at the surface, check for irradiated air.
             return IsAirBreathable();
+        }
+
+        /// <summary>
+        /// Get the damage dealt by decompression sickness.
+        /// </summary>
+        public static int GetBendsDamage()
+        {
+            return _config.NitrogenBends.Value switch
+            {
+                Difficulty3.Normal => 10,
+                Difficulty3.Hard => 10,
+                Difficulty3.Deathrun => 20,
+                _ => throw new InvalidDataException()
+            };
         }
 
         /// <summary>
@@ -92,6 +111,50 @@ namespace DeathrunRemade.Configuration
                 return false;
             // Surface is decontaminated once leaks are fixed and radiation has completely dissipated.
             return LeakingRadiation.main.radiationFixed && LeakingRadiation.main.currentRadius < 5f;
+        }
+
+        /// <summary>
+        /// Check whether the given warning should be shown.
+        /// </summary>
+        /// <param name="warning">The type of warning.</param>
+        /// <param name="intervalSeconds">The interval between warnings, in seconds.</param>
+        public static bool ShouldShowWarning(Warning warning, float intervalSeconds)
+        {
+            Hints setting = _config.ShowWarnings.Value;
+            if (setting == Hints.Never)
+                return false;
+
+            // Don't show anything until the save has finished loading.
+            if (SaveData.Main is null)
+                return false;
+            
+            WarningSave save = SaveData.Main.Warnings;
+            float lastShown = warning switch
+            {
+                Warning.AscentSpeed => save.lastAscentWarningTime,
+                Warning.Decompression => save.lastDecompressionWarningTime,
+                Warning.DecompressionDamage => save.lastDecoDamageWarningTime,
+                Warning.UnbreathableAir => save.lastBreathWarningTime,
+                _ => throw new InvalidDataException()
+            };
+
+            // Always space out warnings by at least this much.
+            const float delay = 3f;
+            float delta = Time.time - lastShown;
+            switch (setting)
+            {
+                case Hints.Introductory:
+                    return lastShown == 0;
+                case Hints.Occasional:
+                    return delta > intervalSeconds && delta > delay;
+                case Hints.Always:
+                    return delta > delay;
+            }
+            
+            // Things shouldn't be able to get down here, but if it happens, uh, scream?
+            _log.Warn($"Unexpected outcome in {typeof(ConfigUtils).FullName}.{nameof(ShouldShowWarning)}: "
+                      + $"Did not return proper value!");
+            return false;
         }
     }
 }

@@ -69,6 +69,12 @@ namespace DeathrunRemade.Configuration
                 defaultValue: Difficulty3.Deathrun,
                 description: ""
             );
+            NitrogenBends = RegisterEntry(
+                section: SectionSurvival,
+                key: nameof(NitrogenBends),
+                defaultValue: Difficulty3.Deathrun,
+                description: ""
+            );
             SurfaceAir = RegisterEntry(
                 section: SectionSurvival,
                 key: nameof(SurfaceAir),
@@ -91,6 +97,13 @@ namespace DeathrunRemade.Configuration
                 "Ah. Not normal",
                 "TAKE ME BACK"
             });
+
+            ShowWarnings = RegisterEntry(
+                section: SectionUI,
+                key: nameof(ShowWarnings),
+                defaultValue: Hints.Always,
+                description: ""
+            );
         }
 
         protected override void RegisterControllingOptions() { }
