@@ -69,14 +69,17 @@ namespace DeathrunRemade.Components
         {
             // Register these events here just to be sure those components had the chance to start up.
             GameEventHandler.OnHudUpdate += OnHudUpdate;
-            // NitrogenHandler.Main.OnSafeDepthEnabled += OnSafeDepthEnabled;
-            // NitrogenHandler.Main.OnSafeDepthDisabled += OnSafeDepthDisabled;
         }
 
         private void Update()
         {
-            float depth = Player.main.GetDepth();
-            float safeDepth = SaveData.Main.Nitrogen.safeDepth;
+            Player player = Player.main;
+            SaveData save = SaveData.Main;
+            if (player is null || save is null)
+                return;
+            
+            float depth = player.GetDepth();
+            float safeDepth = save.Nitrogen.safeDepth;
             _depthText.text = IntStringCache.GetStringForInt(Mathf.CeilToInt(safeDepth));
 
             SafeDepthStatus status = NitrogenHandler.CalculateDepthStatus(depth, safeDepth);
@@ -89,6 +92,11 @@ namespace DeathrunRemade.Components
             UpdateTextColor(textColor);
             UpdateSprites(status != SafeDepthStatus.Safe);
             UpdateOpacity();
+        }
+
+        private void OnDestroy()
+        {
+            GameEventHandler.OnHudUpdate -= OnHudUpdate;
         }
 
         /// <summary>

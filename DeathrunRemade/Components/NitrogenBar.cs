@@ -32,6 +32,11 @@ namespace DeathrunRemade.Components
             base.LateUpdate();
         }
 
+        private void OnDestroy()
+        {
+            GameEventHandler.OnHudUpdate -= HarmonyUpdateHudElements;
+        }
+
         /// <summary>
         /// Change how the danger pulse around the hud bar behaves.
         /// </summary>
