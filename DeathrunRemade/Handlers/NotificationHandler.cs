@@ -36,7 +36,7 @@ namespace DeathrunRemade.Handlers
         public void SetupSlots()
         {
             RectTransform rect = (RectTransform)uGUI.main.intro.transform;
-            CreateSlot(TopMiddle, 0, (int)(rect.rect.height / 2) - 100);
+            CreateSlot(TopMiddle, 0, (int)(rect.rect.height / 2) - 150);
             CreateSlot(LeftMiddle, (int)(rect.rect.width / -2) + 20, 0)
                 .SetAlign(TextAlignmentOptions.Left);
             CreateSlot(Centre, 0, 75);
