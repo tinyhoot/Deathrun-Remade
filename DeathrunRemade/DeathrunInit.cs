@@ -6,6 +6,7 @@ using DeathrunRemade.Configuration;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
+using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using HootLib;
 using HootLib.Components;
@@ -87,9 +88,12 @@ namespace DeathrunRemade
             {
                 _Notifications.SetupSlots();
                 // Nitrogen and UI handling.
-                HootHudBar.Create<NitrogenBar>("NitrogenBar", -45, out GameObject _);
-                _DepthHud = SafeDepthHud.Create(out GameObject _);
-                player.gameObject.AddComponent<NitrogenHandler>();
+                if (_Config.NitrogenBends.Value != Difficulty3.Normal)
+                {
+                    HootHudBar.Create<NitrogenBar>("NitrogenBar", -45, out GameObject _);
+                    _DepthHud = SafeDepthHud.Create(out GameObject _);
+                    player.gameObject.AddComponent<NitrogenHandler>();
+                }
             };
         }
 

@@ -32,9 +32,9 @@ namespace DeathrunRemade.Configuration
         /// <summary>
         /// Get the damage dealt by decompression sickness.
         /// </summary>
-        public static int GetBendsDamage()
+        public static int GetBendsDamage(Difficulty3 value)
         {
-            return _config.NitrogenBends.Value switch
+            return value switch
             {
                 Difficulty3.Normal => 10,
                 Difficulty3.Hard => 10,

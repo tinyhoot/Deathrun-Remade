@@ -63,7 +63,7 @@ namespace DeathrunRemade.Objects.Enums
 
     public enum Timer
     {
-        Random,
+        Vanilla,
         Short,
         Medium,
         Long,

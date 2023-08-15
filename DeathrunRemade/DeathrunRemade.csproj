@@ -135,6 +135,7 @@
         <Compile Include="Patches\AirPatcher.cs" />
         <Compile Include="Patches\BatteryPatcher.cs" />
         <Compile Include="Patches\CompassPatcher.cs" />
+        <Compile Include="Patches\ExplosionPatcher.cs" />
         <Compile Include="Patches\NitrogenPatcher.cs" />
         <Compile Include="Patches\SuitPatcher.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

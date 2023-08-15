@@ -25,6 +25,8 @@ New Ideas
 - Progressively worse Kharaa infection to counteract difficulty being too frontloaded
 - WorldForces.DoFixedUpdate has a shockwave-esque thing to apply to everything on explosion. Could transpile some damage into it too?
 - DealDamageOnImpact.OnCollisionEnter can be transpiled to not allow dealing damage by ramming stuff with vehicles on Pacifist
+- Explicit compatibility with some popular/well fitting mods. Like C2C, Unknown Name, ...
+- Add game quit/reload warning on loading screen to hootils
 
 Checks at the very end
 - All items craft properly and fit into their slots
@@ -36,3 +38,5 @@ Substantial changes from the original
   as a result.
 - Save data is now per save slot. Deathrun no longer messes with your vanilla saves. Should also help with 
   issues with autosave mods.
+- Damage from the Aurora explosion is dealt at the time the shockwave hits you, rather than when the explosion occurs.
+  Shockwave also has a physical force and damages everything else (bases, fish, ...) too.

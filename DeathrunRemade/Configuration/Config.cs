@@ -1,6 +1,7 @@
 using BepInEx;
 using BepInEx.Configuration;
 using DeathrunRemade.Objects.Enums;
+using DeathrunRemade.Patches;
 using HootLib.Configuration;
 using Nautilus.Handlers;
 using UnityEngine;
@@ -33,7 +34,7 @@ namespace DeathrunRemade.Configuration
         public ConfigEntryWrapper<Murkiness> WaterMurkiness;
 
         // Explosion and Radiation
-        public ConfigEntryWrapper<Difficulty3> ExplodeDepth;
+        public ConfigEntryWrapper<Difficulty3> ExplosionDepth;
         public ConfigEntryWrapper<Timer> ExplosionTime;
         public ConfigEntryWrapper<Difficulty4> RadiationDepth;
         public ConfigEntryWrapper<RadiationVisuals> RadiationFX;
@@ -63,6 +64,7 @@ namespace DeathrunRemade.Configuration
 
         protected override void RegisterOptions()
         {
+            // Survival
             CrushDepth = RegisterEntry(
                 section: SectionSurvival,
                 key: nameof(CrushDepth),
@@ -81,7 +83,47 @@ namespace DeathrunRemade.Configuration
                 defaultValue: Difficulty3.Hard,
                 description: ""
             );
+
+            // Environment
+            ExplosionDepth = RegisterEntry(
+                section: SectionEnvironment,
+                key: nameof(ExplosionDepth),
+                defaultValue: Difficulty3.Deathrun,
+                description: "Controls how deep the Aurora's explosion reaches.\n"
+                             + "Normal: No changes\n"
+                             + $"Hard: About {ExplosionPatcher.GetExplosionDepth(Difficulty3.Hard)}\n"
+                             + $"Deathrun: About {ExplosionPatcher.GetExplosionDepth(Difficulty3.Deathrun)}m"
+            ).WithDescription(
+                "Explosion Depth",
+                "Aurora explosion reaches below the surface. Strength varies with depth, and is further reduced "
+                + "if you're somewhere inside."
+            ).WithChoiceOptionStringsOverride(new []
+            {
+                "Normal (No changes)",
+                $"Hard ({ExplosionPatcher.GetExplosionDepth(Difficulty3.Hard)}m)",
+                $"Deathrun ({ExplosionPatcher.GetExplosionDepth(Difficulty3.Deathrun)}m)"
+            });
+            ExplosionTime = RegisterEntry(
+                section: SectionEnvironment,
+                key: nameof(ExplosionTime),
+                defaultValue: Timer.Short,
+                description: "How long it takes for the Aurora to explode.\n"
+                             + "Vanilla: Just like usual, randomly in the range of 2-4 days (46-80 minutes)"
+                             + $"Short: {ExplosionPatcher.GetExplosionTime(Timer.Short)}min\n"
+                             + $"Medium: {ExplosionPatcher.GetExplosionTime(Timer.Medium)}min\n"
+                             + $"Long: {ExplosionPatcher.GetExplosionTime(Timer.Long)}min"
+            ).WithDescription(
+                "Time to Explosion",
+                "How long it takes for the Aurora to explode."
+            ).WithChoiceOptionStringsOverride(new[]
+            {
+                "Vanilla (46-80min)",
+                $"Short ({ExplosionPatcher.GetExplosionTime(Timer.Short)}min)",
+                $"Medium ({ExplosionPatcher.GetExplosionTime(Timer.Medium)}min)",
+                $"Long ({ExplosionPatcher.GetExplosionTime(Timer.Long)}min)",
+            });
             
+            // Costs
             BatteryCapacity = RegisterEntry(
                 section: SectionCosts,
                 key: nameof(BatteryCapacity),
@@ -98,6 +140,7 @@ namespace DeathrunRemade.Configuration
                 "TAKE ME BACK"
             });
 
+            // UI
             ShowWarnings = RegisterEntry(
                 section: SectionUI,
                 key: nameof(ShowWarnings),
@@ -112,8 +155,12 @@ namespace DeathrunRemade.Configuration
         {
             HootModOptions modOptions = new HootModOptions(name, this, separatorParent);
             modOptions.AddItem(CrushDepth.ToModChoiceOption(modOptions));
+            modOptions.AddItem(ExplosionDepth.ToModChoiceOption(modOptions));
+            modOptions.AddItem(ExplosionTime.ToModChoiceOption(modOptions));
             modOptions.AddItem(SurfaceAir.ToModChoiceOption(modOptions));
             modOptions.AddItem(BatteryCapacity.ToModChoiceOption(modOptions));
+            
+            modOptions.AddSeparatorBeforeOption(ExplosionDepth.GetId());
 
             OptionsPanelHandler.RegisterModOptions(modOptions);
         }
