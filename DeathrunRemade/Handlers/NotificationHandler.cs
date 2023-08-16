@@ -130,6 +130,9 @@ namespace DeathrunRemade.Handlers
                 throw new ArgumentException($"Cannot create text slot with duplicate id {id}!");
             BasicText text = new BasicText(x, y);
             text.SetAlign(TextAlignmentOptions.Center);
+            // Force nautilus to build the text object and its components.
+            text.ShowMessage("", 0f);
+            text.GetTextFade().text.outlineWidth = 0.1f;
             _textSlots.Add(id, text);
             return text;
         }
