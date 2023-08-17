@@ -1,7 +1,11 @@
+using System.Collections.Generic;
+using System.Linq;
 using BepInEx;
 using BepInEx.Configuration;
+using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using DeathrunRemade.Patches;
+using HootLib;
 using HootLib.Configuration;
 using Nautilus.Handlers;
 using UnityEngine;
@@ -14,7 +18,6 @@ namespace DeathrunRemade.Configuration
         public static readonly string SectionChallenges = "Challenges";
         public static readonly string SectionCosts = "Costs";
         public static readonly string SectionEnvironment = "Environment";
-        public static readonly string SectionExploRad = "Explosion_Radiation";
         public static readonly string SectionSurvival = "Survival";
         public static readonly string SectionUI = "UI";
         
@@ -26,14 +29,13 @@ namespace DeathrunRemade.Configuration
         public ConfigEntryWrapper<Difficulty3> NitrogenBends;
         public ConfigEntryWrapper<bool> SpecialAirTanks;
         public ConfigEntryWrapper<Difficulty3> SurfaceAir;
+        public ConfigEntryWrapper<string> StartLocation;
+        public ConfigEntryWrapper<bool> SinkLifepod;
+        public ConfigEntryWrapper<bool> ToppleLifepod;
         
         // Environment
         public ConfigEntryWrapper<Difficulty4> CreatureAggression;
-        public ConfigEntryWrapper<DeathrunStarts> StartLocation;
-        public ConfigEntryWrapper<bool> ToppleLifepod;
         public ConfigEntryWrapper<Murkiness> WaterMurkiness;
-
-        // Explosion and Radiation
         public ConfigEntryWrapper<Difficulty3> ExplosionDepth;
         public ConfigEntryWrapper<Timer> ExplosionTime;
         public ConfigEntryWrapper<Difficulty4> RadiationDepth;
@@ -59,8 +61,19 @@ namespace DeathrunRemade.Configuration
         public ConfigEntryWrapper<bool> ShowHighscoreTips;
         public ConfigEntryWrapper<Hints> ShowWarnings;
 
-        public Config(ConfigFile configFile) : base(configFile) { }
-        public Config(string path, BepInPlugin metadata) : base(path, metadata) { }
+        internal readonly List<StartLocation> _startLocations;
+
+        public Config(string path, BepInPlugin metadata) : base(path, metadata)
+        {
+            // Read the CSV file containing all possible random starts from disk.
+            using CsvParser parser = new CsvParser(Hootils.GetEmbeddedResourceStream("DeathrunStarts.csv"));
+            _startLocations = parser.ParseAllLines<StartLocation>().ToList();
+            // Add two extra options which aren't explicit spawn locations. They'll need special handling later on.
+            _startLocations.Insert(0, new StartLocation("Vanilla", 0, 0, 0));
+            _startLocations.Insert(1, new StartLocation("Random", 0, 0, 0));
+            
+            Setup();
+        }
 
         protected override void RegisterOptions()
         {
@@ -83,6 +96,25 @@ namespace DeathrunRemade.Configuration
                 defaultValue: Difficulty3.Hard,
                 description: ""
             );
+            StartLocation = RegisterEntry(
+                section: SectionSurvival,
+                key: nameof(StartLocation),
+                defaultValue: "Random",
+                description: "The spawn point of the lifepod. These are all hand-picked locations.",
+                acceptableValues: new AcceptableValueList<string>(_startLocations.Select(l => l.Name).ToArray())
+            );
+            SinkLifepod = RegisterEntry(
+                section: SectionSurvival,
+                key: nameof(SinkLifepod),
+                defaultValue: true,
+                description: "Make the lifepod sink to the bottom of the ocean."
+            ).WithDescription("Sink Lifepod", null);
+            ToppleLifepod = RegisterEntry(
+                section: SectionSurvival,
+                key: nameof(ToppleLifepod),
+                defaultValue: true,
+                description: "Tilt the lifepod once it is done sinking."
+            ).WithDescription("Topple Lifepod", null);
 
             // Environment
             ExplosionDepth = RegisterEntry(
@@ -155,9 +187,13 @@ namespace DeathrunRemade.Configuration
         {
             HootModOptions modOptions = new HootModOptions(name, this, separatorParent);
             modOptions.AddItem(CrushDepth.ToModChoiceOption(modOptions));
+            modOptions.AddItem(NitrogenBends.ToModChoiceOption(modOptions));
+            modOptions.AddItem(SurfaceAir.ToModChoiceOption(modOptions));
+            modOptions.AddItem(StartLocation.ToModChoiceOption(modOptions));
+            modOptions.AddItem(SinkLifepod.ToModToggleOption(modOptions));
+            modOptions.AddItem(ToppleLifepod.ToModToggleOption(modOptions));
             modOptions.AddItem(ExplosionDepth.ToModChoiceOption(modOptions));
             modOptions.AddItem(ExplosionTime.ToModChoiceOption(modOptions));
-            modOptions.AddItem(SurfaceAir.ToModChoiceOption(modOptions));
             modOptions.AddItem(BatteryCapacity.ToModChoiceOption(modOptions));
             
             modOptions.AddSeparatorBeforeOption(ExplosionDepth.GetId());

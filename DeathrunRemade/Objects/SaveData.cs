@@ -9,9 +9,16 @@ namespace DeathrunRemade.Objects
         public static SaveData Main;
         [NonSerialized]
         public bool Ready;
-        
+
+        public EscapePodSave EscapePod;
         public NitrogenSave Nitrogen;
         public WarningSave Warnings;
+    }
+
+    [Serializable]
+    internal struct EscapePodSave
+    {
+        public bool isAnchored;
     }
 
     [Serializable]

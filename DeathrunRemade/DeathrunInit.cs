@@ -7,6 +7,7 @@ using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
+using DeathrunRemade.Patches;
 using HarmonyLib;
 using HootLib;
 using HootLib.Components;
@@ -79,14 +80,17 @@ namespace DeathrunRemade
 
         private void RegisterCommands()
         {
+            ConsoleCommandsHandler.RegisterConsoleCommand<Action>("loc", DumpLocation);
             ConsoleCommandsHandler.RegisterConsoleCommand<Action>("test", TestMe);
         }
 
         private void RegisterGameEvents()
         {
+            GameEventHandler.RegisterEvents();
+            // Initialise deathrun messaging as soon as uGUI_Main is ready, i.e. the main menu loads.
+            GameEventHandler.OnMainMenuLoaded += _Notifications.OnMainMenuLoaded;
             GameEventHandler.OnPlayerAwake += player =>
             {
-                _Notifications.SetupSlots();
                 // Nitrogen and UI handling.
                 if (_Config.NitrogenBends.Value != Difficulty3.Normal)
                 {
@@ -95,15 +99,7 @@ namespace DeathrunRemade
                     player.gameObject.AddComponent<NitrogenHandler>();
                 }
             };
-        }
-
-        private void TestMe()
-        {
-            //_Notifications.SetupSlots();
-            _Notifications.AddMessage(NotificationHandler.TopMiddle, "This is a great test for testing purposes.\nYour oxygen is gone btw")
-                .SetDuration(5, 3);
-            _Notifications.AddMessage(NotificationHandler.LeftMiddle, "N2 is a whole lot here oh god oh no");
-            _Notifications.AddMessage(NotificationHandler.Centre, "swim up!").SetDuration(3f);
+            GameEventHandler.OnSavedGameLoaded += EscapePodPatcher.OnSavedGameLoaded;
         }
 
         /// <summary>
@@ -142,6 +138,20 @@ namespace DeathrunRemade
                 "Dive Suit Upgrades", suitIcon);
             CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, Constants.WorkbenchTankTab,
                 "Specialty O2 Tanks", tankIcon);
+        }
+
+        private void DumpLocation()
+        {
+            _Log.Info($"Current location: {Player.main.transform.position}");
+        }
+        
+        private void TestMe()
+        {
+            //_Notifications.SetupSlots();
+            _Notifications.AddMessage(NotificationHandler.TopMiddle, "This is a great test for testing purposes.\nYour oxygen is gone btw")
+                .SetDuration(5, 3);
+            _Notifications.AddMessage(NotificationHandler.LeftMiddle, "N2 is a whole lot here oh god oh no");
+            _Notifications.AddMessage(NotificationHandler.Centre, "swim up!").SetDuration(3f);
         }
     }
 }

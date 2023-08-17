@@ -4,6 +4,7 @@ Config
 - Skeleton exists, has to actually be implemented.
 - Some of the options could do with separating out into two.
 - Rename habitat builder to tool costs
+- Embed the config in the save game so that it is locked in.
 
 Items
 - Check whether putting them into slots and such actually works. Probably wait until items are fully functional.
@@ -11,21 +12,23 @@ Items
 
 Monos
 - Maybe use those in more places than the original did?
+- Complete functionality of deco module and filterchip
 
 Patches
 - All of them. So many.
 - Reintroduce easier filterpump placement. Was commented out in BreathingPatcher
 - Changing the Lifepod's RigidBody to enable interpolation might solve the stuttering issues caused by low physics update rate.
   Also, you can change the rate even at runtime! Time.fixeddeltatime
+- Don't forget to add countdown timer to explosion
+- When adding power, do not forget to add stuff from EscapePodPatcher
 
 New Ideas
 - Make tanks not refill by themselves. Refill at special point?
 - Add config options for moving the GUI elements relative to top/sides/wherever.
 - Self-updating score multiplier in the options menu, to show you what you'll get
 - Progressively worse Kharaa infection to counteract difficulty being too frontloaded
-- WorldForces.DoFixedUpdate has a shockwave-esque thing to apply to everything on explosion. Could transpile some damage into it too?
 - DealDamageOnImpact.OnCollisionEnter can be transpiled to not allow dealing damage by ramming stuff with vehicles on Pacifist
-- Explicit compatibility with some popular/well fitting mods. Like C2C, Unknown Name, ...
+- Explicit compatibility with some popular/well fitting mods. Like C2C, Unknown Name, Enhanced Sleep, ...
 - Add game quit/reload warning on loading screen to hootils
 
 Checks at the very end

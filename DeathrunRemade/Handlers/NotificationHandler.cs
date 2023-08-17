@@ -20,6 +20,7 @@ namespace DeathrunRemade.Handlers
         public const string Centre = "centre";
 
         public static NotificationHandler Main;
+        public static bool Ready { get; private set; }
         
         private ILogHandler _log;
         private Dictionary<string, BasicText> _textSlots;
@@ -33,6 +34,9 @@ namespace DeathrunRemade.Handlers
             _messages = new List<Message>();
         }
 
+        /// <summary>
+        /// Prepare all default slots for the rest of the mod to use.
+        /// </summary>
         public void SetupSlots()
         {
             RectTransform rect = (RectTransform)uGUI.main.intro.transform;
@@ -40,6 +44,7 @@ namespace DeathrunRemade.Handlers
             CreateSlot(LeftMiddle, (int)(rect.rect.width / -2) + 20, 0)
                 .SetAlign(TextAlignmentOptions.Left);
             CreateSlot(Centre, 0, 75);
+            Ready = true;
         }
 
         /// <summary>
@@ -138,19 +143,6 @@ namespace DeathrunRemade.Handlers
         }
 
         /// <summary>
-        /// Check whether a message is currently being shown in the given slot id.
-        /// </summary>
-        public bool IsShowingMessage(string slotId)
-        {
-            var slot = GetSlot(slotId);
-            uGUI_TextFade fade = slot.GetTextFade();
-            GameObject text = slot.GetTextObject();
-            if (fade is null || text is null)
-                return false;
-            return slot.GetTextFade().enabled && slot.GetTextObject().activeSelf;
-        }
-
-        /// <summary>
         /// Create a slot for text to appear in, or get a slot with the same id if it already exists.
         /// </summary>
         /// <param name="id">The unique id to give to this slot.</param>
@@ -181,6 +173,28 @@ namespace DeathrunRemade.Handlers
             if (_textSlots.TryGetValue(id, out BasicText text))
                 return text;
             throw new KeyNotFoundException($"Cannot find text element with id {id}!");
+        }
+        
+        /// <summary>
+        /// Check whether a message is currently being shown in the given slot id.
+        /// </summary>
+        public bool IsShowingMessage(string slotId)
+        {
+            var slot = GetSlot(slotId);
+            uGUI_TextFade fade = slot.GetTextFade();
+            GameObject text = slot.GetTextObject();
+            if (fade is null || text is null)
+                return false;
+            return slot.GetTextFade().enabled && slot.GetTextObject().activeSelf;
+        }
+
+        /// <summary>
+        /// Register this on main menu load to set up all slots as soon as possible.
+        /// </summary>
+        public void OnMainMenuLoaded()
+        {
+            GameEventHandler.OnMainMenuLoaded -= OnMainMenuLoaded;
+            SetupSlots();
         }
     }
 }

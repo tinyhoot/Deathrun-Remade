@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
@@ -77,6 +78,25 @@ namespace DeathrunRemade.Configuration
             if (Player.main.HasReinforcedGloves())
                 tempLimit += 6f;
             return tempLimit;
+        }
+
+        /// <summary>
+        /// Get the spawn point of the escape pod.
+        /// </summary>
+        /// <returns></returns>
+        public static Vector3 GetStartPoint(out string name)
+        {
+            string setting = _config.StartLocation.Value;
+
+            // This will throw an exception if the setting name has been altered for some reason, but that's intended.
+            StartLocation location = _config._startLocations.First(l => l.Name == setting);
+            if (setting == "Random")
+                location = _config._startLocations.Where(l => l.Name != "Random").ToList().GetRandom();
+
+            name = location.Name;
+            if (location.Name == "Vanilla")
+                return default;
+            return new Vector3(location.X, location.Y, location.Z);
         }
         
         /// <summary>

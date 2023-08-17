@@ -1,11 +1,5 @@
 namespace DeathrunRemade.Objects.Enums
 {
-    public enum DeathrunStarts
-    {
-        Random,
-        BasicGame,
-    }
-    
     public enum Difficulty3
     {
         Normal,

@@ -73,6 +73,9 @@
           <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.AnimationModule.dll</HintPath>
           <Private>False</Private>
         </Reference>
+        <Reference Include="UnityEngine.AudioModule">
+          <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.AudioModule.dll</HintPath>
+        </Reference>
         <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <HintPath>..\packages\UnityEngine.Modules.2019.4.36\lib\net45\UnityEngine.CoreModule.dll</HintPath>
           <Private>False</Private>
@@ -132,9 +135,11 @@
         <Compile Include="Objects\Exceptions\DeathrunException.cs" />
         <Compile Include="Objects\Message.cs" />
         <Compile Include="Objects\SaveData.cs" />
+        <Compile Include="Objects\StartLocation.cs" />
         <Compile Include="Patches\AirPatcher.cs" />
         <Compile Include="Patches\BatteryPatcher.cs" />
         <Compile Include="Patches\CompassPatcher.cs" />
+        <Compile Include="Patches\EscapePodPatcher.cs" />
         <Compile Include="Patches\ExplosionPatcher.cs" />
         <Compile Include="Patches\NitrogenPatcher.cs" />
         <Compile Include="Patches\SuitPatcher.cs" />
@@ -144,6 +149,7 @@
       <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
+      <EmbeddedResource Include="Assets\DeathrunStarts.csv" />
       <Content Include="todo_list.txt" />
       <EmbeddedResource Include="Assets\AcidBattery.png" />
       <EmbeddedResource Include="Assets\AcidPowerCell.png" />
