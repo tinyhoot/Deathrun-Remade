@@ -91,7 +91,7 @@ namespace DeathrunRemade.Patches
 
             // Average the distance moved over the past second.
             float distance = Vector3.Distance(__instance.transform.position, _previousPos);
-            _avgDistance = Hootils.AverageOverTime(_avgDistance, distance, Time.fixedDeltaTime);
+            _avgDistance = Hootils.AverageOverTime(_avgDistance, distance, Time.fixedDeltaTime, 0.5f);
             // If the pod stopped moving, assume it hit the ground and anchor it.
             if (Time.time - _lastFrozenTime > 2f && _avgDistance < 0.2f && Ocean.GetDepthOf(__instance.gameObject) > 10f)
             {
@@ -103,9 +103,8 @@ namespace DeathrunRemade.Patches
                 if (Player.main.currentEscapePod != null)
                     MainCameraControl.main.ShakeCamera(3f, 1f, MainCameraControl.ShakeMode.Cos);
                 // Play an impact sound centred on the pod to really sell it.
-                var emitter = __instance.gameObject.AddComponent<FMOD_CustomEmitter>();
-                emitter.asset = AudioUtils.GetFmodAsset("event:/sub/cyclops/impact_solid_hard");
-                emitter.Play();
+                var asset = AudioUtils.GetFmodAsset("event:/sub/cyclops/impact_solid_hard");
+                FMODUWE.PlayOneShot(asset, __instance.transform.position);
 
                 DeathrunInit._Log.InGameMessage("The lifepod has hit bottom!");
             }

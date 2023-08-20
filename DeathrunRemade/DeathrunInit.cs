@@ -8,6 +8,8 @@ using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using DeathrunRemade.Patches;
+using FMOD;
+using FMOD.Studio;
 using HarmonyLib;
 using HootLib;
 using HootLib.Components;
@@ -147,11 +149,9 @@ namespace DeathrunRemade
         
         private void TestMe()
         {
-            //_Notifications.SetupSlots();
-            _Notifications.AddMessage(NotificationHandler.TopMiddle, "This is a great test for testing purposes.\nYour oxygen is gone btw")
-                .SetDuration(5, 3);
-            _Notifications.AddMessage(NotificationHandler.LeftMiddle, "N2 is a whole lot here oh god oh no");
-            _Notifications.AddMessage(NotificationHandler.Centre, "swim up!").SetDuration(3f);
+            FMODAsset asset = AudioUtils.GetFmodAsset("event:/sub/cyclops/impact_solid_hard");
+            FMODUWE.PlayOneShot(asset, Player.main.transform.position);
+            RESULT result = FMODUWE.GetEventInstance(asset.path, out EventInstance instance);
         }
     }
 }

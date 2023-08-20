@@ -16,7 +16,7 @@ Items that are ticked off are complete. Yellow circles mark work in progress.
   - [ ] Main Menu and High Scores
   - [x] Nitrogen
   - [ ] 🟡 Radiation
-  - [ ] Random Start and Lifepod
+  - [x] Random Start and Lifepod
   - [x] UI
 - [x] MonoBehaviours
 - [ ] 🟡 Plugin loading and organisation
