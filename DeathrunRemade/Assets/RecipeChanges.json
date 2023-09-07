@@ -1,0 +1,1394 @@
+{
+  "Difficulty4.Normal": [
+    {
+      "techType": "Seaglide",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "Lubricant",
+          "amount": 1
+        },
+        {
+          "techType": "CopperWire",
+          "amount": 1
+        },
+        {
+          "techType": "Titanium",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "Difficulty4.Hard": [
+    {
+      "techType": "Seaglide",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "Lubricant",
+          "amount": 2
+        },
+        {
+          "techType": "CopperWire",
+          "amount": 1
+        },
+        {
+          "techType": "Lead",
+          "amount": 1
+        },
+        {
+          "techType": "Gold",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "Builder",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "ComputerChip",
+          "amount": 2
+        },
+        {
+          "techType": "WiringKit",
+          "amount": 2
+        },
+        {
+          "techType": "Lithium",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "PropulsionCannon",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "WiringKit",
+          "amount": 1
+        },
+        {
+          "techType": "Magnetite",
+          "amount": 1
+        },
+        {
+          "techType": "Lead",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "techType": "RepulsionCannon",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PropulsionCannon",
+          "amount": 1
+        },
+        {
+          "techType": "ComputerChip",
+          "amount": 1
+        },
+        {
+          "techType": "Magnetite",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "techType": "StasisRifle",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "ComputerChip",
+          "amount": 1
+        },
+        {
+          "techType": "Magnetite",
+          "amount": 2
+        },
+        {
+          "techType": "UraniniteCrystal",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "BaseBioReactor",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "TitaniumIngot",
+          "amount": 1
+        },
+        {
+          "techType": "WiringKit",
+          "amount": 1
+        },
+        {
+          "techType": "FiberMesh",
+          "amount": 1
+        },
+        {
+          "techType": "Lubricant",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "BaseMoonpool",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "TitaniumIngot",
+          "amount": 1
+        },
+        {
+          "techType": "WiringKit",
+          "amount": 1
+        },
+        {
+          "techType": "Lubricant",
+          "amount": 1
+        },
+        {
+          "techType": "Lead",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "techType": "BaseNuclearReactor",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "AdvancedWiringKit",
+          "amount": 1
+        },
+        {
+          "techType": "Lead",
+          "amount": 8
+        }
+      ]
+    },
+    {
+      "techType": "MedicalCabinet",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "ComputerChip",
+          "amount": 1
+        },
+        {
+          "techType": "FiberMesh",
+          "amount": 3
+        },
+        {
+          "techType": "Silver",
+          "amount": 1
+        },
+        {
+          "techType": "Titanium",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "ThermalPlant",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "TitaniumIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Magnetite",
+          "amount": 2
+        },
+        {
+          "techType": "Aerogel",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "Battery",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "Lithium",
+          "amount": 1
+        },
+        {
+          "techType": "Salt",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "Difficulty4.Deathrun": [
+    {
+      "techType": "Seaglide",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "Lubricant",
+          "amount": 2
+        },
+        {
+          "techType": "CopperWire",
+          "amount": 1
+        },
+        {
+          "techType": "Lead",
+          "amount": 2
+        },
+        {
+          "techType": "Gold",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "techType": "VehicleHullModule1",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "TitaniumIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Magnetite",
+          "amount": 2
+        },
+        {
+          "techType": "Aerogel",
+          "amount": 3
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "VehicleHullModule2",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "VehicleHullModule1",
+          "amount": 1
+        },
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "VehicleHullModule3",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "VehicleHullModule2",
+          "amount": 1
+        },
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Sulphur",
+          "amount": 3
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "ExoHullModule1",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        },
+        {
+          "techType": "Sulphur",
+          "amount": 3
+        },
+        {
+          "techType": "Kyanite",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "CyclopsHullModule1",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "AluminumOxide",
+          "amount": 3
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "techType": "CyclopsHullModule2",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "CyclopsHullModule1",
+          "amount": 1
+        },
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Sulphur",
+          "amount": 3
+        },
+        {
+          "techType": "Kyanite",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "CyclopsHullModule3",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "CyclopsHullModule2",
+          "amount": 1
+        },
+        {
+          "techType": "Sulphur",
+          "amount": 3
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        },
+        {
+          "techType": "Kyanite",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "techType": "Builder",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "ComputerChip",
+          "amount": 2
+        },
+        {
+          "techType": "WiringKit",
+          "amount": 2
+        },
+        {
+          "techType": "Lithium",
+          "amount": 2
+        },
+        {
+          "techType": "Magnetite",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "PropulsionCannon",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "WiringKit",
+          "amount": 1
+        },
+        {
+          "techType": "Magnetite",
+          "amount": 2
+        },
+        {
+          "techType": "Lead",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "techType": "RepulsionCannon",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PropulsionCannon",
+          "amount": 1
+        },
+        {
+          "techType": "ComputerChip",
+          "amount": 1
+        },
+        {
+          "techType": "Magnetite",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "techType": "StasisRifle",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "ComputerChip",
+          "amount": 1
+        },
+        {
+          "techType": "Magnetite",
+          "amount": 4
+        },
+        {
+          "techType": "UraniniteCrystal",
+          "amount": 2
+        },
+        {
+          "techType": "Benzene",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "BaseBioReactor",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "TitaniumIngot",
+          "amount": 1
+        },
+        {
+          "techType": "WiringKit",
+          "amount": 1
+        },
+        {
+          "techType": "FiberMesh",
+          "amount": 1
+        },
+        {
+          "techType": "Lubricant",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "techType": "BaseMoonpool",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "TitaniumIngot",
+          "amount": 2
+        },
+        {
+          "techType": "WiringKit",
+          "amount": 2
+        },
+        {
+          "techType": "Lubricant",
+          "amount": 2
+        },
+        {
+          "techType": "Lead",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "techType": "BaseNuclearReactor",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 2
+        },
+        {
+          "techType": "AdvancedWiringKit",
+          "amount": 2
+        },
+        {
+          "techType": "Lead",
+          "amount": 8
+        }
+      ]
+    },
+    {
+      "techType": "MedicalCabinet",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "ComputerChip",
+          "amount": 1
+        },
+        {
+          "techType": "FiberMesh",
+          "amount": 4
+        },
+        {
+          "techType": "Silver",
+          "amount": 1
+        },
+        {
+          "techType": "Titanium",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "ThermalPlant",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "TitaniumIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Magnetite",
+          "amount": 3
+        },
+        {
+          "techType": "Aerogel",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "techType": "Battery",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "Lithium",
+          "amount": 1
+        },
+        {
+          "techType": "Diamond",
+          "amount": 1
+        },
+        {
+          "techType": "Salt",
+          "amount": 1
+        },
+        {
+          "techType": "Silicone",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "Difficulty4.Kharaa": [
+    {
+      "techType": "Seaglide",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "Lubricant",
+          "amount": 2
+        },
+        {
+          "techType": "CopperWire",
+          "amount": 1
+        },
+        {
+          "techType": "Lead",
+          "amount": 2
+        },
+        {
+          "techType": "Gold",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "techType": "VehicleHullModule1",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "TitaniumIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Magnetite",
+          "amount": 2
+        },
+        {
+          "techType": "Aerogel",
+          "amount": 3
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "VehicleHullModule2",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "VehicleHullModule1",
+          "amount": 1
+        },
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "VehicleHullModule3",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "VehicleHullModule2",
+          "amount": 1
+        },
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Sulphur",
+          "amount": 3
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "ExoHullModule1",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        },
+        {
+          "techType": "Sulphur",
+          "amount": 3
+        },
+        {
+          "techType": "Kyanite",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "techType": "CyclopsHullModule1",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "AluminumOxide",
+          "amount": 3
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "techType": "CyclopsHullModule2",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "CyclopsHullModule1",
+          "amount": 1
+        },
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Sulphur",
+          "amount": 3
+        },
+        {
+          "techType": "Kyanite",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "techType": "CyclopsHullModule3",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "CyclopsHullModule2",
+          "amount": 1
+        },
+        {
+          "techType": "Sulphur",
+          "amount": 3
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        },
+        {
+          "techType": "Kyanite",
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "techType": "Builder",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "ComputerChip",
+          "amount": 2
+        },
+        {
+          "techType": "WiringKit",
+          "amount": 2
+        },
+        {
+          "techType": "Lithium",
+          "amount": 2
+        },
+        {
+          "techType": "Magnetite",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "PropulsionCannon",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "WiringKit",
+          "amount": 1
+        },
+        {
+          "techType": "Magnetite",
+          "amount": 2
+        },
+        {
+          "techType": "Lead",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "techType": "RepulsionCannon",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PropulsionCannon",
+          "amount": 1
+        },
+        {
+          "techType": "ComputerChip",
+          "amount": 1
+        },
+        {
+          "techType": "Magnetite",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "techType": "StasisRifle",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "ComputerChip",
+          "amount": 1
+        },
+        {
+          "techType": "Magnetite",
+          "amount": 4
+        },
+        {
+          "techType": "UraniniteCrystal",
+          "amount": 2
+        },
+        {
+          "techType": "Benzene",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "BaseBioReactor",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "TitaniumIngot",
+          "amount": 1
+        },
+        {
+          "techType": "WiringKit",
+          "amount": 1
+        },
+        {
+          "techType": "FiberMesh",
+          "amount": 1
+        },
+        {
+          "techType": "Lubricant",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "techType": "BaseMoonpool",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "TitaniumIngot",
+          "amount": 2
+        },
+        {
+          "techType": "WiringKit",
+          "amount": 2
+        },
+        {
+          "techType": "Lubricant",
+          "amount": 2
+        },
+        {
+          "techType": "Lead",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "techType": "BaseNuclearReactor",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 2
+        },
+        {
+          "techType": "AdvancedWiringKit",
+          "amount": 2
+        },
+        {
+          "techType": "Lead",
+          "amount": 8
+        }
+      ]
+    },
+    {
+      "techType": "MedicalCabinet",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "ComputerChip",
+          "amount": 1
+        },
+        {
+          "techType": "FiberMesh",
+          "amount": 4
+        },
+        {
+          "techType": "Silver",
+          "amount": 1
+        },
+        {
+          "techType": "Titanium",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "ThermalPlant",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "TitaniumIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Magnetite",
+          "amount": 3
+        },
+        {
+          "techType": "Aerogel",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "techType": "Battery",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "Lithium",
+          "amount": 1
+        },
+        {
+          "techType": "Diamond",
+          "amount": 1
+        },
+        {
+          "techType": "Salt",
+          "amount": 1
+        },
+        {
+          "techType": "Silicone",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "VehicleDifficulty.Normal":[
+    {
+      "techType": "Seamoth",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "TitaniumIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Glass",
+          "amount": 2
+        },
+        {
+          "techType": "Lubricant",
+          "amount": 1
+        },
+        {
+          "techType": "Lead",
+          "amount": 1
+        }
+      ]
+    },
+  ],
+  "VehicleDifficulty.Hard":[
+    {
+      "techType": "Seamoth",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 2
+        },
+        {
+          "techType": "Lubricant",
+          "amount": 3
+        },
+        {
+          "techType": "Lead",
+          "amount": 4
+        }
+      ]
+    },
+    {
+      "techType": "Exosuit",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 2
+        },
+        {
+          "techType": "Aerogel",
+          "amount": 2
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 1
+        },
+        {
+          "techType": "Diamond",
+          "amount": 2
+        },
+        {
+          "techType": "Sulphur",
+          "amount": 2
+        },
+        {
+          "techType": "Nickel",
+          "amount": 2
+        },
+        {
+          "techType": "Lubricant",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "techType": "Cyclops",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 3
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 3
+        },
+        {
+          "techType": "Lubricant",
+          "amount": 4
+        },
+        {
+          "techType": "AdvancedWiringKit",
+          "amount": 1
+        },
+        {
+          "techType": "Lead",
+          "amount": 4
+        },
+        {
+          "techType": "UraniniteCrystal",
+          "amount": 2
+        },
+        {
+          "techType": "Nickel",
+          "amount": 2
+        }
+      ]
+    }
+  ],
+  "VehicleDifficulty.Deathrun":[
+    {
+      "techType": "Seamoth",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 2
+        },
+        {
+          "techType": "Lubricant",
+          "amount": 2
+        },
+        {
+          "techType": "Lead",
+          "amount": 4
+        },
+        {
+          "techType": "TreeMushroomPiece",
+          "amount": 1
+        },
+        {
+          "techType": "KooshChunk",
+          "amount": 1
+        },
+        {
+          "techType": "RedGreenTentacleSeed",
+          "amount": 1
+        },
+        {
+          "techType": "EyesPlantSeed",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "Exosuit",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 2
+        },
+        {
+          "techType": "Aerogel",
+          "amount": 2
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 2
+        },
+        {
+          "techType": "Diamond",
+          "amount": 2
+        },
+        {
+          "techType": "Sulphur",
+          "amount": 3
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        },
+        {
+          "techType": "Lubricant",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "techType": "Cyclops",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 3
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 3
+        },
+        {
+          "techType": "Lubricant",
+          "amount": 4
+        },
+        {
+          "techType": "AdvancedWiringKit",
+          "amount": 1
+        },
+        {
+          "techType": "UraniniteCrystal",
+          "amount": 6
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        }
+      ]
+    }
+  ],
+  "VehicleDifficulty.Kharaa":[
+    {
+      "techType": "Seamoth",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 2
+        },
+        {
+          "techType": "Lubricant",
+          "amount": 2
+        },
+        {
+          "techType": "Lead",
+          "amount": 4
+        },
+        {
+          "techType": "HydrochloricAcid",
+          "amount": 3
+        },
+        {
+          "techType": "Aerogel",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "Exosuit",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 2
+        },
+        {
+          "techType": "Aerogel",
+          "amount": 2
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 2
+        },
+        {
+          "techType": "Diamond",
+          "amount": 2
+        },
+        {
+          "techType": "Sulphur",
+          "amount": 3
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        },
+        {
+          "techType": "Lubricant",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "techType": "Cyclops",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 3
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 3
+        },
+        {
+          "techType": "Lubricant",
+          "amount": 4
+        },
+        {
+          "techType": "AdvancedWiringKit",
+          "amount": 2
+        },
+        {
+          "techType": "UraniniteCrystal",
+          "amount": 6
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        }
+      ]
+    }
+  ],
+  "VehicleDifficulty.NoVehicles": [
+    {
+      "techType": "Seamoth",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "TitaniumIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Glass",
+          "amount": 2
+        },
+        {
+          "techType": "Lubricant",
+          "amount": 1
+        },
+        {
+          "techType": "Lead",
+          "amount": 1
+        },
+        {
+          "techType": "HatchingEnzymes",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "Exosuit",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Aerogel",
+          "amount": 1
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 1
+        },
+        {
+          "techType": "Diamond",
+          "amount": 2
+        },
+        {
+          "techType": "Lead",
+          "amount": 2
+        },
+        {
+          "techType": "HatchingEnzymes",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "Cyclops",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 3
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 3
+        },
+        {
+          "techType": "Lubricant",
+          "amount": 1
+        },
+        {
+          "techType": "AdvancedWiringKit",
+          "amount": 1
+        },
+        {
+          "techType": "Lead",
+          "amount": 3
+        },
+        {
+          "techType": "HatchingEnzymes",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

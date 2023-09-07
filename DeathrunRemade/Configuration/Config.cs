@@ -43,7 +43,7 @@ namespace DeathrunRemade.Configuration
 
         // Costs
         public ConfigEntryWrapper<Difficulty4> BatteryCapacity;
-        public ConfigEntryWrapper<Difficulty3> BuilderCosts;
+        public ConfigEntryWrapper<Difficulty4> BuilderCosts;
         public ConfigEntryWrapper<Difficulty4> PowerCosts;
         public ConfigEntryWrapper<Difficulty4> ScansRequired;
         public ConfigEntryWrapper<VehicleDifficulty> VehicleCosts;

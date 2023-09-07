@@ -2,8 +2,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 <!-- Define important extra files needed in the final distribution. -->
     <ItemGroup>
-        <Assets Include="Assets\*.png" />
-        <Assets Include="Components\*" />
-        <Assets Include="Objects\**\*" />
+        <Assets Include="Assets\*.json" />
     </ItemGroup>
 </Project>

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using BepInEx;
 using DeathrunRemade.Components;
 using DeathrunRemade.Configuration;
@@ -8,14 +10,13 @@ using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using DeathrunRemade.Patches;
-using FMOD;
-using FMOD.Studio;
 using HarmonyLib;
 using HootLib;
 using HootLib.Components;
 using HootLib.Objects;
 using Nautilus.Handlers;
 using Nautilus.Utility;
+using Newtonsoft.Json;
 using UnityEngine;
 using ILogHandler = HootLib.Interfaces.ILogHandler;
 
@@ -146,12 +147,40 @@ namespace DeathrunRemade
         {
             _Log.Info($"Current location: {Player.main.transform.position}");
         }
-        
+
         private void TestMe()
         {
-            FMODAsset asset = AudioUtils.GetFmodAsset("event:/sub/cyclops/impact_solid_hard");
-            FMODUWE.PlayOneShot(asset, Player.main.transform.position);
-            RESULT result = FMODUWE.GetEventInstance(asset.path, out EventInstance instance);
+            // FMODAsset asset = AudioUtils.GetFmodAsset("event:/sub/cyclops/impact_solid_hard");
+            // FMODUWE.PlayOneShot(asset, Player.main.transform.position);
+            // RESULT result = FMODUWE.GetEventInstance(asset.path, out EventInstance instance);
+
+            VanillaRecipeChanges recipe = new VanillaRecipeChanges();
+            // foreach (var c in recipe.LoadFromDiskBetter())
+            // {
+            //     _Log.Debug($"{c._techType}: {c._ingredients}");
+            // }
+
+            recipe.LoadFromDiskAsync().Start();
+            var data = recipe.GetCraftData(Difficulty4.Deathrun);
+            var x = data.ToList();
+            //_Log.Debug(JsonConvert.SerializeObject(data));
+            // _Log.Debug("Done.");
+
+            var settings = JsonConvert.DefaultSettings?.Invoke() ?? new JsonSerializerSettings();
+            // var enumconverter = new StringEnumConverter();
+            // enumconverter.NamingStrategy ??= new DefaultNamingStrategy();
+            // enumconverter.NamingStrategy.ProcessDictionaryKeys = true;
+            // settings.Converters.Add(enumconverter);
+            settings.NullValueHandling = NullValueHandling.Include;
+
+            // using StreamReader reader = new StreamReader(Hootils.GetAssetHandle("test2.json"));
+            // var text = reader.ReadToEnd();
+            // var x = JsonConvert.DeserializeObject<List<SerialTechData>>(text);
+
+            string json = JsonConvert.SerializeObject(
+                new Dictionary<string, List<SerialTechData>> { { "difficulty", x } }, Formatting.Indented, settings);
+            using StreamWriter writer = new StreamWriter(Hootils.GetAssetHandle($"yolo.json"));
+            writer.Write(json);
         }
     }
 }

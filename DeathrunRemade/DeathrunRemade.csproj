@@ -129,11 +129,13 @@
         <Compile Include="Items\Tank.cs" />
         <Compile Include="Components\DeathrunTank.cs" />
         <Compile Include="Components\NitrogenBar.cs" />
+        <Compile Include="Items\VanillaRecipeChanges.cs" />
         <Compile Include="Objects\Enums\Difficulty.cs" />
         <Compile Include="Objects\Enums\SafeDepthStatus.cs" />
         <Compile Include="Objects\Enums\Warning.cs" />
         <Compile Include="Objects\Exceptions\DeathrunException.cs" />
         <Compile Include="Objects\Message.cs" />
+        <Compile Include="Objects\JsonTechData.cs" />
         <Compile Include="Objects\SaveData.cs" />
         <Compile Include="Objects\StartLocation.cs" />
         <Compile Include="Patches\AirPatcher.cs" />
@@ -150,6 +152,7 @@
     </ItemGroup>
     <ItemGroup>
       <EmbeddedResource Include="Assets\DeathrunStarts.csv" />
+      <Content Include="Assets\RecipeChanges.json" />
       <Content Include="todo_list.txt" />
       <EmbeddedResource Include="Assets\AcidBattery.png" />
       <EmbeddedResource Include="Assets\AcidPowerCell.png" />
