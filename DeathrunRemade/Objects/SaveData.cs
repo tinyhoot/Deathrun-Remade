@@ -1,4 +1,5 @@
 using System;
+using DeathrunRemade.Configuration;
 using Nautilus.Json;
 
 namespace DeathrunRemade.Objects
@@ -9,10 +10,27 @@ namespace DeathrunRemade.Objects
         public static SaveData Main;
         [NonSerialized]
         public bool Ready;
+        
+        /// <summary>
+        /// Invoked when the save cache has finished initialising and/or loading data from disk.
+        /// </summary>
+        public static event Action<SaveData> OnSaveDataLoaded;
 
+        public ConfigSave Config;
         public EscapePodSave EscapePod;
         public NitrogenSave Nitrogen;
         public WarningSave Warnings;
+        
+        public override void Load(bool createFileIfNotExist = true)
+        {
+            base.Load(createFileIfNotExist);
+            // The save data loads on game start. If the config data has not been set already, lock it in.
+            if (!Config.WasInitialised)
+                Config = ConfigSave.SerializeConfig(DeathrunInit._Config);
+            // Once the file has completed loading/creation, notify everything waiting on it.
+            Ready = true;
+            OnSaveDataLoaded?.Invoke(this);
+        }
     }
 
     [Serializable]

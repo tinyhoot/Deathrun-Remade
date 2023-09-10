@@ -38,10 +38,10 @@ namespace DeathrunRemade.Items
         /// Set up recipe changes based on the given config values.
         /// </summary>
         /// <param name="config">The config values to use.</param>
-        public void RegisterRecipeChanges(Config config)
+        public void RegisterRecipeChanges(ConfigSave config)
         {
-            List<SerialTechData> changes = GetCraftData(config.BuilderCosts.Value);
-            changes.AddRange(GetCraftData(config.VehicleCosts.Value));
+            List<SerialTechData> changes = GetCraftData(config.BuilderCosts);
+            changes.AddRange(GetCraftData(config.VehicleCosts));
             foreach (var craftData in changes)
             {
                 CraftDataHandler.SetRecipeData(craftData.techType, craftData.ToTechData());

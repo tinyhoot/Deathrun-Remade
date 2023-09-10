@@ -253,7 +253,7 @@ namespace DeathrunRemade.Handlers
             LiveMixin health = player.GetComponent<LiveMixin>();
             float depthDiff = save.Nitrogen.safeDepth - currentDepth;
             
-            int baseDamage = ConfigUtils.GetBendsDamage(DeathrunInit._Config.NitrogenBends.Value);
+            int baseDamage = ConfigUtils.GetBendsDamage(save.Config.NitrogenBends);
             // Make the damage more manageable for small transgressions.
             if (depthDiff < 5)
             {

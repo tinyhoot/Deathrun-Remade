@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection.Emit;
+using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using UnityEngine;
@@ -91,7 +92,7 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(CrashedShipExploder), nameof(CrashedShipExploder.SetExplodeTime))]
         private static void PatchExplosionTime(CrashedShipExploder __instance)
         {
-            Timer setting = DeathrunInit._Config.ExplosionTime.Value;
+            Timer setting = SaveData.Main.Config.ExplosionTime;
             // No changes necessary.
             if (setting == Timer.Vanilla)
                 return;
@@ -108,7 +109,7 @@ namespace DeathrunRemade.Patches
         {
             float threshold = DealDamageAfterSeconds / __instance.duration;
             if (__instance.animTime >= threshold && _lastAnimTime < threshold)
-                PlayerTakeExplosionDamage(DeathrunInit._Config.ExplosionDepth.Value, Player.main);
+                PlayerTakeExplosionDamage(SaveData.Main.Config.ExplosionDepth, Player.main);
             _lastAnimTime = __instance.animTime;
         }
 
@@ -154,10 +155,10 @@ namespace DeathrunRemade.Patches
             // Player is handled separately.
             if (health is null || wf.gameObject == Player.main.gameObject)
                 return;
-            float damage = GetExplosionDamage(DeathrunInit._Config.ExplosionDepth.Value, wf.gameObject);
+            float damage = GetExplosionDamage(SaveData.Main.Config.ExplosionDepth, wf.gameObject);
             // The player can hide in bases and vehicles and therefore needs some extra handling.
             if (wf.gameObject == Player.main.gameObject)
-                damage *= GetPlayerExplosionDamageMult(DeathrunInit._Config.ExplosionDepth.Value, Player.main);
+                damage *= GetPlayerExplosionDamageMult(SaveData.Main.Config.ExplosionDepth, Player.main);
             // Damage type pressure because it's less likely to be resisted and it's a shockwave crushing you.
             health.TakeDamage(damage, type: DamageType.Pressure);
         }

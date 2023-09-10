@@ -9,6 +9,7 @@ Config
 Items
 - Check whether putting them into slots and such actually works. Probably wait until items are fully functional.
 - Acid powercells not accepted in the charger?
+- Batteries need their stuff set at game start, not during item registering.
 - Expand on Kharaa vehicle recipe costs. Only seamoth actually got any changes?
 
 Monos
@@ -32,6 +33,7 @@ New Ideas
 - Explicit compatibility with some popular/well fitting mods. Like C2C, Unknown Name, Enhanced Sleep, ...
 - Add game quit/reload warning on loading screen to hootils
 - Introduce QoL way to get stalker teeth because YOU NEED SO MANY
+- Change nuget packages.config to csproj PackageReference?
 
 Checks at the very end
 - All items craft properly and fit into their slots

@@ -111,6 +111,7 @@
     <ItemGroup>
         <Compile Include="Components\SafeDepthHud.cs" />
         <Compile Include="Configuration\Config.cs" />
+        <Compile Include="Configuration\ConfigSave.cs" />
         <Compile Include="Configuration\ConfigUtils.cs" />
         <Compile Include="Constants.cs" />
         <Compile Include="DeathrunInit.cs" />

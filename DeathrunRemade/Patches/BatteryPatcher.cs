@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using DeathrunRemade.Items;
+using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using UnityEngine;
@@ -46,7 +47,7 @@ namespace DeathrunRemade.Patches
         private static void SpawnWithoutBattery(ref EnergyMixin __instance, TechType techType)
         {
             // Don't apply this patch on low difficulty levels.
-            if (DeathrunInit._Config.BatteryCapacity.Value.Equals(Difficulty4.Normal))
+            if (SaveData.Main.Config.BatteryCapacity.Equals(Difficulty4.Normal))
                 return;
 
             if (techType != TechType.MapRoomCamera)

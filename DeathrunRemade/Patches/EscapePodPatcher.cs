@@ -21,7 +21,7 @@ namespace DeathrunRemade.Patches
         public static void OnSavedGameLoaded()
         {
             // If the pod is still sinking for some reason, do nothing.
-            if (!DeathrunInit._Config.SinkLifepod.Value || !SaveData.Main.EscapePod.isAnchored)
+            if (SaveData.Main.Config.SinkLifepod || !SaveData.Main.EscapePod.isAnchored)
                 return;
             EscapePod pod = EscapePod.main;
             AnchorLifepod(pod, pod.GetComponent<WorldForces>());
@@ -71,7 +71,7 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(EscapePod), nameof(EscapePod.FixedUpdate))]
         private static bool OverrideLifepodPhysics(EscapePod __instance)
         {
-            if (!DeathrunInit._Config.SinkLifepod.Value)
+            if (!SaveData.Main.Config.SinkLifepod)
                 return true;
             
             // If the pod is already anchored at the bottom there is nothing left to do.

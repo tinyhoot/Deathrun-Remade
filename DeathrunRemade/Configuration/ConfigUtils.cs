@@ -14,7 +14,7 @@ namespace DeathrunRemade.Configuration
     /// </summary>
     internal static class ConfigUtils
     {
-        private static Config _config => DeathrunInit._Config;
+        private static ConfigSave _config => SaveData.Main.Config;
         private static ILogHandler _log => DeathrunInit._Log;
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace DeathrunRemade.Configuration
         public static float GetPersonalCrushDepth()
         {
             TechType suit = Inventory.main.equipment.GetTechTypeInSlot("Body");
-            bool deathrun = _config.CrushDepth.Value == Difficulty3.Deathrun;
+            bool deathrun = _config.CrushDepth == Difficulty3.Deathrun;
             float depth = suit switch
             {
                 TechType.RadiationSuit => 500f,
@@ -86,12 +86,12 @@ namespace DeathrunRemade.Configuration
         /// <returns></returns>
         public static Vector3 GetStartPoint(out string name)
         {
-            string setting = _config.StartLocation.Value;
+            string setting = _config.StartLocation;
 
             // This will throw an exception if the setting name has been altered for some reason, but that's intended.
-            StartLocation location = _config._startLocations.First(l => l.Name == setting);
+            StartLocation location = DeathrunInit._Config._startLocations.First(l => l.Name == setting);
             if (setting == "Random")
-                location = _config._startLocations.Where(l => l.Name != "Random").ToList().GetRandom();
+                location = DeathrunInit._Config._startLocations.Where(l => l.Name != "Random").ToList().GetRandom();
 
             name = location.Name;
             if (location.Name == "Vanilla")
@@ -104,7 +104,7 @@ namespace DeathrunRemade.Configuration
         /// </summary>
         public static bool IsAirBreathable()
         {
-            if (_config.SurfaceAir.Value == Difficulty3.Normal)
+            if (_config.SurfaceAir == Difficulty3.Normal)
                 return true;
 
             // If this doesn't pass the game is not yet done loading.
@@ -114,7 +114,7 @@ namespace DeathrunRemade.Configuration
                 return true;
 
             // Surface air without a filter is always unbreathable on high difficulties.
-            if (_config.SurfaceAir.Value == Difficulty3.Deathrun)
+            if (_config.SurfaceAir == Difficulty3.Deathrun)
                 return false;
             return !IsSurfaceIrradiated();
         }
@@ -140,7 +140,7 @@ namespace DeathrunRemade.Configuration
         /// <param name="intervalSeconds">The interval between warnings, in seconds.</param>
         public static bool ShouldShowWarning(Warning warning, float intervalSeconds)
         {
-            Hints setting = _config.ShowWarnings.Value;
+            Hints setting = _config.ShowWarnings;
             if (setting == Hints.Never)
                 return false;
 

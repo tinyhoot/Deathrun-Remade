@@ -15,7 +15,6 @@ using HootLib;
 using HootLib.Components;
 using HootLib.Objects;
 using Nautilus.Handlers;
-using Nautilus.Utility;
 using Newtonsoft.Json;
 using UnityEngine;
 using ILogHandler = HootLib.Interfaces.ILogHandler;
@@ -59,9 +58,8 @@ namespace DeathrunRemade
             Harmony harmony = new Harmony(GUID);
             harmony.PatchAll(Hootils.GetAssembly());
 
-            // Register the save game and ensure Nautilus marks it as ready as soon as the player enters the game.
+            // Register the save game.
             SaveData.Main = SaveDataHandler.RegisterSaveDataCache<SaveData>();
-            SaveUtils.RegisterOnLoadEvent(() => SaveData.Main.Ready = true);
 
             _Log.Info("Finished loading.");
         }
@@ -95,7 +93,7 @@ namespace DeathrunRemade
             GameEventHandler.OnPlayerAwake += player =>
             {
                 // Nitrogen and UI handling.
-                if (_Config.NitrogenBends.Value != Difficulty3.Normal)
+                if (SaveData.Main.Config.NitrogenBends != Difficulty3.Normal)
                 {
                     HootHudBar.Create<NitrogenBar>("NitrogenBar", -45, out GameObject _);
                     _DepthHud = SafeDepthHud.Create(out GameObject _);
@@ -150,6 +148,8 @@ namespace DeathrunRemade
 
         private void TestMe()
         {
+            ConfigSave.SerializeConfig(_Config);
+            return;
             // FMODAsset asset = AudioUtils.GetFmodAsset("event:/sub/cyclops/impact_solid_hard");
             // FMODUWE.PlayOneShot(asset, Player.main.transform.position);
             // RESULT result = FMODUWE.GetEventInstance(asset.path, out EventInstance instance);
