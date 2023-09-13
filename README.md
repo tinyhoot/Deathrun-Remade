@@ -7,7 +7,7 @@ and the latest version of Subnautica.
 
 Items that are ticked off are complete. Yellow circles mark work in progress.
 
-- [ ] 🟡 Config
+- [x] Config
 - [x] Custom Items
 - [ ] 🟡 Harmony Patches
   - [x] Additional Item Behaviour

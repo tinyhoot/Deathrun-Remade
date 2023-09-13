@@ -255,156 +255,6 @@
       ]
     },
     {
-      "techType": "VehicleHullModule1",
-      "craftAmount": 1,
-      "ingredients": [
-        {
-          "techType": "TitaniumIngot",
-          "amount": 1
-        },
-        {
-          "techType": "Magnetite",
-          "amount": 2
-        },
-        {
-          "techType": "Aerogel",
-          "amount": 3
-        },
-        {
-          "techType": "EnameledGlass",
-          "amount": 1
-        }
-      ]
-    },
-    {
-      "techType": "VehicleHullModule2",
-      "craftAmount": 1,
-      "ingredients": [
-        {
-          "techType": "VehicleHullModule1",
-          "amount": 1
-        },
-        {
-          "techType": "PlasteelIngot",
-          "amount": 1
-        },
-        {
-          "techType": "Nickel",
-          "amount": 3
-        },
-        {
-          "techType": "EnameledGlass",
-          "amount": 1
-        }
-      ]
-    },
-    {
-      "techType": "VehicleHullModule3",
-      "craftAmount": 1,
-      "ingredients": [
-        {
-          "techType": "VehicleHullModule2",
-          "amount": 1
-        },
-        {
-          "techType": "PlasteelIngot",
-          "amount": 1
-        },
-        {
-          "techType": "Sulphur",
-          "amount": 3
-        },
-        {
-          "techType": "EnameledGlass",
-          "amount": 1
-        }
-      ]
-    },
-    {
-      "techType": "ExoHullModule1",
-      "craftAmount": 1,
-      "ingredients": [
-        {
-          "techType": "PlasteelIngot",
-          "amount": 1
-        },
-        {
-          "techType": "Nickel",
-          "amount": 3
-        },
-        {
-          "techType": "Sulphur",
-          "amount": 3
-        },
-        {
-          "techType": "Kyanite",
-          "amount": 1
-        }
-      ]
-    },
-    {
-      "techType": "CyclopsHullModule1",
-      "craftAmount": 1,
-      "ingredients": [
-        {
-          "techType": "PlasteelIngot",
-          "amount": 1
-        },
-        {
-          "techType": "AluminumOxide",
-          "amount": 3
-        },
-        {
-          "techType": "Nickel",
-          "amount": 3
-        }
-      ]
-    },
-    {
-      "techType": "CyclopsHullModule2",
-      "craftAmount": 1,
-      "ingredients": [
-        {
-          "techType": "CyclopsHullModule1",
-          "amount": 1
-        },
-        {
-          "techType": "PlasteelIngot",
-          "amount": 1
-        },
-        {
-          "techType": "Sulphur",
-          "amount": 3
-        },
-        {
-          "techType": "Kyanite",
-          "amount": 1
-        }
-      ]
-    },
-    {
-      "techType": "CyclopsHullModule3",
-      "craftAmount": 1,
-      "ingredients": [
-        {
-          "techType": "CyclopsHullModule2",
-          "amount": 1
-        },
-        {
-          "techType": "Sulphur",
-          "amount": 3
-        },
-        {
-          "techType": "Nickel",
-          "amount": 3
-        },
-        {
-          "techType": "Kyanite",
-          "amount": 5
-        }
-      ]
-    },
-    {
       "techType": "Builder",
       "craftAmount": 1,
       "ingredients": [
@@ -629,156 +479,6 @@
         {
           "techType": "Gold",
           "amount": 2
-        }
-      ]
-    },
-    {
-      "techType": "VehicleHullModule1",
-      "craftAmount": 1,
-      "ingredients": [
-        {
-          "techType": "TitaniumIngot",
-          "amount": 1
-        },
-        {
-          "techType": "Magnetite",
-          "amount": 2
-        },
-        {
-          "techType": "Aerogel",
-          "amount": 3
-        },
-        {
-          "techType": "EnameledGlass",
-          "amount": 1
-        }
-      ]
-    },
-    {
-      "techType": "VehicleHullModule2",
-      "craftAmount": 1,
-      "ingredients": [
-        {
-          "techType": "VehicleHullModule1",
-          "amount": 1
-        },
-        {
-          "techType": "PlasteelIngot",
-          "amount": 1
-        },
-        {
-          "techType": "Nickel",
-          "amount": 3
-        },
-        {
-          "techType": "EnameledGlass",
-          "amount": 1
-        }
-      ]
-    },
-    {
-      "techType": "VehicleHullModule3",
-      "craftAmount": 1,
-      "ingredients": [
-        {
-          "techType": "VehicleHullModule2",
-          "amount": 1
-        },
-        {
-          "techType": "PlasteelIngot",
-          "amount": 1
-        },
-        {
-          "techType": "Sulphur",
-          "amount": 3
-        },
-        {
-          "techType": "EnameledGlass",
-          "amount": 1
-        }
-      ]
-    },
-    {
-      "techType": "ExoHullModule1",
-      "craftAmount": 1,
-      "ingredients": [
-        {
-          "techType": "PlasteelIngot",
-          "amount": 1
-        },
-        {
-          "techType": "Nickel",
-          "amount": 3
-        },
-        {
-          "techType": "Sulphur",
-          "amount": 3
-        },
-        {
-          "techType": "Kyanite",
-          "amount": 2
-        }
-      ]
-    },
-    {
-      "techType": "CyclopsHullModule1",
-      "craftAmount": 1,
-      "ingredients": [
-        {
-          "techType": "PlasteelIngot",
-          "amount": 1
-        },
-        {
-          "techType": "AluminumOxide",
-          "amount": 3
-        },
-        {
-          "techType": "Nickel",
-          "amount": 3
-        }
-      ]
-    },
-    {
-      "techType": "CyclopsHullModule2",
-      "craftAmount": 1,
-      "ingredients": [
-        {
-          "techType": "CyclopsHullModule1",
-          "amount": 1
-        },
-        {
-          "techType": "PlasteelIngot",
-          "amount": 1
-        },
-        {
-          "techType": "Sulphur",
-          "amount": 3
-        },
-        {
-          "techType": "Kyanite",
-          "amount": 2
-        }
-      ]
-    },
-    {
-      "techType": "CyclopsHullModule3",
-      "craftAmount": 1,
-      "ingredients": [
-        {
-          "techType": "CyclopsHullModule2",
-          "amount": 1
-        },
-        {
-          "techType": "Sulphur",
-          "amount": 3
-        },
-        {
-          "techType": "Nickel",
-          "amount": 3
-        },
-        {
-          "techType": "Kyanite",
-          "amount": 5
         }
       ]
     },
@@ -1009,7 +709,7 @@
           "amount": 1
         }
       ]
-    },
+    }
   ],
   "VehicleDifficulty.Hard":[
     {
@@ -1205,6 +905,156 @@
           "amount": 3
         }
       ]
+    },
+    {
+      "techType": "VehicleHullModule1",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "TitaniumIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Magnetite",
+          "amount": 2
+        },
+        {
+          "techType": "Aerogel",
+          "amount": 3
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "VehicleHullModule2",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "VehicleHullModule1",
+          "amount": 1
+        },
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "VehicleHullModule3",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "VehicleHullModule2",
+          "amount": 1
+        },
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Sulphur",
+          "amount": 3
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "ExoHullModule1",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        },
+        {
+          "techType": "Sulphur",
+          "amount": 3
+        },
+        {
+          "techType": "Kyanite",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "CyclopsHullModule1",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "AluminumOxide",
+          "amount": 3
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "techType": "CyclopsHullModule2",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "CyclopsHullModule1",
+          "amount": 1
+        },
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Sulphur",
+          "amount": 3
+        },
+        {
+          "techType": "Kyanite",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "CyclopsHullModule3",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "CyclopsHullModule2",
+          "amount": 1
+        },
+        {
+          "techType": "Sulphur",
+          "amount": 3
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        },
+        {
+          "techType": "Kyanite",
+          "amount": 5
+        }
+      ]
     }
   ],
   "VehicleDifficulty.Kharaa":[
@@ -1299,6 +1149,156 @@
         {
           "techType": "Nickel",
           "amount": 3
+        }
+      ]
+    },
+    {
+      "techType": "VehicleHullModule1",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "TitaniumIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Magnetite",
+          "amount": 2
+        },
+        {
+          "techType": "Aerogel",
+          "amount": 3
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "VehicleHullModule2",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "VehicleHullModule1",
+          "amount": 1
+        },
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "VehicleHullModule3",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "VehicleHullModule2",
+          "amount": 1
+        },
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Sulphur",
+          "amount": 3
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "ExoHullModule1",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        },
+        {
+          "techType": "Sulphur",
+          "amount": 3
+        },
+        {
+          "techType": "Kyanite",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "techType": "CyclopsHullModule1",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "AluminumOxide",
+          "amount": 3
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        }
+      ]
+    },
+    {
+      "techType": "CyclopsHullModule2",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "CyclopsHullModule1",
+          "amount": 1
+        },
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "Sulphur",
+          "amount": 3
+        },
+        {
+          "techType": "Kyanite",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "techType": "CyclopsHullModule3",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "CyclopsHullModule2",
+          "amount": 1
+        },
+        {
+          "techType": "Sulphur",
+          "amount": 3
+        },
+        {
+          "techType": "Nickel",
+          "amount": 3
+        },
+        {
+          "techType": "Kyanite",
+          "amount": 5
         }
       ]
     }

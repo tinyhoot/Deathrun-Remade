@@ -50,7 +50,7 @@ namespace DeathrunRemade.Configuration
         public static float GetPersonalCrushDepth()
         {
             TechType suit = Inventory.main.equipment.GetTechTypeInSlot("Body");
-            bool deathrun = _config.CrushDepth == Difficulty3.Deathrun;
+            bool deathrun = _config.PersonalCrushDepth == Difficulty3.Deathrun;
             float depth = suit switch
             {
                 TechType.RadiationSuit => 500f,

@@ -20,11 +20,9 @@ namespace DeathrunRemade.Configuration
         public static readonly string SectionEnvironment = "Environment";
         public static readonly string SectionSurvival = "Survival";
         public static readonly string SectionUI = "UI";
-        
+
         // Survival
-        // Only temporarily, so I can actually see when something else doesn't work.
-#pragma warning disable CS0649
-        public ConfigEntryWrapper<Difficulty3> CrushDepth;
+        public ConfigEntryWrapper<Difficulty3> PersonalCrushDepth;
         public ConfigEntryWrapper<Difficulty4> DamageTaken;
         public ConfigEntryWrapper<Difficulty3> NitrogenBends;
         public ConfigEntryWrapper<bool> SpecialAirTanks;
@@ -32,7 +30,7 @@ namespace DeathrunRemade.Configuration
         public ConfigEntryWrapper<string> StartLocation;
         public ConfigEntryWrapper<bool> SinkLifepod;
         public ConfigEntryWrapper<bool> ToppleLifepod;
-        
+
         // Environment
         public ConfigEntryWrapper<Difficulty4> CreatureAggression;
         public ConfigEntryWrapper<Murkiness> WaterMurkiness;
@@ -42,20 +40,20 @@ namespace DeathrunRemade.Configuration
         public ConfigEntryWrapper<RadiationVisuals> RadiationFX;
 
         // Costs
-        public ConfigEntryWrapper<Difficulty4> BatteryCapacity;
-        public ConfigEntryWrapper<Difficulty4> BuilderCosts;
-        public ConfigEntryWrapper<Difficulty4> PowerCosts;
-        public ConfigEntryWrapper<Difficulty4> ScansRequired;
+        public ConfigEntryWrapper<Difficulty3> ToolCosts;
         public ConfigEntryWrapper<VehicleDifficulty> VehicleCosts;
+        public ConfigEntryWrapper<Difficulty4> ScansRequired;
+        public ConfigEntryWrapper<Difficulty4> BatteryCapacity;
+        public ConfigEntryWrapper<Difficulty4> PowerCosts;
         public ConfigEntryWrapper<Difficulty4> VehicleExitPowerLoss;
-        
+
         // Challenges
         public ConfigEntryWrapper<Difficulty3> FarmingChallenge;
-        public ConfigEntryWrapper<Difficulty3> FilterPumpChallenge;
         public ConfigEntryWrapper<DietPreference> FoodChallenge;
         public ConfigEntryWrapper<RelativeToExplosion> IslandFoodChallenge;
+        public ConfigEntryWrapper<Difficulty3> FilterPumpChallenge;
         public ConfigEntryWrapper<bool> PacifistChallenge;
-        
+
         // UI
         public ConfigEntryWrapper<bool> ShowHighscores;
         public ConfigEntryWrapper<bool> ShowHighscoreTips;
@@ -77,25 +75,65 @@ namespace DeathrunRemade.Configuration
 
         protected override void RegisterOptions()
         {
-            // Survival
-            CrushDepth = RegisterEntry(
+            RegisterSurvivalOptions();
+            RegisterEnvironmentOptions();
+            RegisterCostOptions();
+            RegisterChallengeOptions();
+            RegisterUIOptions();
+        }
+
+        private void RegisterSurvivalOptions()
+        {
+            PersonalCrushDepth = RegisterEntry(
                 section: SectionSurvival,
-                key: nameof(CrushDepth),
+                key: nameof(PersonalCrushDepth),
                 defaultValue: Difficulty3.Deathrun,
-                description: ""
-            );
+                description: "You have a personal crush depth of 200m and need to craft advanced suits to survive "
+                             + "greater depths."
+            ).WithChoiceOptionStringsOverride(
+                "Normal (Inactive)",
+                "Hard (Reinforced Suit)",
+                "Deathrun (Adv. Reinforced Suits)"
+            ).WithDescription("Personal Crush Depth");
+            DamageTaken = RegisterEntry(
+                section: SectionSurvival,
+                key: nameof(DamageTaken),
+                defaultValue: Difficulty4.Deathrun,
+                description: "Increase damage taken from all sources and decrease respawn health."
+            ).WithChoiceOptionStringsOverride(
+                "Love Taps (1.1x - 1.25x)",
+                "Hard (1.25x - 1.5x)",
+                "Deathrun (1.5x - 2x)",
+                "Kharaa (2x - 3x)"
+            ).WithDescription("Damage Taken");
             NitrogenBends = RegisterEntry(
                 section: SectionSurvival,
                 key: nameof(NitrogenBends),
                 defaultValue: Difficulty3.Deathrun,
-                description: ""
-            );
+                description: "You get decompression sickness and take damage from surfacing too quickly. Ascend slowly "
+                             + "and take care to let your safe diving depth adjust."
+            ).WithChoiceOptionStringsOverride(
+                "Normal (Inactive)",
+                "Hard (Slower, lenient)",
+                "Deathrun (Strict)"
+            ).WithDescription("Nitrogen and the Bends");
             SurfaceAir = RegisterEntry(
                 section: SectionSurvival,
                 key: nameof(SurfaceAir),
                 defaultValue: Difficulty3.Hard,
-                description: ""
-            );
+                description: "The surface air is unbreathable without a filter pump or an integrated filter chip."
+            ).WithChoiceOptionStringsOverride(
+                "Normal (Inactive)",
+                "Hard (While Aurora not fixed)",
+                "Deathrun (Always)"
+            ).WithDescription("Surface Air Poisoning");
+            SpecialAirTanks = RegisterEntry(
+                section: SectionSurvival,
+                key: nameof(SpecialAirTanks),
+                defaultValue: true,
+                description: "Add new special air tanks which regenerate oxygen under the right conditions, like "
+                             + "surface light or heat."
+            ).WithDescription("Enable Special Air Tanks");
             StartLocation = RegisterEntry(
                 section: SectionSurvival,
                 key: nameof(StartLocation),
@@ -108,33 +146,50 @@ namespace DeathrunRemade.Configuration
                 key: nameof(SinkLifepod),
                 defaultValue: true,
                 description: "Make the lifepod sink to the bottom of the ocean."
-            ).WithDescription("Sink Lifepod", null);
+            ).WithDescription("Sink Lifepod");
             ToppleLifepod = RegisterEntry(
                 section: SectionSurvival,
                 key: nameof(ToppleLifepod),
                 defaultValue: true,
                 description: "Tilt the lifepod once it is done sinking."
-            ).WithDescription("Topple Lifepod", null);
+            ).WithDescription("Topple Lifepod");
+        }
 
-            // Environment
+        private void RegisterEnvironmentOptions()
+        {
+            CreatureAggression = RegisterEntry(
+                section: SectionEnvironment,
+                key: nameof(CreatureAggression),
+                defaultValue: Difficulty4.Deathrun,
+                description: "Creatures become more aggressive after 20 and 40 minutes and receive buffs to their vision. \n"
+                             + "Normal: No changes. \n"
+                             + "Hard: Creatures see you from further away. \n"
+                             + "Deathrun: Creatures can sense you even when you're behind them. \n"
+                             + "Kharaa: Creatures can sense you even through terrain."
+            ).WithDescription("Creature Aggression");
+            WaterMurkiness = RegisterEntry(
+                section: SectionEnvironment,
+                key: nameof(WaterMurkiness),
+                defaultValue: Murkiness.Normal,
+                description: "Increase the murkiness of the water, making it darker and more difficult to see."
+            );
             ExplosionDepth = RegisterEntry(
                 section: SectionEnvironment,
                 key: nameof(ExplosionDepth),
                 defaultValue: Difficulty3.Deathrun,
                 description: "Controls how deep the Aurora's explosion reaches.\n"
                              + "Normal: No changes\n"
-                             + $"Hard: About {ExplosionPatcher.GetExplosionDepth(Difficulty3.Hard)}\n"
+                             + $"Hard: About {ExplosionPatcher.GetExplosionDepth(Difficulty3.Hard)}m\n"
                              + $"Deathrun: About {ExplosionPatcher.GetExplosionDepth(Difficulty3.Deathrun)}m"
             ).WithDescription(
                 "Explosion Depth",
                 "Aurora explosion reaches below the surface. Strength varies with depth, and is further reduced "
                 + "if you're somewhere inside."
-            ).WithChoiceOptionStringsOverride(new []
-            {
-                "Normal (No changes)",
+            ).WithChoiceOptionStringsOverride(
+                "Normal (Inactive)",
                 $"Hard ({ExplosionPatcher.GetExplosionDepth(Difficulty3.Hard)}m)",
                 $"Deathrun ({ExplosionPatcher.GetExplosionDepth(Difficulty3.Deathrun)}m)"
-            });
+            );
             ExplosionTime = RegisterEntry(
                 section: SectionEnvironment,
                 key: nameof(ExplosionTime),
@@ -147,38 +202,175 @@ namespace DeathrunRemade.Configuration
             ).WithDescription(
                 "Time to Explosion",
                 "How long it takes for the Aurora to explode."
-            ).WithChoiceOptionStringsOverride(new[]
-            {
+            ).WithChoiceOptionStringsOverride(
                 "Vanilla (46-80min)",
                 $"Short ({ExplosionPatcher.GetExplosionTime(Timer.Short)}min)",
                 $"Medium ({ExplosionPatcher.GetExplosionTime(Timer.Medium)}min)",
-                $"Long ({ExplosionPatcher.GetExplosionTime(Timer.Long)}min)",
-            });
-            
-            // Costs
+                $"Long ({ExplosionPatcher.GetExplosionTime(Timer.Long)}min)"
+            );
+            RadiationDepth = RegisterEntry(
+                section: SectionEnvironment,
+                key: nameof(RadiationDepth),
+                defaultValue: Difficulty4.Deathrun,
+                description: "Radiation affects the water even when not near the Aurora up to a certain depth."
+            ).WithChoiceOptionStringsOverride(
+                "Normal (No changes)",
+                "Hard (30m)",
+                "Deathrun (60m)",
+                "Kharaa (200m)"
+            ).WithDescription("Radiation");
+            RadiationFX = RegisterEntry(
+                section: SectionEnvironment,
+                key: nameof(RadiationFX),
+                defaultValue: RadiationVisuals.Chernobyl,
+                description: "Determines what kind of radiation visuals to play while immune to radiation. On the "
+                             + "highest setting, the effects get worse as you approach the Aurora and make it "
+                             + "difficult to see while inside."
+            ).WithChoiceOptionStringsOverride(
+                "Normal (No visuals)",
+                "Mild Reminder",
+                "Chernobyl (Strong Interference)"
+            ).WithDescription("Radiation FX if immune");
+        }
+
+        private void RegisterCostOptions()
+        {
+            ToolCosts = RegisterEntry(
+                section: SectionCosts,
+                key: nameof(ToolCosts),
+                defaultValue: Difficulty3.Deathrun,
+                description: "Harder recipes for important tools and buildings like habitat builder and reactors."
+            ).WithDescription("Tool and Building Costs");
+            VehicleCosts = RegisterEntry(
+                section: SectionCosts,
+                key: nameof(VehicleCosts),
+                defaultValue: VehicleDifficulty.Deathrun,
+                description: "Harder recipes for vehicles and vehicle modules."
+            ).WithChoiceOptionStringsOverride(
+                "Normal (No changes)",
+                "Hard (No changes to modules)",
+                "Deathrun",
+                "Kharaa",
+                "No Vehicle Challenge"
+            ).WithDescription("Vehicle Costs");
+            ScansRequired = RegisterEntry(
+                section: SectionCosts,
+                key: nameof(ScansRequired),
+                defaultValue: Difficulty4.Deathrun,
+                description: "Increase the number of fragment scans required for almost all fragments in the game."
+            ).WithDescription("Required Fragment Scans");
             BatteryCapacity = RegisterEntry(
                 section: SectionCosts,
                 key: nameof(BatteryCapacity),
                 defaultValue: Difficulty4.Deathrun,
-                description: ""
-            ).WithDescription(
-                "Battery Cost",
-                ""
-            ).WithChoiceOptionStringsOverride(new []
-            {
-                "Very normal",
-                "A bit less normal",
-                "Ah. Not normal",
-                "TAKE ME BACK"
-            });
+                description: "Batteries cost more and hold less power with higher difficulties. Copper batteries are "
+                             + "not rechargeable, but can be recycled. Tools do not automatically contain batteries."
+            ).WithChoiceOptionStringsOverride(
+                "Normal (No changes)",
+                "Hard (75 power)",
+                "Deathrun (50 power)",
+                "Kharaa (25 power)"
+            ).WithDescription("Battery Costs");
+            PowerCosts = RegisterEntry(
+                section: SectionCosts,
+                key: nameof(PowerCosts),
+                defaultValue: Difficulty4.Deathrun,
+                description: "Increase all power costs and even more so while irradiated. Recharge speeds are also slower."
+            ).WithChoiceOptionStringsOverride(
+                "Normal (No changes)",
+                "Hard (2x, 3x while irradiated)",
+                "Deathrun (3x, 5x while irradiated)",
+                "Kharaa (??x, ??x while irradiated)"
+            ).WithDescription("Power Costs");
+            VehicleExitPowerLoss = RegisterEntry(
+                section: SectionCosts,
+                key: nameof(VehicleExitPowerLoss),
+                defaultValue: Difficulty4.Deathrun,
+                description: "Vehicles lose power when you exit them outside of a docking bay like the moonpool or "
+                             + "cyclops. The power loss depends on your current depth and can be reduced with "
+                             + "Decompression Modules."
+            ).WithChoiceOptionStringsOverride(
+                "Normal (No changes)",
+                "Hard (Depth / 20)",
+                "Deathrun (Depth / 10)",
+                "Kharaa (Depth / 2.5)"
+            ).WithDescription("Power Loss on Vehicle Exit");
+        }
 
-            // UI
+        private void RegisterChallengeOptions()
+        {
+            FoodChallenge = RegisterEntry(
+                section: SectionChallenges,
+                key: nameof(FoodChallenge),
+                defaultValue: DietPreference.Omnivore,
+                description: "Restricts your diet to only certain types of food. \n"
+                             + "Omnivore: You can eat everything. \n"
+                             + "Radical Pescatarian: You can only eat fish. \n"
+                             + "Vegetarian: You can only eat plants and nutrient blocks. \n"
+                             + "Vegan: You can only eat plants."
+            ).WithDescription("Challenge: Diet Restrictions");
+            FarmingChallenge = RegisterEntry(
+                section: SectionChallenges,
+                key: nameof(FarmingChallenge),
+                defaultValue: Difficulty3.Normal,
+                description: "Plants grow more slowly, making it more difficult to farm them."
+            ).WithChoiceOptionStringsOverride(
+                "Normal (No changes)",
+                "Hard (1/3x speed)",
+                "Deathrun (1/6x speed)"
+            ).WithDescription("Challenge: Farming");
+            IslandFoodChallenge = RegisterEntry(
+                section: SectionChallenges,
+                key: nameof(IslandFoodChallenge),
+                defaultValue: RelativeToExplosion.Always,
+                description: "Food from the floating island is inedible when irradiated."
+            ).WithChoiceOptionStringsOverride(
+                "Never edible",
+                "Edible after fixing reactor",
+                "Edible before and after radiation",
+                "Always edible"
+            ).WithDescription("Challenge: Island Food");
+            FilterPumpChallenge = RegisterEntry(
+                section: SectionChallenges,
+                key: nameof(FilterPumpChallenge),
+                defaultValue: Difficulty3.Normal,
+                description: "The filter pump will not work in heavily irradiated areas. \n"
+                             + "Hard: Will not work while inside the Aurora. \n"
+                             + "Deathrun: Will not work inside the Aurora's Radiation Zone (not including the extra "
+                             + "depth-based radiation)"
+            ).WithChoiceOptionStringsOverride(
+                "Normal (No changes)",
+                "Hard (Not inside Aurora)",
+                "Deathrun (Not near Aurora)"
+            ).WithDescription("Challenge: Filter Pump");
+            PacifistChallenge = RegisterEntry(
+                section: SectionChallenges,
+                key: nameof(PacifistChallenge),
+                defaultValue: false,
+                description: "You cannot hurt animals; your knife does zero damage."
+            ).WithDescription("Challenge: Pacifist");
+        }
+
+        private void RegisterUIOptions()
+        {
+            ShowHighscores = RegisterEntry(
+                section: SectionUI,
+                key: nameof(ShowHighscores),
+                defaultValue: true,
+                description: "Show highscores in the main menu."
+            ).WithDescription("Show Highscores");
+            ShowHighscoreTips = RegisterEntry(
+                section: SectionUI,
+                key: nameof(ShowHighscoreTips),
+                defaultValue: true,
+                description: "Show tips about how to reach better scores during loading screens."
+            ).WithDescription("Show Highscore Tips");
             ShowWarnings = RegisterEntry(
                 section: SectionUI,
                 key: nameof(ShowWarnings),
                 defaultValue: Hints.Always,
-                description: ""
-            );
+                description: "Show warnings when you are about to do something harmful, like ascending very quickly."
+            ).WithDescription("Show Warnings");
         }
 
         protected override void RegisterControllingOptions() { }
@@ -186,17 +378,42 @@ namespace DeathrunRemade.Configuration
         public override void RegisterModOptions(string name, Transform separatorParent = null)
         {
             HootModOptions modOptions = new HootModOptions(name, this, separatorParent);
-            modOptions.AddItem(CrushDepth.ToModChoiceOption(modOptions));
-            modOptions.AddItem(NitrogenBends.ToModChoiceOption(modOptions));
-            modOptions.AddItem(SurfaceAir.ToModChoiceOption(modOptions));
-            modOptions.AddItem(StartLocation.ToModChoiceOption(modOptions));
-            modOptions.AddItem(SinkLifepod.ToModToggleOption(modOptions));
-            modOptions.AddItem(ToppleLifepod.ToModToggleOption(modOptions));
-            modOptions.AddItem(ExplosionDepth.ToModChoiceOption(modOptions));
-            modOptions.AddItem(ExplosionTime.ToModChoiceOption(modOptions));
-            modOptions.AddItem(BatteryCapacity.ToModChoiceOption(modOptions));
+            modOptions.AddItem(PersonalCrushDepth.ToModChoiceOption());
+            modOptions.AddItem(DamageTaken.ToModChoiceOption());
+            modOptions.AddItem(NitrogenBends.ToModChoiceOption());
+            modOptions.AddItem(SurfaceAir.ToModChoiceOption());
+            modOptions.AddItem(SpecialAirTanks.ToModToggleOption());
+            modOptions.AddItem(StartLocation.ToModChoiceOption());
+            modOptions.AddItem(SinkLifepod.ToModToggleOption());
+            modOptions.AddItem(ToppleLifepod.ToModToggleOption());
             
-            modOptions.AddSeparatorBeforeOption(ExplosionDepth.GetId());
+            modOptions.AddSeparatorBeforeOption(CreatureAggression.GetId());
+            modOptions.AddItem(CreatureAggression.ToModChoiceOption());
+            modOptions.AddItem(WaterMurkiness.ToModChoiceOption());
+            modOptions.AddItem(ExplosionDepth.ToModChoiceOption());
+            modOptions.AddItem(ExplosionTime.ToModChoiceOption());
+            modOptions.AddItem(RadiationDepth.ToModChoiceOption());
+            modOptions.AddItem(RadiationFX.ToModChoiceOption());
+            
+            modOptions.AddSeparatorBeforeOption(ToolCosts.GetId());
+            modOptions.AddItem(ToolCosts.ToModChoiceOption());
+            modOptions.AddItem(VehicleCosts.ToModChoiceOption());
+            modOptions.AddItem(ScansRequired.ToModChoiceOption());
+            modOptions.AddItem(BatteryCapacity.ToModChoiceOption());
+            modOptions.AddItem(PowerCosts.ToModChoiceOption());
+            modOptions.AddItem(VehicleExitPowerLoss.ToModChoiceOption());
+            
+            modOptions.AddSeparatorBeforeOption(FoodChallenge.GetId());
+            modOptions.AddItem(FoodChallenge.ToModChoiceOption());
+            modOptions.AddItem(FarmingChallenge.ToModChoiceOption());
+            modOptions.AddItem(IslandFoodChallenge.ToModChoiceOption());
+            modOptions.AddItem(FilterPumpChallenge.ToModChoiceOption());
+            modOptions.AddItem(PacifistChallenge.ToModToggleOption());
+            
+            modOptions.AddSeparatorBeforeOption(ShowHighscores.GetId());
+            modOptions.AddItem(ShowHighscores.ToModToggleOption());
+            modOptions.AddItem(ShowHighscoreTips.ToModToggleOption());
+            modOptions.AddItem(ShowWarnings.ToModChoiceOption());
 
             OptionsPanelHandler.RegisterModOptions(modOptions);
         }

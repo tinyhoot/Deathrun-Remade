@@ -40,7 +40,7 @@ namespace DeathrunRemade.Items
         /// <param name="config">The config values to use.</param>
         public void RegisterRecipeChanges(ConfigSave config)
         {
-            List<SerialTechData> changes = GetCraftData(config.BuilderCosts);
+            List<SerialTechData> changes = GetCraftData(config.ToolCosts);
             changes.AddRange(GetCraftData(config.VehicleCosts));
             foreach (var craftData in changes)
             {

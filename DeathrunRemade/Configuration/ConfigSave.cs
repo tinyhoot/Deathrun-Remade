@@ -15,7 +15,7 @@ namespace DeathrunRemade.Configuration
         // Everything in here *does* get assigned, but by reflection rather than explicitly.
 #pragma warning disable CS0649
         // Survival
-        public readonly Difficulty3 CrushDepth;
+        public readonly Difficulty3 PersonalCrushDepth;
         public readonly Difficulty4 DamageTaken;
         public readonly Difficulty3 NitrogenBends;
         public readonly bool SpecialAirTanks;
@@ -34,7 +34,7 @@ namespace DeathrunRemade.Configuration
         
         // Costs
         public readonly Difficulty4 BatteryCapacity;
-        public readonly Difficulty4 BuilderCosts;
+        public readonly Difficulty4 ToolCosts;
         public readonly Difficulty4 PowerCosts;
         public readonly Difficulty4 ScansRequired;
         public readonly VehicleDifficulty VehicleCosts;
