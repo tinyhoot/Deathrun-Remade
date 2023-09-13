@@ -139,12 +139,12 @@
         <Compile Include="Objects\JsonTechData.cs" />
         <Compile Include="Objects\SaveData.cs" />
         <Compile Include="Objects\StartLocation.cs" />
+        <Compile Include="Patches\AggressionPatcher.cs" />
         <Compile Include="Patches\AirPatcher.cs" />
         <Compile Include="Patches\BatteryPatcher.cs" />
         <Compile Include="Patches\CompassPatcher.cs" />
         <Compile Include="Patches\EscapePodPatcher.cs" />
         <Compile Include="Patches\ExplosionPatcher.cs" />
-        <Compile Include="Patches\NitrogenPatcher.cs" />
         <Compile Include="Patches\SuitPatcher.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>

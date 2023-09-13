@@ -37,6 +37,7 @@ namespace DeathrunRemade
         // Run Update() once per second.
         private const float UpdateInterval = 1f;
         private Hootimer _updateTimer;
+        private Harmony _harmony;
 
         private void Awake()
         {
@@ -55,8 +56,14 @@ namespace DeathrunRemade
             RegisterCommands();
             RegisterGameEvents();
             
-            Harmony harmony = new Harmony(GUID);
-            harmony.PatchAll(Hootils.GetAssembly());
+            _harmony = new Harmony(GUID);
+            // Wow I really wish HarmonyX would update their fork with PatchCategories
+            _harmony.PatchAll(typeof(GameEventHandler));
+            _harmony.PatchAll(typeof(BatteryPatcher));
+            _harmony.PatchAll(typeof(CompassPatcher));
+            _harmony.PatchAll(typeof(EscapePodPatcher));
+            _harmony.PatchAll(typeof(ExplosionPatcher));
+            _harmony.PatchAll(typeof(SuitPatcher));
 
             // Register the save game.
             SaveData.Main = SaveDataHandler.RegisterSaveDataCache<SaveData>();
@@ -101,6 +108,7 @@ namespace DeathrunRemade
                 }
             };
             GameEventHandler.OnSavedGameLoaded += EscapePodPatcher.OnSavedGameLoaded;
+            SaveData.OnSaveDataLoaded += DoDelayedHarmonyPatching;
         }
 
         /// <summary>
@@ -139,6 +147,19 @@ namespace DeathrunRemade
                 "Dive Suit Upgrades", suitIcon);
             CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, Constants.WorkbenchTankTab,
                 "Specialty O2 Tanks", tankIcon);
+        }
+
+        /// <summary>
+        /// Execute all harmony patches that should only be applied with the right config options enabled. For that
+        /// reason, they must be delayed until the game loads and the config is locked in.
+        /// </summary>
+        private void DoDelayedHarmonyPatching(SaveData save)
+        {
+            ConfigSave config = save.Config;
+            if (config.CreatureAggression != Difficulty4.Normal)
+                _harmony.PatchAll(typeof(AggressionPatcher));
+            if (config.SurfaceAir != Difficulty3.Normal)
+                _harmony.PatchAll(typeof(AirPatcher));
         }
 
         private void DumpLocation()
