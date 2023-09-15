@@ -56,14 +56,10 @@ namespace DeathrunRemade
             RegisterCommands();
             RegisterGameEvents();
             
+            // Set up all the harmony patching.
             _harmony = new Harmony(GUID);
-            // Wow I really wish HarmonyX would update their fork with PatchCategories
-            _harmony.PatchAll(typeof(GameEventHandler));
-            _harmony.PatchAll(typeof(BatteryPatcher));
-            _harmony.PatchAll(typeof(CompassPatcher));
-            _harmony.PatchAll(typeof(EscapePodPatcher));
-            _harmony.PatchAll(typeof(ExplosionPatcher));
-            _harmony.PatchAll(typeof(SuitPatcher));
+            HarmonyPatching(_harmony);
+            SaveData.OnSaveDataLoaded += HarmonyPatchingDelayed;
 
             // Register the save game.
             SaveData.Main = SaveDataHandler.RegisterSaveDataCache<SaveData>();
@@ -79,6 +75,54 @@ namespace DeathrunRemade
             
             // Putting these things here prevents having to run them as MonoBehaviours too.
             _Notifications.Update();
+        }
+
+        /// <summary>
+        /// Execute all harmony patches that need to run every time regardless of which config options were chosen.
+        /// </summary>
+        private void HarmonyPatching(Harmony harmony)
+        {
+            // Wow I really wish HarmonyX would update their fork with PatchCategories
+            harmony.PatchAll(typeof(GameEventHandler));
+            harmony.PatchAll(typeof(BatteryPatcher));
+            harmony.PatchAll(typeof(CompassPatcher));
+            harmony.PatchAll(typeof(EscapePodPatcher));
+            harmony.PatchAll(typeof(ExplosionPatcher));
+            harmony.PatchAll(typeof(SuitPatcher));
+        }
+        
+        /// <summary>
+        /// Execute all harmony patches that should only be applied with the right config options enabled. For that
+        /// reason, they must be delayed until the game loads and the config is locked in.
+        /// </summary>
+        private void HarmonyPatchingDelayed(SaveData save)
+        {
+            ConfigSave config = save.Config;
+            if (config.CreatureAggression != Difficulty4.Normal)
+                _harmony.PatchAll(typeof(AggressionPatcher));
+            if (config.SurfaceAir != Difficulty3.Normal)
+                _harmony.PatchAll(typeof(AirPatcher));
+        }
+
+        /// <summary>
+        /// Do all the necessary work to get the mod going which can only be done when the game is done loading and
+        /// ready to play.
+        /// </summary>
+        /// <param name="player">A freshly awoken player instance.</param>
+        private void InGameSetup(Player player)
+        {
+            ConfigSave config = SaveData.Main.Config;
+            
+            // Enable crush depth if the player needs to breathe, i.e. is not in creative mode.
+            if (config.PersonalCrushDepth != Difficulty3.Normal && GameModeUtils.RequiresOxygen())
+                player.tookBreathEvent.AddHandler(this, CrushDepthHandler.CrushPlayer);
+            // Nitrogen and its UI if required by config and game mode settings.
+            if (config.NitrogenBends != Difficulty3.Normal && GameModeUtils.RequiresOxygen())
+            {
+                HootHudBar.Create<NitrogenBar>("NitrogenBar", -45, out GameObject _);
+                _DepthHud = SafeDepthHud.Create(out GameObject _);
+                player.gameObject.AddComponent<NitrogenHandler>();
+            }
         }
 
         private void InitHandlers()
@@ -97,18 +141,8 @@ namespace DeathrunRemade
             GameEventHandler.RegisterEvents();
             // Initialise deathrun messaging as soon as uGUI_Main is ready, i.e. the main menu loads.
             GameEventHandler.OnMainMenuLoaded += _Notifications.OnMainMenuLoaded;
-            GameEventHandler.OnPlayerAwake += player =>
-            {
-                // Nitrogen and UI handling.
-                if (SaveData.Main.Config.NitrogenBends != Difficulty3.Normal)
-                {
-                    HootHudBar.Create<NitrogenBar>("NitrogenBar", -45, out GameObject _);
-                    _DepthHud = SafeDepthHud.Create(out GameObject _);
-                    player.gameObject.AddComponent<NitrogenHandler>();
-                }
-            };
+            GameEventHandler.OnPlayerAwake += InGameSetup;
             GameEventHandler.OnSavedGameLoaded += EscapePodPatcher.OnSavedGameLoaded;
-            SaveData.OnSaveDataLoaded += DoDelayedHarmonyPatching;
         }
 
         /// <summary>
@@ -147,19 +181,6 @@ namespace DeathrunRemade
                 "Dive Suit Upgrades", suitIcon);
             CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, Constants.WorkbenchTankTab,
                 "Specialty O2 Tanks", tankIcon);
-        }
-
-        /// <summary>
-        /// Execute all harmony patches that should only be applied with the right config options enabled. For that
-        /// reason, they must be delayed until the game loads and the config is locked in.
-        /// </summary>
-        private void DoDelayedHarmonyPatching(SaveData save)
-        {
-            ConfigSave config = save.Config;
-            if (config.CreatureAggression != Difficulty4.Normal)
-                _harmony.PatchAll(typeof(AggressionPatcher));
-            if (config.SurfaceAir != Difficulty3.Normal)
-                _harmony.PatchAll(typeof(AirPatcher));
         }
 
         private void DumpLocation()

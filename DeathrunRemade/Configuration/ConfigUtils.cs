@@ -152,6 +152,7 @@ namespace DeathrunRemade.Configuration
             float lastShown = warning switch
             {
                 Warning.AscentSpeed => save.lastAscentWarningTime,
+                Warning.CrushDepth => save.lastCrushDepthWarningTime,
                 Warning.Decompression => save.lastDecompressionWarningTime,
                 Warning.DecompressionDamage => save.lastDecoDamageWarningTime,
                 Warning.UnbreathableAir => save.lastBreathWarningTime,

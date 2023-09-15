@@ -50,6 +50,7 @@ namespace DeathrunRemade.Objects
     internal struct WarningSave
     {
         public float lastAscentWarningTime;
+        public float lastCrushDepthWarningTime;
         public float lastBreathWarningTime;
         public float lastDecompressionWarningTime;
         public float lastDecoDamageWarningTime;
