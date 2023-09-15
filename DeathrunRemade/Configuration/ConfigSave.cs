@@ -16,7 +16,7 @@ namespace DeathrunRemade.Configuration
 #pragma warning disable CS0649
         // Survival
         public readonly Difficulty3 PersonalCrushDepth;
-        public readonly Difficulty4 DamageTaken;
+        public readonly DamageDifficulty DamageTaken;
         public readonly Difficulty3 NitrogenBends;
         public readonly bool SpecialAirTanks;
         public readonly Difficulty3 SurfaceAir;
@@ -34,7 +34,7 @@ namespace DeathrunRemade.Configuration
         
         // Costs
         public readonly Difficulty4 BatteryCapacity;
-        public readonly Difficulty4 ToolCosts;
+        public readonly Difficulty3 ToolCosts;
         public readonly Difficulty4 PowerCosts;
         public readonly Difficulty4 ScansRequired;
         public readonly VehicleDifficulty VehicleCosts;

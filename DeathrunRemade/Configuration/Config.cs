@@ -23,7 +23,7 @@ namespace DeathrunRemade.Configuration
 
         // Survival
         public ConfigEntryWrapper<Difficulty3> PersonalCrushDepth;
-        public ConfigEntryWrapper<Difficulty4> DamageTaken;
+        public ConfigEntryWrapper<DamageDifficulty> DamageTaken;
         public ConfigEntryWrapper<Difficulty3> NitrogenBends;
         public ConfigEntryWrapper<bool> SpecialAirTanks;
         public ConfigEntryWrapper<Difficulty3> SurfaceAir;
@@ -98,13 +98,14 @@ namespace DeathrunRemade.Configuration
             DamageTaken = RegisterEntry(
                 section: SectionSurvival,
                 key: nameof(DamageTaken),
-                defaultValue: Difficulty4.Deathrun,
+                defaultValue: DamageDifficulty.Deathrun,
                 description: "Increase damage taken from all sources and decrease respawn health."
             ).WithChoiceOptionStringsOverride(
-                "Love Taps (1.1x - 1.25x)",
-                "Hard (1.25x - 1.5x)",
-                "Deathrun (1.5x - 2x)",
-                "Kharaa (2x - 3x)"
+                "Normal (No changes)",
+                $"Love Taps ({DamageTakenPatcher.GetDamageMult(DamageDifficulty.LoveTaps).Item1}x - {DamageTakenPatcher.GetDamageMult(DamageDifficulty.LoveTaps).Item2}x)",
+                $"Hard ({DamageTakenPatcher.GetDamageMult(DamageDifficulty.Hard).Item1}x - {DamageTakenPatcher.GetDamageMult(DamageDifficulty.Hard).Item2}x)",
+                $"Deathrun ({DamageTakenPatcher.GetDamageMult(DamageDifficulty.Deathrun).Item1}x - {DamageTakenPatcher.GetDamageMult(DamageDifficulty.Deathrun).Item2}x)",
+                $"Kharaa ({DamageTakenPatcher.GetDamageMult(DamageDifficulty.Kharaa).Item1}x - {DamageTakenPatcher.GetDamageMult(DamageDifficulty.Kharaa).Item2}x)"
             ).WithDescription("Damage Taken");
             NitrogenBends = RegisterEntry(
                 section: SectionSurvival,

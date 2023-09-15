@@ -87,6 +87,8 @@ namespace DeathrunRemade.Configuration
         public static Vector3 GetStartPoint(out string name)
         {
             string setting = _config.StartLocation;
+            // If the save data has not yet initialised, fall back to the actual config.
+            setting ??= DeathrunInit._Config.StartLocation.Value;
 
             // This will throw an exception if the setting name has been altered for some reason, but that's intended.
             StartLocation location = DeathrunInit._Config._startLocations.First(l => l.Name == setting);

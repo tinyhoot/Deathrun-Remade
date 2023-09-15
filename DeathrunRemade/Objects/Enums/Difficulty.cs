@@ -14,6 +14,15 @@ namespace DeathrunRemade.Objects.Enums
         Deathrun,
         Kharaa,
     }
+    
+    public enum DamageDifficulty
+    {
+        Normal,
+        LoveTaps,
+        Hard,
+        Deathrun,
+        Kharaa,
+    }
 
     public enum DietPreference
     {

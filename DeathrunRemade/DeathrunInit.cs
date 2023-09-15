@@ -100,6 +100,8 @@ namespace DeathrunRemade
             ConfigSave config = save.Config;
             if (config.CreatureAggression != Difficulty4.Normal)
                 _harmony.PatchAll(typeof(AggressionPatcher));
+            if (config.DamageTaken != DamageDifficulty.Normal)
+                _harmony.PatchAll(typeof(DamageTakenPatcher));
             if (config.SurfaceAir != Difficulty3.Normal)
                 _harmony.PatchAll(typeof(AirPatcher));
         }
@@ -116,6 +118,9 @@ namespace DeathrunRemade
             // Enable crush depth if the player needs to breathe, i.e. is not in creative mode.
             if (config.PersonalCrushDepth != Difficulty3.Normal && GameModeUtils.RequiresOxygen())
                 player.tookBreathEvent.AddHandler(this, CrushDepthHandler.CrushPlayer);
+            // Decrease the free health provided on respawn.
+            if (config.DamageTaken != DamageDifficulty.Normal && player.liveMixin)
+                player.playerRespawnEvent.AddHandler(this, DamageTakenPatcher.DecreaseRespawnHealth);
             // Nitrogen and its UI if required by config and game mode settings.
             if (config.NitrogenBends != Difficulty3.Normal && GameModeUtils.RequiresOxygen())
             {
