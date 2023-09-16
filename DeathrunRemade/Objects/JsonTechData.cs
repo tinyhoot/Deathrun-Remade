@@ -54,6 +54,20 @@ namespace DeathrunRemade.Objects
         }
     }
 
+    [Serializable]
+    internal class SerialScanData
+    {
+        [JsonConverter(typeof(BetterStringEnumConverter))]
+        public TechType techType;
+        public int amount;
+        
+        public SerialScanData(TechType techType, int amount)
+        {
+            this.techType = techType;
+            this.amount = amount;
+        }
+    }
+
     /// <summary>
     /// The normal StringEnumConverter results in a nullref for some reason so here's an extremely basic replacement.
     /// </summary>

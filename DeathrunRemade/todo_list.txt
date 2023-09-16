@@ -46,3 +46,6 @@ Substantial changes from the original
 - Damage from the Aurora explosion is dealt at the time the shockwave hits you, rather than when the explosion occurs.
   Shockwave also has a physical force and damages everything else (bases, fish, ...) too.
 - Much better compatibility with other mods due to less intrusive patching.
+
+Known Issues
+- Number of fragment scans not properly reflected by seaglide and constructor until first scan.

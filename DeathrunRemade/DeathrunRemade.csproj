@@ -155,6 +155,7 @@
     <ItemGroup>
       <EmbeddedResource Include="Assets\DeathrunStarts.csv" />
       <Content Include="Assets\RecipeChanges.json" />
+      <Content Include="Assets\ScanNumberChanges.json" />
       <Content Include="todo_list.txt" />
       <EmbeddedResource Include="Assets\AcidBattery.png" />
       <EmbeddedResource Include="Assets\AcidPowerCell.png" />

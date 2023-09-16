@@ -1,5 +1,5 @@
 {
-  "Difficulty4.Normal": [
+  "Difficulty3.Normal": [
     {
       "techType": "Seaglide",
       "craftAmount": 1,
@@ -19,7 +19,7 @@
       ]
     }
   ],
-  "Difficulty4.Hard": [
+  "Difficulty3.Hard": [
     {
       "techType": "Seaglide",
       "craftAmount": 1,
@@ -231,7 +231,7 @@
       ]
     }
   ],
-  "Difficulty4.Deathrun": [
+  "Difficulty3.Deathrun": [
     {
       "techType": "Seaglide",
       "craftAmount": 1,

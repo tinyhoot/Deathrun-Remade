@@ -1,0 +1,248 @@
+{
+  "Hard": [
+    {
+      "techType": "SeaglideFragment",
+      "amount": 3
+    },
+    {
+      "techType": "SeamothFragment",
+      "amount": 8
+    },
+    {
+      "techType": "ExosuitFragment",
+      "amount": 6
+    },
+    {
+      "techType": "CyclopsBridgeFragment",
+      "amount": 4
+    },
+    {
+      "techType": "CyclopsEngineFragment",
+      "amount": 4
+    },
+    {
+      "techType": "CyclopsHullFragment",
+      "amount": 4
+    },
+    {
+      "techType": "BeaconFragment",
+      "amount": 3
+    },
+    {
+      "techType": "GravsphereFragment",
+      "amount": 3
+    },
+    {
+      "techType": "StasisRifleFragment",
+      "amount": 4
+    },
+    {
+      "techType": "PropulsionCannonFragment",
+      "amount": 4
+    },
+    {
+      "techType": "LaserCutterFragment",
+      "amount": 4
+    },
+    {
+      "techType": "BatteryChargerFragment",
+      "amount": 4
+    },
+    {
+      "techType": "PowerCellChargerFragment",
+      "amount": 4
+    },
+    {
+      "techType": "ConstructorFragment",
+      "amount": 6
+    },
+    {
+      "techType": "BaseBioReactorFragment",
+      "amount": 4
+    },
+    {
+      "techType": "BaseNuclearReactorFragment",
+      "amount": 4
+    },
+    {
+      "techType": "ThermalPlantFragment",
+      "amount": 4
+    },
+    {
+      "techType": "MoonpoolFragment",
+      "amount": 4
+    },
+    {
+      "techType": "PowerTransmitterFragment",
+      "amount": 2
+    },
+    {
+      "techType": "BaseMapRoomFragment",
+      "amount": 4
+    }
+  ],
+  "Deathrun": [
+    {
+      "techType": "SeaglideFragment",
+      "amount": 4
+    },
+    {
+      "techType": "SeamothFragment",
+      "amount": 12
+    },
+    {
+      "techType": "ExosuitFragment",
+      "amount": 7
+    },
+    {
+      "techType": "CyclopsBridgeFragment",
+      "amount": 5
+    },
+    {
+      "techType": "CyclopsEngineFragment",
+      "amount": 5
+    },
+    {
+      "techType": "CyclopsHullFragment",
+      "amount": 5
+    },
+    {
+      "techType": "BeaconFragment",
+      "amount": 4
+    },
+    {
+      "techType": "GravsphereFragment",
+      "amount": 4
+    },
+    {
+      "techType": "StasisRifleFragment",
+      "amount": 6
+    },
+    {
+      "techType": "PropulsionCannonFragment",
+      "amount": 6
+    },
+    {
+      "techType": "LaserCutterFragment",
+      "amount": 6
+    },
+    {
+      "techType": "BatteryChargerFragment",
+      "amount": 6
+    },
+    {
+      "techType": "PowerCellChargerFragment",
+      "amount": 6
+    },
+    {
+      "techType": "ConstructorFragment",
+      "amount": 10
+    },
+    {
+      "techType": "BaseBioReactorFragment",
+      "amount": 5
+    },
+    {
+      "techType": "BaseNuclearReactorFragment",
+      "amount": 5
+    },
+    {
+      "techType": "ThermalPlantFragment",
+      "amount": 5
+    },
+    {
+      "techType": "MoonpoolFragment",
+      "amount": 5
+    },
+    {
+      "techType": "PowerTransmitterFragment",
+      "amount": 2
+    },
+    {
+      "techType": "BaseMapRoomFragment",
+      "amount": 5
+    }
+  ],
+  "Kharaa": [
+    {
+      "techType": "SeaglideFragment",
+      "amount": 6
+    },
+    {
+      "techType": "SeamothFragment",
+      "amount": 20
+    },
+    {
+      "techType": "ExosuitFragment",
+      "amount": 8
+    },
+    {
+      "techType": "CyclopsBridgeFragment",
+      "amount": 7
+    },
+    {
+      "techType": "CyclopsEngineFragment",
+      "amount": 7
+    },
+    {
+      "techType": "CyclopsHullFragment",
+      "amount": 7
+    },
+    {
+      "techType": "BeaconFragment",
+      "amount": 6
+    },
+    {
+      "techType": "GravsphereFragment",
+      "amount": 4
+    },
+    {
+      "techType": "StasisRifleFragment",
+      "amount": 6
+    },
+    {
+      "techType": "PropulsionCannonFragment",
+      "amount": 6
+    },
+    {
+      "techType": "LaserCutterFragment",
+      "amount": 6
+    },
+    {
+      "techType": "BatteryChargerFragment",
+      "amount": 6
+    },
+    {
+      "techType": "PowerCellChargerFragment",
+      "amount": 6
+    },
+    {
+      "techType": "ConstructorFragment",
+      "amount": 10
+    },
+    {
+      "techType": "BaseBioReactorFragment",
+      "amount": 6
+    },
+    {
+      "techType": "BaseNuclearReactorFragment",
+      "amount": 6
+    },
+    {
+      "techType": "ThermalPlantFragment",
+      "amount": 6
+    },
+    {
+      "techType": "MoonpoolFragment",
+      "amount": 6
+    },
+    {
+      "techType": "PowerTransmitterFragment",
+      "amount": 4
+    },
+    {
+      "techType": "BaseMapRoomFragment",
+      "amount": 6
+    }
+  ]
+}

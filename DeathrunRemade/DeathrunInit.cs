@@ -33,6 +33,7 @@ namespace DeathrunRemade
         internal static ILogHandler _Log;
         internal static NotificationHandler _Notifications;
         internal static SafeDepthHud _DepthHud;
+        private VanillaRecipeChanges _recipeChanges;
 
         // Run Update() once per second.
         private const float UpdateInterval = 1f;
@@ -51,6 +52,7 @@ namespace DeathrunRemade
             _Config.RegisterModOptions(NAME, transform);
             
             InitHandlers();
+            LoadFiles();
             SetupCraftTree();
             RegisterItems();
             RegisterCommands();
@@ -128,11 +130,22 @@ namespace DeathrunRemade
                 _DepthHud = SafeDepthHud.Create(out GameObject _);
                 player.gameObject.AddComponent<NitrogenHandler>();
             }
+            
+            // Deal with any recipe changes.
+            _recipeChanges.RegisterFragmentChanges(config);
+            _recipeChanges.RegisterRecipeChanges(config);
         }
 
         private void InitHandlers()
         {
             _Notifications = new NotificationHandler(_Log);
+        }
+
+        private void LoadFiles()
+        {
+            _recipeChanges = new VanillaRecipeChanges();
+            // Ignore a compiler warning.
+            _ = _recipeChanges.LoadFromDiskAsync();
         }
 
         private void RegisterCommands()
