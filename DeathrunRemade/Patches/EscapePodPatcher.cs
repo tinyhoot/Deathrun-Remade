@@ -71,6 +71,7 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(EscapePod), nameof(EscapePod.FixedUpdate))]
         private static bool OverrideLifepodPhysics(EscapePod __instance)
         {
+            DeathrunInit._Log.Debug($"SinkLifepod: {SaveData.Main.Config.SinkLifepod}");
             if (!SaveData.Main.Config.SinkLifepod)
                 return true;
             
@@ -95,9 +96,12 @@ namespace DeathrunRemade.Patches
             // If the pod stopped moving, assume it hit the ground and anchor it.
             if (Time.time - _lastFrozenTime > 2f && _avgDistance < 0.2f && Ocean.GetDepthOf(__instance.gameObject) > 10f)
             {
-                // Move the pod back up a bit to give it some space to tilt.
-                __instance.transform.Translate(0f, 2f, 0f);
-                TiltLifepod(__instance);
+                if (SaveData.Main.Config.ToppleLifepod)
+                {
+                    // Move the pod back up a bit to give it some space to tilt.
+                    __instance.transform.Translate(0f, 2f, 0f);
+                    TiltLifepod(__instance);
+                }
                 AnchorLifepod(__instance, wf);
                 // Only shake the camera if the player is inside the pod.
                 if (Player.main.currentEscapePod != null)

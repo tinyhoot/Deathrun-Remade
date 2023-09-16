@@ -195,8 +195,6 @@ namespace DeathrunRemade
 
         private void TestMe()
         {
-            ConfigSave.SerializeConfig(_Config);
-            return;
             // FMODAsset asset = AudioUtils.GetFmodAsset("event:/sub/cyclops/impact_solid_hard");
             // FMODUWE.PlayOneShot(asset, Player.main.transform.position);
             // RESULT result = FMODUWE.GetEventInstance(asset.path, out EventInstance instance);

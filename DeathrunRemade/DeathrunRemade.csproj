@@ -50,8 +50,7 @@
           <Private>False</Private>
         </Reference>
         <Reference Include="Nautilus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-          <HintPath>..\packages\Subnautica.Nautilus.1.0.0-pre.16\lib\net472\Nautilus.dll</HintPath>
-          <Private>False</Private>
+          <HintPath>..\packages\Subnautica.Nautilus.1.0.0-pre.21\lib\net472\Nautilus.dll</HintPath>
         </Reference>
         <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
           <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>

@@ -12,8 +12,6 @@ namespace DeathrunRemade.Configuration
     /// </summary>
     internal readonly struct ConfigSave
     {
-        // Everything in here *does* get assigned, but by reflection rather than explicitly.
-#pragma warning disable CS0649
         // Survival
         public readonly Difficulty3 PersonalCrushDepth;
         public readonly DamageDifficulty DamageTaken;
@@ -52,49 +50,69 @@ namespace DeathrunRemade.Configuration
         public readonly bool ShowHighscoreTips;
         public readonly Hints ShowWarnings;
         
-        // This field defaults to false in any instance that was made using the constructor rather than serialisation.
+        // This field defaults to false in any instance that was made using the default constructor rather than
+        // serialisation from a config file.
         public readonly bool WasInitialised;
-        
-#pragma warning restore CS0649
-        
-        /// <summary>
-        /// Create a new save data instance from an existing config.
-        /// </summary>
-        public static ConfigSave SerializeConfig(Config config)
+
+        public ConfigSave(Config config)
         {
-            ConfigSave save = new ConfigSave();
-            // Use reflection to copy each field from the config to the field in the save data of the same name.
-            // This also gets around the readonly restriction. Ideally all of this would be a constructor but that
-            // does not allow for setting fields by reflection (i.e. arbitrary names).
-            var fields = AccessTools.GetDeclaredFields(typeof(Config));
-            foreach (FieldInfo field in fields)
+            PersonalCrushDepth = config.PersonalCrushDepth.Value;
+            DamageTaken = config.DamageTaken.Value;
+            NitrogenBends = config.NitrogenBends.Value;
+            SpecialAirTanks = config.SpecialAirTanks.Value;
+            SurfaceAir = config.SurfaceAir.Value;
+            StartLocation = config.StartLocation.Value;
+            SinkLifepod = config.SinkLifepod.Value;
+            ToppleLifepod = config.ToppleLifepod.Value;
+
+            CreatureAggression = config.CreatureAggression.Value;
+            WaterMurkiness = config.WaterMurkiness.Value;
+            ExplosionDepth = config.ExplosionDepth.Value;
+            ExplosionTime = config.ExplosionTime.Value;
+            RadiationDepth = config.RadiationDepth.Value;
+            RadiationFX = config.RadiationFX.Value;
+
+            BatteryCapacity = config.BatteryCapacity.Value;
+            ToolCosts = config.ToolCosts.Value;
+            PowerCosts = config.PowerCosts.Value;
+            ScansRequired = config.ScansRequired.Value;
+            VehicleCosts = config.VehicleCosts.Value;
+            VehicleExitPowerLoss = config.VehicleExitPowerLoss.Value;
+
+            FarmingChallenge = config.FarmingChallenge.Value;
+            FilterPumpChallenge = config.FilterPumpChallenge.Value;
+            FoodChallenge = config.FoodChallenge.Value;
+            IslandFoodChallenge = config.IslandFoodChallenge.Value;
+            PacifistChallenge = config.PacifistChallenge.Value;
+            ShowHighscores = config.ShowHighscores.Value;
+            ShowHighscoreTips = config.ShowHighscoreTips.Value;
+            ShowWarnings = config.ShowWarnings.Value;
+            
+            WasInitialised = true;
+
+            Validate();
+        }
+
+        /// <summary>
+        /// Ensure that no discrepancy between the config fields and the saved fields can exist by checking for the
+        /// same field names with reflection.
+        /// </summary>
+        /// <exception cref="ConfigEntryException">Thrown if the config and this save data do not match up.</exception>
+        private void Validate()
+        {
+            var configFields = AccessTools.GetDeclaredFields(typeof(Config));
+            foreach (FieldInfo configField in configFields)
             {
                 // Ignore all fields that aren't actually config values.
-                if (!field.FieldType.IsGenericType || !field.FieldType.GetGenericTypeDefinition().IsAssignableFrom(typeof(ConfigEntryWrapper<>)))
+                if (!configField.FieldType.IsGenericType || !configField.FieldType.GetGenericTypeDefinition().IsAssignableFrom(typeof(ConfigEntryWrapper<>)))
                     continue;
-
-                // Find the field in this struct of the same name.
-                FieldInfo saveField = AccessTools.Field(typeof(ConfigSave), field.Name);
-                if (saveField is null || field.FieldType.GetGenericArguments()[0] != saveField.FieldType)
-                    throw new ConfigEntryException($"Failed to find field in SaveData corresponding to {field.Name}: "
-                                                   + $"Types were '{field.FieldType.GetGenericArguments()[0]}' and '{saveField?.FieldType}'");
-
-                object wrapper = field.GetValue(config);
-                if (wrapper is null)
-                {
-                    DeathrunInit._Log.Debug($"Ignoring field {field.Name}, was not set in config.");
-                    continue;
-                }
                 
-                // Copy the value.
-                object value = AccessTools.Property(wrapper.GetType(), nameof(ConfigEntryWrapper<bool>.Value))?.GetValue(wrapper);
-                saveField.SetValue(save, value);
-                DeathrunInit._Log.Debug($"Successfully set field {saveField.Name}");
+                // Find the field in this struct of the same name.
+                FieldInfo saveField = AccessTools.Field(typeof(ConfigSave), configField.Name);
+                if (saveField is null || configField.FieldType.GetGenericArguments()[0] != saveField.FieldType)
+                    throw new ConfigEntryException($"Failed to find field in SaveData corresponding to {configField.Name}: "
+                                                   + $"Types were '{configField.FieldType.GetGenericArguments()[0]}' and '{saveField?.FieldType}'");
             }
-
-            AccessTools.Field(typeof(ConfigSave), nameof(WasInitialised)).SetValue(save, true);
-            DeathrunInit._Log.Debug($"Config serialization complete!");
-            return save;
         }
     }
 }

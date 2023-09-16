@@ -26,9 +26,11 @@ namespace DeathrunRemade.Objects
             base.Load(createFileIfNotExist);
             // The save data loads on game start. If the config data has not been set already, lock it in.
             if (!Config.WasInitialised)
-                Config = ConfigSave.SerializeConfig(DeathrunInit._Config);
+                Config = new ConfigSave(DeathrunInit._Config);
             // Once the file has completed loading/creation, notify everything waiting on it.
             Ready = true;
+            DeathrunInit._Log.Debug("Save data is ready.");
+            DeathrunInit._Log.Debug($"SinkLifepod: {Config.SinkLifepod}");
             OnSaveDataLoaded?.Invoke(this);
         }
     }
