@@ -59,8 +59,7 @@ namespace DeathrunRemade.Configuration
                 _ => 200f,
             };
             // If the player wasn't wearing any of the vanilla suits, check for custom ones.
-            if (depth <= 201f)
-                depth = Suit.GetCrushDepth(suit, deathrun);
+            depth = Mathf.Max(depth, Suit.GetCrushDepth(suit, deathrun));
             return depth;
         }
 
