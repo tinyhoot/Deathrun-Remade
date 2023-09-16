@@ -17,6 +17,12 @@ namespace DeathrunRemade.Handlers
             // Only do this if the player is exposed to the elements.
             if (!player.IsUnderwater() || player.currentWaterPark != null)
                 return;
+            
+            float crushDepth = ConfigUtils.GetPersonalCrushDepth();
+            float diff = player.GetDepth() - crushDepth;
+            // Not below the crush depth, do nothing.
+            if (diff <= 0)
+                return;
 
             // Show a warning before dealing damage.
             if (ConfigUtils.ShouldShowWarning(Warning.CrushDepth, 30f))
@@ -29,12 +35,7 @@ namespace DeathrunRemade.Handlers
             // Fifty-fifty on whether you take damage this time.
             if (UnityEngine.Random.value < 0.5f)
                 return;
-
-            float crushDepth = ConfigUtils.GetPersonalCrushDepth();
-            float diff = player.GetDepth() - crushDepth;
-            // Not below the crush depth, do nothing.
-            if (diff <= 0)
-                return;
+            
             // At 50 depth, ^2 (4dmg). At 250 depth, ^6 (64dmg).
             // Together with the separate global damage multiplier, this gets quite punishing.
             float damageExp = 1f + Mathf.Clamp(diff / 50f, 1f, 5f);
