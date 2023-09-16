@@ -71,7 +71,6 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(EscapePod), nameof(EscapePod.FixedUpdate))]
         private static bool OverrideLifepodPhysics(EscapePod __instance)
         {
-            DeathrunInit._Log.Debug($"SinkLifepod: {SaveData.Main.Config.SinkLifepod}");
             if (!SaveData.Main.Config.SinkLifepod)
                 return true;
             

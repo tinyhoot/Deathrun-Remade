@@ -30,7 +30,6 @@ namespace DeathrunRemade.Objects
             // Once the file has completed loading/creation, notify everything waiting on it.
             Ready = true;
             DeathrunInit._Log.Debug("Save data is ready.");
-            DeathrunInit._Log.Debug($"SinkLifepod: {Config.SinkLifepod}");
             OnSaveDataLoaded?.Invoke(this);
         }
     }
