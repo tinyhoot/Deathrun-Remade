@@ -4,6 +4,7 @@ using System.Linq;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
+using DeathrunRemade.Patches;
 using UnityEngine;
 using ILogHandler = HootLib.Interfaces.ILogHandler;
 
@@ -117,21 +118,7 @@ namespace DeathrunRemade.Configuration
             // Surface air without a filter is always unbreathable on high difficulties.
             if (_config.SurfaceAir == Difficulty3.Deathrun)
                 return false;
-            return !IsSurfaceIrradiated();
-        }
-
-        /// <summary>
-        /// Check whether the surface as a whole is irradiated.
-        /// </summary>
-        public static bool IsSurfaceIrradiated()
-        {
-            // If these do not exist the game is probably still loading.
-            if (CrashedShipExploder.main is null || LeakingRadiation.main is null)
-                return false;
-            if (!CrashedShipExploder.main.IsExploded())
-                return false;
-            // Surface is decontaminated once leaks are fixed and radiation has completely dissipated.
-            return LeakingRadiation.main.radiationFixed && LeakingRadiation.main.currentRadius < 5f;
+            return !RadiationPatcher.IsSurfaceIrradiated();
         }
 
         /// <summary>

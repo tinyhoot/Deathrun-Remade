@@ -8,6 +8,7 @@ Items
 - Acid powercells not accepted in the charger?
 - Batteries need their stuff set at game start, not during item registering.
 - Expand on Kharaa vehicle recipe costs. Only seamoth actually got any changes?
+- Ensure the filterchip gets added to known tech when all leaks have been fixed.
 
 Monos
 - Maybe use those in more places than the original did?
@@ -31,11 +32,17 @@ New Ideas
 - Add game quit/reload warning on loading screen to hootils
 - Introduce QoL way to get stalker teeth because YOU NEED SO MANY
 - Change nuget packages.config to csproj PackageReference?
+- Add some way to remove passive power drain from the scanner room. It gets really rough with the multiplier.
+- Probably difficult. Partial base flooding on entry? Stoppable with bulkhead? Apparently they already do that in
+  vanilla, so it could be doable.
+- Draining water costs power
+- Some extra stuff from RadiationChallenge? Lifepod no longer safe, that kind of thing?
 
 Checks at the very end
 - All items craft properly and fit into their slots
 - Breathing works as it should in bases, alien bases, vehicles, open water
 - No bends from precursor base elevator
+- Do one huge sweep through all the Patcher classes and ensure nothing was forgotten
 
 Substantial changes from the original
 - Photosynthetic tanks always work in sunlight, including the surface

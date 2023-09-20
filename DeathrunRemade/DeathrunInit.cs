@@ -15,6 +15,7 @@ using HootLib;
 using HootLib.Components;
 using HootLib.Objects;
 using Nautilus.Handlers;
+using Nautilus.Utility;
 using Newtonsoft.Json;
 using UnityEngine;
 using ILogHandler = HootLib.Interfaces.ILogHandler;
@@ -90,6 +91,7 @@ namespace DeathrunRemade
             harmony.PatchAll(typeof(CompassPatcher));
             harmony.PatchAll(typeof(EscapePodPatcher));
             harmony.PatchAll(typeof(ExplosionPatcher));
+            harmony.PatchAll(typeof(RadiationPatcher));
             harmony.PatchAll(typeof(SuitPatcher));
         }
         
@@ -117,6 +119,9 @@ namespace DeathrunRemade
         {
             ConfigSave config = SaveData.Main.Config;
             
+            // Set up GUI components.
+            RadiationPatcher.CalculateGuiPosition();
+            
             // Enable crush depth if the player needs to breathe, i.e. is not in creative mode.
             if (config.PersonalCrushDepth != Difficulty3.Normal && GameModeUtils.RequiresOxygen())
                 player.tookBreathEvent.AddHandler(this, CrushDepthHandler.CrushPlayer);
@@ -130,7 +135,7 @@ namespace DeathrunRemade
                 _DepthHud = SafeDepthHud.Create(out GameObject _);
                 player.gameObject.AddComponent<NitrogenHandler>();
             }
-            
+
             // Deal with any recipe changes.
             _recipeChanges.RegisterFragmentChanges(config);
             _recipeChanges.RegisterRecipeChanges(config);
@@ -208,6 +213,17 @@ namespace DeathrunRemade
 
         private void TestMe()
         {
+            var bundle = AssetBundleLoadingUtils.LoadFromAssetsFolder(Hootils.GetAssembly(), "highscores");
+            foreach (var assetName in bundle.GetAllAssetNames())
+            {
+                _Log.Debug($"Asset: {assetName}");
+            }
+            var scores = bundle.LoadAsset<GameObject>("HighscoreMenu");
+            var scores2 = Instantiate(scores, uGUI_MainMenu.main.transform, false);
+            scores2.SetActive(true);
+            _Log.Debug("DONE.");
+            _Log.InGameMessage("YES.");
+            return;
             // FMODAsset asset = AudioUtils.GetFmodAsset("event:/sub/cyclops/impact_solid_hard");
             // FMODUWE.PlayOneShot(asset, Player.main.transform.position);
             // RESULT result = FMODUWE.GetEventInstance(asset.path, out EventInstance instance);

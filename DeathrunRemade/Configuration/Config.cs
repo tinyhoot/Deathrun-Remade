@@ -133,7 +133,7 @@ namespace DeathrunRemade.Configuration
                 key: nameof(SpecialAirTanks),
                 defaultValue: true,
                 description: "Add new special air tanks which regenerate oxygen under the right conditions, like "
-                             + "surface light or heat."
+                             + "sunlight or heat."
             ).WithDescription("Enable Special Air Tanks");
             StartLocation = RegisterEntry(
                 section: SectionSurvival,

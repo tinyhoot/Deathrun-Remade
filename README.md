@@ -17,10 +17,11 @@ Items that are ticked off are complete. Yellow circles mark work in progress.
   - [ ] Main Menu and High Scores
   - [x] Nitrogen
   - [ ] Power Changes
-  - [ ] 🟡 Radiation
+  - [x] Radiation
   - [x] Random Start and Lifepod
   - [x] UI
 - [x] MonoBehaviours
+- [ ] PDA Entries, Item Descriptions
 - [ ] 🟡 Plugin loading and organisation
 - [x] Recipe Changes
 - [x] Save System
