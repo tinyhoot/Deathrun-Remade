@@ -56,3 +56,4 @@ Substantial changes from the original
 
 Known Issues
 - Number of fragment scans not properly reflected by seaglide and constructor until first scan.
+- Sometimes you get flung out of your escape pod at the beginning.

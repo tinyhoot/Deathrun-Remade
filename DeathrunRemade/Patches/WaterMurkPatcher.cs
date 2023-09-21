@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace DeathrunRemade.Patches
 {
+    [HarmonyPatch]
     internal class WaterMurkPatcher
     {
         /// <summary>

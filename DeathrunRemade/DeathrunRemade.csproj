@@ -151,6 +151,7 @@
         <Compile Include="Patches\DamageTakenPatcher.cs" />
         <Compile Include="Patches\EscapePodPatcher.cs" />
         <Compile Include="Patches\ExplosionPatcher.cs" />
+        <Compile Include="Patches\FarmingChallengePatcher.cs" />
         <Compile Include="Patches\PowerPatcher.cs" />
         <Compile Include="Patches\RadiationPatcher.cs" />
         <Compile Include="Patches\SuitPatcher.cs" />

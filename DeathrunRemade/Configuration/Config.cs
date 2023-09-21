@@ -321,8 +321,8 @@ namespace DeathrunRemade.Configuration
                 description: "Plants grow more slowly, making it more difficult to farm them."
             ).WithChoiceOptionStringsOverride(
                 "Normal (No changes)",
-                "Hard (1/3x speed)",
-                "Deathrun (1/6x speed)"
+                $"Hard (1/{FarmingChallengePatcher.GetDurationMult(Difficulty3.Hard)}x speed)",
+                $"Deathrun (1/{FarmingChallengePatcher.GetDurationMult(Difficulty3.Deathrun)}x speed)"
             ).WithDescription("Challenge: Farming");
             IslandFoodChallenge = RegisterEntry(
                 section: SectionChallenges,
