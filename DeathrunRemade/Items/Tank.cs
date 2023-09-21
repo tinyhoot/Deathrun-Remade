@@ -1,5 +1,6 @@
 using DeathrunRemade.Components;
 using DeathrunRemade.Handlers;
+using DeathrunRemade.Objects;
 using HootLib;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
@@ -52,9 +53,15 @@ namespace DeathrunRemade.Items
             TechType cloneType = variant == Variant.PhotosynthesisTankSmall ? TechType.Tank : TechType.PlasteelTank;
             var template = new CloneTemplate(_prefabInfo, cloneType);
             _prefab.SetGameObject(template);
-            _prefab.Register();
 
+            // Register these special tanks later, and only if they're actually enabled in the config.
+            SaveData.OnSaveDataLoaded += data =>
+            {
+                if (data.Config.SpecialAirTanks)
+                    _prefab.Register();
+            };
             // Add the special tank behaviour to the player as soon as they're ready.
+            // This won't do anything if the player isn't wearing any special tanks, so no config check necessary.
             GameEventHandler.OnPlayerAwake += player => player.gameObject.EnsureComponent<DeathrunTank>();
         }
         
