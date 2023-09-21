@@ -57,6 +57,7 @@ namespace DeathrunRemade.Configuration
         // UI
         public ConfigEntryWrapper<bool> ShowHighscores;
         public ConfigEntryWrapper<bool> ShowHighscoreTips;
+        public ConfigEntryWrapper<bool> ShowTutorials;
         public ConfigEntryWrapper<Hints> ShowWarnings;
 
         internal readonly List<StartLocation> _startLocations;
@@ -279,9 +280,12 @@ namespace DeathrunRemade.Configuration
                 description: "Increase all power costs and even more so while irradiated. Recharge speeds are also slower."
             ).WithChoiceOptionStringsOverride(
                 "Normal (No changes)",
-                "Hard (2x, 3x while irradiated)",
-                "Deathrun (3x, 5x while irradiated)",
-                "Kharaa (??x, ??x while irradiated)"
+                $"Hard ({PowerPatcher.GetPowerCostMult(Difficulty4.Hard, false)}x, "
+                + $"{PowerPatcher.GetPowerCostMult(Difficulty4.Hard, true)}x while irradiated)",
+                $"Deathrun ({PowerPatcher.GetPowerCostMult(Difficulty4.Deathrun, false)}x, "
+                + $"{PowerPatcher.GetPowerCostMult(Difficulty4.Deathrun, true)}x while irradiated)",
+                $"Kharaa ({PowerPatcher.GetPowerCostMult(Difficulty4.Kharaa, false)}x, "
+                + $"{PowerPatcher.GetPowerCostMult(Difficulty4.Kharaa, true)}x while irradiated)"
             ).WithDescription("Power Costs");
             VehicleExitPowerLoss = RegisterEntry(
                 section: SectionCosts,
@@ -292,9 +296,9 @@ namespace DeathrunRemade.Configuration
                              + "Decompression Modules."
             ).WithChoiceOptionStringsOverride(
                 "Normal (No changes)",
-                "Hard (Depth / 20)",
-                "Deathrun (Depth / 10)",
-                "Kharaa (Depth / 2.5)"
+                $"Hard (Depth / {PowerPatcher.GetVehicleExitCostDiv(Difficulty4.Hard, true)})",
+                $"Deathrun (Depth / {PowerPatcher.GetVehicleExitCostDiv(Difficulty4.Deathrun, true)})",
+                $"Kharaa (Depth / {PowerPatcher.GetVehicleExitCostDiv(Difficulty4.Kharaa, true)})"
             ).WithDescription("Power Loss on Vehicle Exit");
         }
 
@@ -366,6 +370,12 @@ namespace DeathrunRemade.Configuration
                 defaultValue: true,
                 description: "Show tips about how to reach better scores during loading screens."
             ).WithDescription("Show Highscore Tips");
+            ShowTutorials = RegisterEntry(
+                section: SectionUI,
+                key: nameof(ShowTutorials),
+                defaultValue: true,
+                description: "Show tutorial messages when something unique to Deathrun happens for the first time."
+            ).WithDescription("Show Tutorials");
             ShowWarnings = RegisterEntry(
                 section: SectionUI,
                 key: nameof(ShowWarnings),
@@ -414,6 +424,7 @@ namespace DeathrunRemade.Configuration
             modOptions.AddSeparatorBeforeOption(ShowHighscores.GetId());
             modOptions.AddItem(ShowHighscores.ToModToggleOption());
             modOptions.AddItem(ShowHighscoreTips.ToModToggleOption());
+            modOptions.AddItem(ShowTutorials.ToModToggleOption());
             modOptions.AddItem(ShowWarnings.ToModChoiceOption());
 
             OptionsPanelHandler.RegisterModOptions(modOptions);

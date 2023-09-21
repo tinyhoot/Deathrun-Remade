@@ -1,6 +1,10 @@
+using System;
+using DeathrunRemade.Handlers;
+using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
+using HootLib.Objects.Exceptions;
 using UnityEngine;
 
 namespace DeathrunRemade.Patches
@@ -8,6 +12,9 @@ namespace DeathrunRemade.Patches
     [HarmonyPatch]
     internal class PowerPatcher
     {
+        // Used to keep track of which vehicle is being exited by the player.
+        private static Vehicle _ejectedVehicle;
+        
         [HarmonyPrefix]
         [HarmonyPatch(typeof(PowerSystem), nameof(PowerSystem.AddEnergy))]
         private static void AddBaseEnergy(IPowerInterface powerInterface, ref float amount)
@@ -68,6 +75,109 @@ namespace DeathrunRemade.Patches
         }
 
         /// <summary>
+        /// The postfix is incapable of determining what vehicle was just exited, so set it up right here.
+        /// </summary>
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(Player), nameof(Player.TryEject))]
+        private static void ConsumeVehicleExitPowerPrefix(Player __instance)
+        {
+            _ejectedVehicle = __instance.GetVehicle();
+        }
+        
+        /// <summary>
+        /// Consume power when the player exits a Seamoth/Prawn at depth, reduced by decompression modules.
+        /// </summary>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(Player), nameof(Player.TryEject))]
+        private static void ConsumeVehicleExitPower(Player __instance)
+        {
+            Difficulty4 difficulty = SaveData.Main.Config.VehicleExitPowerLoss;
+            // If the vehicle is a Cyclops or the config says no, stop.
+            if (_ejectedVehicle is null || difficulty == Difficulty4.Normal)
+                return;
+            // No penalty for exiting in a moonpool.
+            if (PrecursorMoonPoolTrigger.inMoonpool || __instance.precursorOutOfWater)
+                return;
+            // No penalty for very shallow (surface) exits.
+            float depth = Ocean.GetDepthOf(_ejectedVehicle.transform);
+            if (depth < 5f)
+                return;
+            // Never punish for exiting in any of the precursor locations.
+            string biome = __instance.CalculateBiome();
+            if (biome.StartsWith("Precursor", StringComparison.InvariantCultureIgnoreCase)
+                || biome.StartsWith("Prison", StringComparison.InvariantCultureIgnoreCase))
+                return;
+            
+            // Can only be seamoth or prawn at this point.
+            float divisor = GetVehicleExitCostDiv(difficulty, _ejectedVehicle is SeaMoth);
+            // Energy cost increases with depth and difficulty. At 100 depth, exiting Seamoth costs 10 power on Deathrun.
+            float energyCost = depth / divisor;
+            // Flat extra cost on top, absolutely crippling at the highest levels.
+            energyCost += 100f / divisor;
+            
+            // Reduce power cost for decompression modules.
+            int modules = _ejectedVehicle.modules.GetCount(DecompressionModule.TechType);
+            // No reduction at zero, halved at 1, no cost at 2 and above.
+            energyCost -= energyCost * (modules / 2f);
+            if (energyCost < 1f)
+                return;
+            
+            // Drain the energy.
+            _ejectedVehicle.energyInterface.ConsumeEnergy(energyCost);
+            DeathrunInit._Log.InGameMessage($"{_ejectedVehicle.subName.GetName()} drained of {energyCost:F0} energy "
+                                            + $"for exiting at {depth:F0}m depth.");
+
+            // Ensure the player understands what just happened.
+            if (_ejectedVehicle is SeaMoth)
+                TutorialHandler.TriggerTutorial(Tutorial.SeamothVehicleExitPowerLoss);
+            else
+                TutorialHandler.TriggerTutorial(Tutorial.ExosuitVehicleExitPowerLoss);
+        }
+
+        /// <summary>
+        /// Get the multiplier applied to any power consumption based on difficulty and whether the location is
+        /// considered in radiation.
+        /// Mostly exists so the in-game mod menu can access it and display the values dynamically.
+        /// </summary>
+        public static float GetPowerCostMult(Difficulty4 difficulty, bool radiation)
+        {
+            float mult;
+            if (radiation)
+                mult = difficulty switch
+                {
+                    Difficulty4.Hard => 3f,
+                    Difficulty4.Deathrun => 5f,
+                    Difficulty4.Kharaa => 6f,
+                    _ => 1f
+                };
+            else
+                mult = difficulty switch
+                {
+                    Difficulty4.Hard => 2f,
+                    Difficulty4.Deathrun => 3f,
+                    Difficulty4.Kharaa => 3.5f,
+                    _ => 1f
+                };
+            return mult;
+        }
+
+        /// <summary>
+        /// Get the divisor used for calculating the power cost of exiting a vehicle at depth.
+        /// </summary>
+        public static float GetVehicleExitCostDiv(Difficulty4 difficulty, bool isSeaMoth)
+        {
+            float difficultyMult = difficulty switch
+            {
+                Difficulty4.Hard => 20f,
+                Difficulty4.Deathrun => 10f,
+                Difficulty4.Kharaa => 2.5f,
+                _ => throw new ConfigEntryException($"Invalid value for {difficulty.GetType()}: {difficulty.ToString()}")
+            };
+            float vehicleMult = isSeaMoth ? 1f : 2f;
+            return difficultyMult * vehicleMult;
+        }
+
+        /// <summary>
         /// Check whether the given object is in any radiation.
         /// </summary>
         private static bool IsInRadiation(Transform transform)
@@ -112,25 +222,7 @@ namespace DeathrunRemade.Patches
         /// </summary>
         private static float ModifyConsumeEnergy(float energy, bool radiation)
         {
-            float mult;
-            // Slightly higher multiplier in radiation.
-            if (radiation)
-                mult = SaveData.Main.Config.PowerCosts switch
-                {
-                    Difficulty4.Hard => 3f,
-                    Difficulty4.Deathrun => 5f,
-                    Difficulty4.Kharaa => 5f,
-                    _ => 1f
-                };
-            else
-                mult = SaveData.Main.Config.PowerCosts switch
-                {
-                    Difficulty4.Hard => 2f,
-                    Difficulty4.Deathrun => 3f,
-                    Difficulty4.Kharaa => 3f,
-                    _ => 1f
-                };
-
+            float mult = GetPowerCostMult(SaveData.Main.Config.PowerCosts, radiation);
             return energy * mult;
         }
     }

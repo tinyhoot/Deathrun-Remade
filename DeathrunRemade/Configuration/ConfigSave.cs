@@ -48,6 +48,7 @@ namespace DeathrunRemade.Configuration
         // UI
         public readonly bool ShowHighscores;
         public readonly bool ShowHighscoreTips;
+        public readonly bool ShowTutorials;
         public readonly Hints ShowWarnings;
         
         // This field defaults to false in any instance that was made using the default constructor rather than
@@ -84,8 +85,10 @@ namespace DeathrunRemade.Configuration
             FoodChallenge = config.FoodChallenge.Value;
             IslandFoodChallenge = config.IslandFoodChallenge.Value;
             PacifistChallenge = config.PacifistChallenge.Value;
+            
             ShowHighscores = config.ShowHighscores.Value;
             ShowHighscoreTips = config.ShowHighscoreTips.Value;
+            ShowTutorials = config.ShowTutorials.Value;
             ShowWarnings = config.ShowWarnings.Value;
             
             WasInitialised = true;

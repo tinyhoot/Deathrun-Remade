@@ -33,6 +33,7 @@ namespace DeathrunRemade
         internal static Config _Config;
         internal static ILogHandler _Log;
         internal static NotificationHandler _Notifications;
+        internal static TutorialHandler _Tutorials;
         internal static SafeDepthHud _DepthHud;
         private VanillaRecipeChanges _recipeChanges;
 
@@ -52,6 +53,9 @@ namespace DeathrunRemade
             _Config = new Config(Hootils.GetConfigFilePath(NAME), Info.Metadata);
             _Config.RegisterModOptions(NAME, transform);
             
+            // Register the save game.
+            SaveData.Main = SaveDataHandler.RegisterSaveDataCache<SaveData>();
+            
             InitHandlers();
             LoadFiles();
             SetupCraftTree();
@@ -63,9 +67,6 @@ namespace DeathrunRemade
             _harmony = new Harmony(GUID);
             HarmonyPatching(_harmony);
             SaveData.OnSaveDataLoaded += HarmonyPatchingDelayed;
-
-            // Register the save game.
-            SaveData.Main = SaveDataHandler.RegisterSaveDataCache<SaveData>();
 
             _Log.Info("Finished loading.");
         }
@@ -146,6 +147,7 @@ namespace DeathrunRemade
         private void InitHandlers()
         {
             _Notifications = new NotificationHandler(_Log);
+            _Tutorials = new TutorialHandler(_Notifications, SaveData.Main);
         }
 
         private void LoadFiles()

@@ -19,6 +19,7 @@ namespace DeathrunRemade.Objects
         public ConfigSave Config;
         public EscapePodSave EscapePod;
         public NitrogenSave Nitrogen;
+        public TutorialSave Tutorials;
         public WarningSave Warnings;
         
         public override void Load(bool createFileIfNotExist = true)
@@ -45,6 +46,13 @@ namespace DeathrunRemade.Objects
     {
         public float nitrogen;
         public float safeDepth;
+    }
+
+    [Serializable]
+    internal struct TutorialSave
+    {
+        public bool seamothVehicleExitCosts;
+        public bool exosuitVehicleExitCosts;
     }
 
     [Serializable]
