@@ -75,6 +75,7 @@ namespace DeathrunRemade.Patches
 
         /// <summary>
         /// Island food challenge - Prevent knifing plants on the island.
+        /// We patch this instead of IsValidTarget to not make it impossible to remove those resources.
         /// </summary>
         [HarmonyPrefix]
         [HarmonyPatch(typeof(Knife), nameof(Knife.GiveResourceOnDamage))]
@@ -132,7 +133,7 @@ namespace DeathrunRemade.Patches
 
             // The Aurora has not exploded yet, so we can rule out this specific case.
             if (difficulty == RelativeToExplosion.After
-                && (CrashedShipExploder.main is null || CrashedShipExploder.main.IsExploded()))
+                && (CrashedShipExploder.main is null || !CrashedShipExploder.main.IsExploded()))
                 return false;
 
             // Both remaining config options are covered with this check.

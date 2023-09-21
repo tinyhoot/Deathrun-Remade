@@ -12,7 +12,7 @@ Items that are ticked off are complete. Yellow circles mark work in progress.
 - [ ] 🟡 Harmony Patches
   - [x] Additional Item Behaviour
   - [x] Aurora and Explosion
-  - [ ] 🟡 Challenges and misc. config options
+  - [x] Challenges and misc. config options
   - [x] Creature Aggression
   - [ ] Main Menu and High Scores
   - [x] Nitrogen
@@ -22,6 +22,8 @@ Items that are ticked off are complete. Yellow circles mark work in progress.
   - [x] UI
 - [x] MonoBehaviours
 - [ ] PDA Entries, Item Descriptions
-- [ ] 🟡 Plugin loading and organisation
+- [x] Plugin loading and organisation
 - [x] Recipe Changes
 - [x] Save System
+- [ ] New Ideas
+- [ ] Big Bugfix Playtest

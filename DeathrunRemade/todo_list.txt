@@ -27,7 +27,6 @@ New Ideas
 - Add config options for moving the GUI elements relative to top/sides/wherever.
 - Self-updating score multiplier in the options menu, to show you what you'll get
 - Progressively worse Kharaa infection to counteract difficulty being too frontloaded
-- DealDamageOnImpact.OnCollisionEnter can be transpiled to not allow dealing damage by ramming stuff with vehicles on Pacifist
 - Explicit compatibility with some popular/well fitting mods. Like C2C, Unknown Name, Enhanced Sleep, ...
 - Add game quit/reload warning on loading screen to hootils
 - Introduce QoL way to get stalker teeth because YOU NEED SO MANY
@@ -53,6 +52,7 @@ Substantial changes from the original
 - Damage from the Aurora explosion is dealt at the time the shockwave hits you, rather than when the explosion occurs.
   Shockwave also has a physical force and damages everything else (bases, fish, ...) too.
 - Much better compatibility with other mods due to less intrusive patching.
+- Pacifist challenge covers many more ways to damage things.
 
 Known Issues
 - Number of fragment scans not properly reflected by seaglide and constructor until first scan.
