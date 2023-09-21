@@ -92,6 +92,7 @@ namespace DeathrunRemade
             harmony.PatchAll(typeof(CompassPatcher));
             harmony.PatchAll(typeof(EscapePodPatcher));
             harmony.PatchAll(typeof(ExplosionPatcher));
+            harmony.PatchAll(typeof(FoodChallengePatcher));
             harmony.PatchAll(typeof(RadiationPatcher));
             harmony.PatchAll(typeof(SuitPatcher));
             harmony.PatchAll(typeof(WaterMurkPatcher));
