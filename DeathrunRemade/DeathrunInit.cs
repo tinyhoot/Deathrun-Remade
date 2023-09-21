@@ -108,6 +108,8 @@ namespace DeathrunRemade
                 _harmony.PatchAll(typeof(DamageTakenPatcher));
             if (config.SurfaceAir != Difficulty3.Normal)
                 _harmony.PatchAll(typeof(AirPatcher));
+            if (config.PowerCosts != Difficulty4.Normal)
+                _harmony.PatchAll(typeof(PowerPatcher));
         }
 
         /// <summary>

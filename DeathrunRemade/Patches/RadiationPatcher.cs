@@ -226,7 +226,7 @@ namespace DeathrunRemade.Patches
             
             float environmentRads = 0f;
             // Smaller value for any radiation, including depth-based.
-            if (IsIrradiated(player.transform, SaveData.Main.Config.RadiationDepth))
+            if (IsInRadiation(player.transform, SaveData.Main.Config.RadiationDepth))
                 environmentRads = 0.1f;
             // Bigger value for actually entering the danger radius.
             if (IsInRadiationRadius(player.transform))
@@ -365,7 +365,7 @@ namespace DeathrunRemade.Patches
         /// <summary>
         /// Check whether the given object is in any radiation at all.
         /// </summary>
-        public static bool IsIrradiated(Transform transform, Difficulty4 difficulty)
+        public static bool IsInRadiation(Transform transform, Difficulty4 difficulty)
         {
             return IsSurfaceIrradiated() && GetRadiationDepth(difficulty) >= Ocean.GetDepthOf(transform);
         }

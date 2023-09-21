@@ -16,7 +16,7 @@ Items that are ticked off are complete. Yellow circles mark work in progress.
   - [x] Creature Aggression
   - [ ] Main Menu and High Scores
   - [x] Nitrogen
-  - [ ] Power Changes
+  - [x] Power Changes
   - [x] Radiation
   - [x] Random Start and Lifepod
   - [x] UI
