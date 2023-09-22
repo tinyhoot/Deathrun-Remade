@@ -92,6 +92,7 @@ namespace DeathrunRemade
             harmony.PatchAll(typeof(CompassPatcher));
             harmony.PatchAll(typeof(EscapePodPatcher));
             harmony.PatchAll(typeof(ExplosionPatcher));
+            harmony.PatchAll(typeof(FilterPumpPatcher));
             harmony.PatchAll(typeof(FoodChallengePatcher));
             harmony.PatchAll(typeof(RadiationPatcher));
             harmony.PatchAll(typeof(SuitPatcher));
@@ -101,6 +102,9 @@ namespace DeathrunRemade
         /// <summary>
         /// Execute all harmony patches that should only be applied with the right config options enabled. For that
         /// reason, they must be delayed until the game loads and the config is locked in.
+        ///
+        /// Some of these could totally run at the beginning of the game too, but why patch things when there's no
+        /// need to?
         /// </summary>
         private void HarmonyPatchingDelayed(SaveData save)
         {

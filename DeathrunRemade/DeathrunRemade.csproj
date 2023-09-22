@@ -152,6 +152,7 @@
         <Compile Include="Patches\EscapePodPatcher.cs" />
         <Compile Include="Patches\ExplosionPatcher.cs" />
         <Compile Include="Patches\FarmingChallengePatcher.cs" />
+        <Compile Include="Patches\FilterPumpPatcher.cs" />
         <Compile Include="Patches\FoodChallengePatcher.cs" />
         <Compile Include="Patches\PacifistPatcher.cs" />
         <Compile Include="Patches\PowerPatcher.cs" />

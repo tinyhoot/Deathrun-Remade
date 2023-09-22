@@ -16,7 +16,6 @@ Monos
 
 Patches
 - All of them. So many.
-- Reintroduce easier filterpump placement. Was commented out in BreathingPatcher
 - Changing the Lifepod's RigidBody to enable interpolation might solve the stuttering issues caused by low physics update rate.
   Also, you can change the rate even at runtime! Time.fixeddeltatime
 - Don't forget to add countdown timer to explosion
@@ -53,6 +52,7 @@ Substantial changes from the original
   Shockwave also has a physical force and damages everything else (bases, fish, ...) too.
 - Much better compatibility with other mods due to less intrusive patching.
 - Pacifist challenge covers many more ways to damage things.
+- Re-introduces a patch that lets you deploy filterpumps from the water surface.
 
 Known Issues
 - Number of fragment scans not properly reflected by seaglide and constructor until first scan.
