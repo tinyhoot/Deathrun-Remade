@@ -60,6 +60,9 @@
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
         <Reference Include="System.Xml" />
+        <Reference Include="Unity.ResourceManager">
+          <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Unity.ResourceManager.dll</HintPath>
+        </Reference>
         <Reference Include="Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <HintPath>..\packages\Subnautica.GameLibs.71288.0.0-r.0\lib\net472\Unity.TextMeshPro.dll</HintPath>
           <Private>False</Private>
@@ -111,6 +114,9 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Components\RunStatsUI\BackButton.cs" />
+        <Compile Include="Components\RunStatsUI\RunStatsWindow.cs" />
+        <Compile Include="Components\RunStatsUI\RunStatsRow.cs" />
         <Compile Include="Components\SafeDepthHud.cs" />
         <Compile Include="Configuration\Config.cs" />
         <Compile Include="Configuration\ConfigSave.cs" />
@@ -142,6 +148,7 @@
         <Compile Include="Objects\Exceptions\DeathrunException.cs" />
         <Compile Include="Objects\Message.cs" />
         <Compile Include="Objects\JsonTechData.cs" />
+        <Compile Include="Objects\RunStats.cs" />
         <Compile Include="Objects\SaveData.cs" />
         <Compile Include="Objects\StartLocation.cs" />
         <Compile Include="Patches\AggressionPatcher.cs" />
@@ -168,6 +175,7 @@
       <EmbeddedResource Include="Assets\DeathrunStarts.csv" />
       <Content Include="Assets\RecipeChanges.json" />
       <Content Include="Assets\ScanNumberChanges.json" />
+      <Content Include="Assets\highscores" />
       <Content Include="todo_list.txt" />
       <EmbeddedResource Include="Assets\AcidBattery.png" />
       <EmbeddedResource Include="Assets\AcidPowerCell.png" />

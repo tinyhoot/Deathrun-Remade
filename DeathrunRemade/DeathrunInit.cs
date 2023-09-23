@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using BepInEx;
 using DeathrunRemade.Components;
+using DeathrunRemade.Components.RunStatsUI;
 using DeathrunRemade.Configuration;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
@@ -36,6 +37,10 @@ namespace DeathrunRemade
         internal static TutorialHandler _Tutorials;
         internal static SafeDepthHud _DepthHud;
         private VanillaRecipeChanges _recipeChanges;
+        
+        // The base objects from which the main menu highscores window is instantiated.
+        private GameObject _highscoreWindow;
+        private GameObject _runStatsRow;
 
         // Run Update() once per second.
         private const float UpdateInterval = 1f;
@@ -158,11 +163,28 @@ namespace DeathrunRemade
             _Tutorials = new TutorialHandler(_Notifications, SaveData.Main);
         }
 
+        /// <summary>
+        /// Load any files or assets the mod needs in order to run.
+        /// </summary>
         private void LoadFiles()
         {
+            _Log.Debug("Loading files...");
             _recipeChanges = new VanillaRecipeChanges();
             // Ignore a compiler warning.
             _ = _recipeChanges.LoadFromDiskAsync();
+            
+            // Load the assets for the highscore window. This was prepared in the unity editor.
+            _Log.Debug("Loading assets...");
+            AssetBundle bundle = AssetBundleLoadingUtils.LoadFromAssetsFolder(Hootils.GetAssembly(), "highscores");
+            _highscoreWindow = bundle.LoadAsset<GameObject>("Highscores");
+            _runStatsRow = bundle.LoadAsset<GameObject>("RunStats");
+            // These always need the below components to make them work.
+            _highscoreWindow.AddComponent<RunStatsWindow>().StatsRow = _runStatsRow;
+            _runStatsRow.AddComponent<RunStatsRow>();
+            _highscoreWindow.SetActive(false);
+            _runStatsRow.SetActive(false);
+
+            _Log.Debug("Assets loaded.");
         }
 
         private void RegisterCommands()
@@ -176,6 +198,12 @@ namespace DeathrunRemade
             GameEventHandler.RegisterEvents();
             // Initialise deathrun messaging as soon as uGUI_Main is ready, i.e. the main menu loads.
             GameEventHandler.OnMainMenuLoaded += _Notifications.OnMainMenuLoaded;
+            // Ensure the highscore window is always ready to go.
+            GameEventHandler.OnMainMenuLoaded += () =>
+            {
+                var window = Instantiate(_highscoreWindow, uGUI_MainMenu.main.transform, false);
+                window.GetComponent<RunStatsWindow>().InsertPrimaryOption();
+            };
             GameEventHandler.OnPlayerAwake += InGameSetup;
             GameEventHandler.OnSavedGameLoaded += EscapePodPatcher.OnSavedGameLoaded;
         }
@@ -225,16 +253,7 @@ namespace DeathrunRemade
 
         private void TestMe()
         {
-            var bundle = AssetBundleLoadingUtils.LoadFromAssetsFolder(Hootils.GetAssembly(), "highscores");
-            foreach (var assetName in bundle.GetAllAssetNames())
-            {
-                _Log.Debug($"Asset: {assetName}");
-            }
-            var scores = bundle.LoadAsset<GameObject>("HighscoreMenu");
-            var scores2 = Instantiate(scores, uGUI_MainMenu.main.transform, false);
-            scores2.SetActive(true);
-            _Log.Debug("DONE.");
-            _Log.InGameMessage("YES.");
+            
             return;
             // FMODAsset asset = AudioUtils.GetFmodAsset("event:/sub/cyclops/impact_solid_hard");
             // FMODUWE.PlayOneShot(asset, Player.main.transform.position);
