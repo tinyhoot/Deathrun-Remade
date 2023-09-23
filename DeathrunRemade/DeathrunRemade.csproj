@@ -141,11 +141,13 @@
         <Compile Include="Components\DeathrunTank.cs" />
         <Compile Include="Components\NitrogenBar.cs" />
         <Compile Include="Items\VanillaRecipeChanges.cs" />
+        <Compile Include="Objects\DeathrunStats.cs" />
         <Compile Include="Objects\Enums\Difficulty.cs" />
         <Compile Include="Objects\Enums\SafeDepthStatus.cs" />
         <Compile Include="Objects\Enums\Tutorial.cs" />
         <Compile Include="Objects\Enums\Warning.cs" />
         <Compile Include="Objects\Exceptions\DeathrunException.cs" />
+        <Compile Include="Objects\LegacyStats.cs" />
         <Compile Include="Objects\Message.cs" />
         <Compile Include="Objects\JsonTechData.cs" />
         <Compile Include="Objects\RunStats.cs" />
