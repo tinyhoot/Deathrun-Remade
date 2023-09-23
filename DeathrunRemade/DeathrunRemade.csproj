@@ -114,7 +114,7 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Components\RunStatsUI\BackButton.cs" />
+        <Compile Include="Components\RunStatsUI\ButtonEventTrigger.cs" />
         <Compile Include="Components\RunStatsUI\RunStatsWindow.cs" />
         <Compile Include="Components\RunStatsUI\RunStatsRow.cs" />
         <Compile Include="Components\SafeDepthHud.cs" />

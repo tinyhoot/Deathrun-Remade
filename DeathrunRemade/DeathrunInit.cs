@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using BepInEx;
 using DeathrunRemade.Components;
-using DeathrunRemade.Components.RunStatsUI;
 using DeathrunRemade.Configuration;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
@@ -38,9 +37,8 @@ namespace DeathrunRemade
         internal static SafeDepthHud _DepthHud;
         private VanillaRecipeChanges _recipeChanges;
         
-        // The base objects from which the main menu highscores window is instantiated.
+        // The base object from which the main menu highscores window is instantiated.
         private GameObject _highscoreWindow;
-        private GameObject _runStatsRow;
 
         // Run Update() once per second.
         private const float UpdateInterval = 1f;
@@ -177,12 +175,7 @@ namespace DeathrunRemade
             _Log.Debug("Loading assets...");
             AssetBundle bundle = AssetBundleLoadingUtils.LoadFromAssetsFolder(Hootils.GetAssembly(), "highscores");
             _highscoreWindow = bundle.LoadAsset<GameObject>("Highscores");
-            _runStatsRow = bundle.LoadAsset<GameObject>("RunStats");
-            // These always need the below components to make them work.
-            _highscoreWindow.AddComponent<RunStatsWindow>().StatsRow = _runStatsRow;
-            _runStatsRow.AddComponent<RunStatsRow>();
             _highscoreWindow.SetActive(false);
-            _runStatsRow.SetActive(false);
 
             _Log.Debug("Assets loaded.");
         }
@@ -202,7 +195,12 @@ namespace DeathrunRemade
             GameEventHandler.OnMainMenuLoaded += () =>
             {
                 var window = Instantiate(_highscoreWindow, uGUI_MainMenu.main.transform, false);
-                window.GetComponent<RunStatsWindow>().InsertPrimaryOption();
+                var option = uGUI_MainMenu.main.primaryOptions.gameObject.AddComponent<MainMenuCustomPrimaryOption>();
+                option.onClick.AddListener(window.GetComponent<MainMenuCustomWindow>().Open);
+                option.SetText("Deathrun Stats");
+                // Put this new option in the right place - just after the options menu button.
+                int index = uGUI_MainMenu.main.primaryOptions.transform.Find("PrimaryOptions/MenuButtons/ButtonOptions").GetSiblingIndex();
+                option.SetIndex(index + 1);
             };
             GameEventHandler.OnPlayerAwake += InGameSetup;
             GameEventHandler.OnSavedGameLoaded += EscapePodPatcher.OnSavedGameLoaded;
