@@ -1,3 +1,4 @@
+using DeathrunRemade.Objects;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,9 +18,30 @@ namespace DeathrunRemade.Components.RunStatsUI
             background.color = Color.white;
         }
 
-        public void AddRun()
+        private void Start()
         {
-            Instantiate(statsRow, scorePanel.transform, false);
+            // testing
+            foreach (var stats in LegacyStats.LoadLegacyStats())
+            {
+                AddRun(stats.ToModernStats());
+            }
+        }
+
+        /// <summary>
+        /// Add a new run to the highscore window 
+        /// </summary>
+        public void AddRun(RunStats stats)
+        {
+            var row = Instantiate(statsRow, scorePanel.transform, false);
+            row.GetComponent<RunStatsRow>().UpdateRow(stats);
+        }
+
+        /// <summary>
+        /// Recalculate rankings and put the runs into the right order.
+        /// </summary>
+        public void SortRuns()
+        {
+            
         }
     }
 }

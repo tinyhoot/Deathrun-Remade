@@ -1,9 +1,10 @@
+using DeathrunRemade.Objects;
 using TMPro;
 using UnityEngine;
 
 namespace DeathrunRemade.Components.RunStatsUI
 {
-    public class RunStatsRow : MonoBehaviour
+    internal class RunStatsRow : MonoBehaviour
     {
         public TextMeshProUGUI rank;
         public TextMeshProUGUI startPoint;
@@ -13,9 +14,15 @@ namespace DeathrunRemade.Components.RunStatsUI
         public TextMeshProUGUI scoreMult;
         public TextMeshProUGUI score;
 
-        private void Awake()
+        public void UpdateRow(RunStats stats)
         {
-            // score.text = $"{Random.value:F3}";
+            rank.text = "-1";
+            startPoint.text = stats.startPoint;
+            time.text = $"{stats.time:F0}";
+            causeOfDeath.text = stats.causeOfDeath;
+            deaths.text = $"{stats.deaths}";
+            scoreMult.text = $"{stats.scoreMult:F1}x";
+            score.text = $"{stats.scoreBase * stats.scoreMult}";
         }
     }
 }

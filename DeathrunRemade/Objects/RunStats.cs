@@ -12,6 +12,7 @@ namespace DeathrunRemade.Objects
         public int deaths;
         public float depthReached;
         public float scoreBase;
+        public float scoreMult;
         public string startPoint;
         public float time;
         public bool victory;
@@ -20,9 +21,5 @@ namespace DeathrunRemade.Objects
         public int id;
         public string version;
         public string gameMode;
-        
-        // Do not save this as the math might be different from version to version.
-        [NonSerialized]
-        public float ScoreMult;
     }
 }

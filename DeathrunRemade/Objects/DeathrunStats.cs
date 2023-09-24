@@ -16,7 +16,7 @@ namespace DeathrunRemade.Objects
         /// <summary>
         /// Putting this into a function just to ensure it's the same for both saving and loading.
         /// </summary>
-        private static JsonSerializerSettings GetSerializerSettings()
+        public static JsonSerializerSettings GetSerializerSettings()
         {
             return new JsonSerializerSettings
             {

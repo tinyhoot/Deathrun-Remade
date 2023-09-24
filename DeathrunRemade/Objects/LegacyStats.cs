@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using HootLib;
+using Newtonsoft.Json;
 
 namespace DeathrunRemade.Objects
 {
@@ -40,6 +41,7 @@ namespace DeathrunRemade.Objects
                 depthReached = Deepest,
                 deaths = Deaths,
                 scoreBase = Score,
+                scoreMult = 1f,
                 victory = Victory,
                 version = "Legacy"
             };
@@ -84,8 +86,21 @@ namespace DeathrunRemade.Objects
             if (!TryFindLegacyStatsFile(out FileInfo legacyFile))
                 return null;
 
-            // TODO
-            return null;
+            using StreamReader reader = new StreamReader(legacyFile.FullName);
+            string json = reader.ReadToEnd();
+            var statsFile = JsonConvert.DeserializeObject<LegacyStatsFile>(json, DeathrunStats.GetSerializerSettings());
+            return statsFile.HighScores;
         }
+    }
+
+    internal struct LegacyStatsFile
+    {
+#pragma warning disable CS0649
+        public bool VeryFirstTime;
+        public int RunCounter;
+        public int RecentIndex;
+        public List<LegacyStats> HighScores;
+        public string Version;
+#pragma warning restore CS0649
     }
 }
