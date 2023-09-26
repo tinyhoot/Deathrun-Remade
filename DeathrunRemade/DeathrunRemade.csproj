@@ -126,7 +126,7 @@
         <Compile Include="DeathrunUtils.cs" />
         <Compile Include="Handlers\CrushDepthHandler.cs" />
         <Compile Include="Handlers\GameEventHandler.cs" />
-        <Compile Include="Handlers\HighscoreHandler.cs" />
+        <Compile Include="Handlers\RunStatsHandler.cs" />
         <Compile Include="Handlers\NitrogenHandler.cs" />
         <Compile Include="Handlers\NotificationHandler.cs" />
         <Compile Include="Handlers\TutorialHandler.cs" />
@@ -143,6 +143,7 @@
         <Compile Include="Items\VanillaRecipeChanges.cs" />
         <Compile Include="Objects\DeathrunStats.cs" />
         <Compile Include="Objects\Enums\Difficulty.cs" />
+        <Compile Include="Objects\Enums\RunAchievements.cs" />
         <Compile Include="Objects\Enums\SafeDepthStatus.cs" />
         <Compile Include="Objects\Enums\Tutorial.cs" />
         <Compile Include="Objects\Enums\Warning.cs" />

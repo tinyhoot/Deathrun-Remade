@@ -1,3 +1,4 @@
+using DeathrunRemade.Handlers;
 using DeathrunRemade.Objects;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,9 +22,12 @@ namespace DeathrunRemade.Components.RunStatsUI
         private void Start()
         {
             // testing
-            foreach (var stats in LegacyStats.LoadLegacyStats())
+            RunStatsHandler r = new RunStatsHandler(DeathrunInit._Log);
+            foreach (var stats in r.TryLoadLegacyStats())
             {
-                AddRun(stats.ToModernStats());
+                var modern = stats.ToModernStats();
+                r.UpdateScore(ref modern);
+                AddRun(modern);
             }
         }
 

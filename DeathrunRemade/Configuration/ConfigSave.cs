@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
@@ -10,6 +11,7 @@ namespace DeathrunRemade.Configuration
     /// The config class is complex and full of references to things that change at runtime. This struct preserves only
     /// the relevant setting values for consistency during a run.
     /// </summary>
+    [Serializable]
     internal readonly struct ConfigSave
     {
         // Survival

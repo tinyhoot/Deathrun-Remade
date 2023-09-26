@@ -134,7 +134,7 @@ namespace DeathrunRemade.Configuration
                 key: nameof(SpecialAirTanks),
                 defaultValue: true,
                 description: "Add new special air tanks which regenerate oxygen under the right conditions, like "
-                             + "sunlight or heat."
+                             + "sunlight or heat. This setting will not affect your score."
             ).WithDescription("Enable Special Air Tanks");
             StartLocation = RegisterEntry(
                 section: SectionSurvival,
@@ -153,7 +153,7 @@ namespace DeathrunRemade.Configuration
                 section: SectionSurvival,
                 key: nameof(ToppleLifepod),
                 defaultValue: true,
-                description: "Tilt the lifepod once it is done sinking."
+                description: "Tilt the lifepod once it is done sinking. This setting will not affect your score."
             ).WithDescription("Topple Lifepod");
         }
 
