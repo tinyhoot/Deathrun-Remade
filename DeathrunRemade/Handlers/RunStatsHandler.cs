@@ -19,7 +19,11 @@ namespace DeathrunRemade.Handlers
     /// and then associate each config entry <em>directly</em> with the resulting multiplier/bonus on registration?
     /// That would also ensure the scoring doesn't go forgotten if a new option is added in an update.
     ///
-    /// Basic idea is that a perfect run should gain ~75k points before any multipliers or challenge bonuses.
+    /// Basic idea is that a perfect run should gain ~60k points before any multipliers or challenge bonuses.
+    /// -> 5000 from depth
+    /// -> 10000 from time
+    /// -> 30000 from achievements
+    /// -> 20000 from victory
     /// </summary>
     internal class RunStatsHandler
     {
@@ -28,7 +32,7 @@ namespace DeathrunRemade.Handlers
         private const float TimeScoreBase = 2000f;
         private const float MaxDepthBonus = 5000f;
         // Best-case score awarded for the fastest possible victory.
-        private const float VictoryBonus = 30000f;
+        private const float VictoryBonus = 20000f;
         private const float VictoryGraceHours = 5f;
         private const float VictoryMaxHours = 15f;
         // The additive score multipliers for each difficulty level.
