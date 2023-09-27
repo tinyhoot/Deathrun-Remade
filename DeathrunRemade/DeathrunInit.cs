@@ -56,7 +56,11 @@ namespace DeathrunRemade
             _Config = new Config(Hootils.GetConfigFilePath(NAME), Info.Metadata);
             _Config.RegisterModOptions(NAME, transform);
             
-            // Register the save game.
+            // Load statistics of all runs ever played.
+            DeathrunStats.LoadAsync(Hootils.GetModDirectory() + DeathrunStats.FileName)
+                .ContinueWith(task => DeathrunStats.Main = task.Result);
+            
+            // Register the in-game save game of the current run.
             SaveData.Main = SaveDataHandler.RegisterSaveDataCache<SaveData>();
             
             InitHandlers();
@@ -98,6 +102,7 @@ namespace DeathrunRemade
             harmony.PatchAll(typeof(FilterPumpPatcher));
             harmony.PatchAll(typeof(FoodChallengePatcher));
             harmony.PatchAll(typeof(RadiationPatcher));
+            harmony.PatchAll(typeof(RunStatsTracker));
             harmony.PatchAll(typeof(SuitPatcher));
             harmony.PatchAll(typeof(WaterMurkPatcher));
         }
@@ -133,6 +138,8 @@ namespace DeathrunRemade
         {
             ConfigSave config = SaveData.Main.Config;
             
+            // Enable the tracker which updates all run statistics.
+            player.gameObject.AddComponent<RunStatsTracker>();
             // Set up GUI components.
             RadiationPatcher.CalculateGuiPosition();
             

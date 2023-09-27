@@ -25,7 +25,7 @@ namespace DeathrunRemade.Components.RunStatsUI
         private void Start()
         {
             // testing
-            RunStatsHandler r = new RunStatsHandler(DeathrunInit._Log);
+            ScoreHandler r = new ScoreHandler(DeathrunInit._Log);
             foreach (var stats in r.TryLoadLegacyStats())
             {
                 var modern = stats.ToModernStats();
@@ -54,7 +54,7 @@ namespace DeathrunRemade.Components.RunStatsUI
         public void SortRuns()
         {
             // Sort the list descending, best runs first.
-            _runRows.Sort((first, second) => RunStatsHandler.CompareRuns(first.Stats, second.Stats));
+            _runRows.Sort((first, second) => ScoreHandler.CompareRuns(first.Stats, second.Stats));
             _runRows.Reverse();
             // Make sure any headers stay where they are.
             int firstRow = _runRows.Select(row => row.transform.GetSiblingIndex()).Min();

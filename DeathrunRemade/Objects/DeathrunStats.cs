@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -11,8 +12,21 @@ namespace DeathrunRemade.Objects
     [Serializable]
     internal class DeathrunStats
     {
+        public const string FileName = "DeathrunStats.sav";
+        [NonSerialized] public static DeathrunStats Main;
+        
+        public List<RunStats> bestRuns;
         public int totalRuns;
+        public string version;
 
+        /// <summary>
+        /// Starts a new run and gets a unique id for it.
+        /// </summary>
+        public int GetNewRunID()
+        {
+            return totalRuns++;
+        }
+        
         /// <summary>
         /// Putting this into a function just to ensure it's the same for both saving and loading.
         /// </summary>

@@ -1,9 +1,14 @@
 using System;
+using DeathrunRemade.Components;
 using DeathrunRemade.Configuration;
 using Nautilus.Json;
 
 namespace DeathrunRemade.Objects
 {
+    /// <summary>
+    /// The cache that keeps track of everything happening in an ongoing game. It enables the mod to load properly
+    /// after saving and quitting.
+    /// </summary>
     internal class SaveData : SaveDataCache
     {
         [NonSerialized]
@@ -19,6 +24,7 @@ namespace DeathrunRemade.Objects
         public ConfigSave Config;
         public EscapePodSave EscapePod;
         public NitrogenSave Nitrogen;
+        public RunStats Stats;
         public TutorialSave Tutorials;
         public WarningSave Warnings;
         
@@ -27,7 +33,11 @@ namespace DeathrunRemade.Objects
             base.Load(createFileIfNotExist);
             // The save data loads on game start. If the config data has not been set already, lock it in.
             if (!Config.WasInitialised)
+            {
                 Config = new ConfigSave(DeathrunInit._Config);
+                RunStatsTracker.InitStats(ref Stats, Config);
+            }
+
             // Once the file has completed loading/creation, notify everything waiting on it.
             Ready = true;
             DeathrunInit._Log.Debug("Save data is ready.");

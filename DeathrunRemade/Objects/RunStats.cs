@@ -19,7 +19,7 @@ namespace DeathrunRemade.Objects
         public float scoreBonus;
         public float scoreTotal;
         public string startPoint;
-        public float time;
+        public double time;
         public bool victory;
         
         // Technical information that isn't really about what the player did.

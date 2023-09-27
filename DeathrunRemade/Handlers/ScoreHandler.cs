@@ -25,7 +25,7 @@ namespace DeathrunRemade.Handlers
     /// -> 30000 from achievements
     /// -> 20000 from victory
     /// </summary>
-    internal class RunStatsHandler
+    internal class ScoreHandler
     {
         private const string LegacyFileName = "/DeathRun_Stats.json";
         // Score given for every "segment" of time survived.
@@ -72,7 +72,7 @@ namespace DeathrunRemade.Handlers
         };
         private ILogHandler _log;
         
-        public RunStatsHandler(ILogHandler log)
+        public ScoreHandler(ILogHandler log)
         {
             _log = log;
         }
@@ -111,7 +111,7 @@ namespace DeathrunRemade.Handlers
             _log.Debug($"Updating score for run with id {stats.id}");
             stats.scoreBase = CalculateScoreBase(stats);
             // Offset vehicle achievements for no vehicle runs.
-            if (stats.victory && (stats.achievements & RunAchievements.AllVehicles) == 0)
+            if (stats.victory && stats.achievements.IsUnlocked(RunAchievements.AllVehicles))
                 stats.scoreBase += GetNoVehicleChallengeBonus();
             _log.Debug($"Base score: {stats.scoreBase}");
             
@@ -121,7 +121,7 @@ namespace DeathrunRemade.Handlers
             stats.scoreBonus = CalculateScoreBonus(stats.config);
             _log.Debug($"Bonus: {stats.scoreBonus}");
             // Extra bonus for finishing the game.
-            stats.scoreBonus += CalculateVictoryScore(stats.victory, stats.time);
+            stats.scoreBonus += CalculateVictoryScore(stats.victory, (float)stats.time);
             // Extra bonus for playing on hardcore.
             if ((stats.gameMode & GameModeOption.Hardcore) == GameModeOption.Hardcore)
                 stats.scoreBonus += HardcoreBonus;
@@ -143,7 +143,7 @@ namespace DeathrunRemade.Handlers
         {
             // Time score. Diminishes greatly as time goes on. Points for every log-base 2 of hours lived.
             // E.g. 1 hour = 1, 2 hours = 2, 4 hours = 3, 8 hours = 4, etc.
-            float hours = stats.time / 3600f;
+            float hours = (float)(stats.time / 3600);
             float adjustedHours = Mathf.Log(hours + 1, 2f);
             float timeScore = adjustedHours * TimeScoreBase;
             _log.Debug($"--Time lived: {timeScore}");
