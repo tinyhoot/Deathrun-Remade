@@ -1,3 +1,4 @@
+using System;
 using DeathrunRemade.Objects;
 using TMPro;
 using UnityEngine;
@@ -13,16 +14,26 @@ namespace DeathrunRemade.Components.RunStatsUI
         public TextMeshProUGUI deaths;
         public TextMeshProUGUI scoreMult;
         public TextMeshProUGUI score;
+        [NonSerialized] public RunStats Stats;
 
-        public void UpdateRow(RunStats stats)
+        public void SetRank(int ranking)
         {
-            rank.text = "-1";
-            startPoint.text = stats.startPoint;
-            time.text = $"{stats.time:F0}";
-            causeOfDeath.text = stats.causeOfDeath;
-            deaths.text = $"{stats.deaths}";
-            scoreMult.text = $"{stats.scoreMult:F1}x";
-            score.text = $"{stats.scoreBase * stats.scoreMult}";
+            rank.text = $"{ranking}";
+        }
+
+        /// <summary>
+        /// Update all fields of this row with data from the run.
+        /// </summary>
+        public void UpdateRow()
+        {
+            if (string.IsNullOrEmpty(rank.text))
+                rank.text = "-1";
+            startPoint.text = Stats.startPoint;
+            time.text = $"{Stats.time / DayNightCycle.kDayLengthSeconds:F0} Days";
+            causeOfDeath.text = Stats.causeOfDeath;
+            deaths.text = $"{Stats.deaths}";
+            scoreMult.text = $"{Stats.scoreMult:F1}x";
+            score.text = $"{Stats.scoreBase * Stats.scoreMult:F0}";
         }
     }
 }

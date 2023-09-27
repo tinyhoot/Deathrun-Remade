@@ -11,11 +11,9 @@ Items
 - Ensure the filterchip gets added to known tech when all leaks have been fixed.
 
 Monos
-- Maybe use those in more places than the original did?
 - Complete functionality of deco module and filterchip
 
 Patches
-- All of them. So many.
 - Changing the Lifepod's RigidBody to enable interpolation might solve the stuttering issues caused by low physics update rate.
   Also, you can change the rate even at runtime! Time.fixeddeltatime
 - Don't forget to add countdown timer to explosion
@@ -35,6 +33,7 @@ New Ideas
   vanilla, so it could be doable.
 - Draining water costs power
 - Some extra stuff from RadiationChallenge? Lifepod no longer safe, that kind of thing?
+- Add additional window to run stats to view all the details about a run and make the scoring more transparent.
 
 Checks at the very end
 - All items craft properly and fit into their slots
@@ -53,6 +52,7 @@ Substantial changes from the original
 - Much better compatibility with other mods due to less intrusive patching.
 - Pacifist challenge covers many more ways to damage things.
 - Re-introduces a patch that lets you deploy filterpumps from the water surface.
+- Scoring system is reworked. Legacy runs can be imported, but will show different scores.
 
 Known Issues
 - Number of fragment scans not properly reflected by seaglide and constructor until first scan.

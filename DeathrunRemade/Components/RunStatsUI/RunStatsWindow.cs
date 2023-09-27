@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Objects;
 using UnityEngine;
@@ -10,6 +12,7 @@ namespace DeathrunRemade.Components.RunStatsUI
         public GameObject scorePanel;
         public GameObject statsRow;
         public Image background;
+        private List<RunStatsRow> _runRows = new List<RunStatsRow>();
 
         private void Awake()
         {
@@ -32,12 +35,17 @@ namespace DeathrunRemade.Components.RunStatsUI
         }
 
         /// <summary>
-        /// Add a new run to the highscore window 
+        /// Add a new run to the highscore window.
         /// </summary>
         public void AddRun(RunStats stats)
         {
-            var row = Instantiate(statsRow, scorePanel.transform, false);
-            row.GetComponent<RunStatsRow>().UpdateRow(stats);
+            GameObject rowObject = Instantiate(statsRow, scorePanel.transform, false);
+            var row = rowObject.GetComponent<RunStatsRow>();
+            row.Stats = stats;
+            row.UpdateRow();
+            _runRows.Add(row);
+            // Make sure the new run shows up at the right place.
+            SortRuns();
         }
 
         /// <summary>
@@ -45,7 +53,16 @@ namespace DeathrunRemade.Components.RunStatsUI
         /// </summary>
         public void SortRuns()
         {
-            
+            // Sort the list descending, best runs first.
+            _runRows.Sort((first, second) => RunStatsHandler.CompareRuns(first.Stats, second.Stats));
+            _runRows.Reverse();
+            // Make sure any headers stay where they are.
+            int firstRow = _runRows.Select(row => row.transform.GetSiblingIndex()).Min();
+            for (int i = 0; i < _runRows.Count; i++)
+            {
+                _runRows[i].transform.SetSiblingIndex(firstRow + i);
+                _runRows[i].SetRank(i + 1);
+            }
         }
     }
 }

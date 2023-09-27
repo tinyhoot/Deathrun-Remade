@@ -30,6 +30,7 @@ namespace DeathrunRemade.Handlers
         private const string LegacyFileName = "/DeathRun_Stats.json";
         // Score given for every "segment" of time survived.
         private const float TimeScoreBase = 2000f;
+        // Score awarded for reaching the very bottom.
         private const float MaxDepthBonus = 5000f;
         // Best-case score awarded for the fastest possible victory.
         private const float VictoryBonus = 20000f;
@@ -74,6 +75,31 @@ namespace DeathrunRemade.Handlers
         public RunStatsHandler(ILogHandler log)
         {
             _log = log;
+        }
+
+        /// <summary>
+        /// Compare two runs against each other to figure out which one was better.
+        /// </summary>
+        /// <returns>Less than zero if run1 was worse than run2, zero if they were equal, greater than zero if run1
+        /// was better than run2.</returns>
+        /// <seealso cref="Comparison{T}"/>
+        public static int CompareRuns(RunStats run1, RunStats run2)
+        {
+            // Score is the primary deciding factor.
+            if ((int)run1.scoreTotal != (int)run2.scoreTotal)
+                return (int)(run1.scoreTotal - run2.scoreTotal);
+            
+            // If scores are equal, use the difficulty multiplier.
+            if (!Mathf.Approximately(run1.scoreMult, run2.scoreMult))
+                return (int)(run1.scoreMult - run2.scoreMult);
+            // Or maybe victory?
+            if (run1.victory != run2.victory)
+                return (int)(run1.victory.ToFloat() - run2.victory.ToFloat());
+            // Deaths??
+            if (run1.deaths != run2.deaths)
+                return run2.deaths - run1.deaths;
+            // Depth or just give up.
+            return (int)(run1.depthReached - run2.depthReached);
         }
 
         /// <summary>
@@ -124,7 +150,7 @@ namespace DeathrunRemade.Handlers
             float achievements = CalculateAchievementScore(stats.achievements);
             _log.Debug($"--Achievements: {achievements}");
             // Depth score is linear function of how deep the player managed to get out of the total possible.
-            float depthMult = Mathf.Clamp(stats.depthReached, 0f, 1500f) / 1500f;
+            float depthMult = Mathf.Clamp(stats.depthReached, 0f, 1600f) / 1600f;
             float depthScore = depthMult * MaxDepthBonus;
             _log.Debug($"--Depth: {depthScore}");
             
