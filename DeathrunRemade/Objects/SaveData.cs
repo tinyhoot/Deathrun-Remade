@@ -1,5 +1,4 @@
 using System;
-using DeathrunRemade.Components;
 using DeathrunRemade.Configuration;
 using Nautilus.Json;
 
@@ -35,7 +34,7 @@ namespace DeathrunRemade.Objects
             if (!Config.WasInitialised)
             {
                 Config = new ConfigSave(DeathrunInit._Config);
-                RunStatsTracker.InitStats(ref Stats, Config);
+                DeathrunInit._RunHandler.StartNewRun(this);
             }
 
             // Once the file has completed loading/creation, notify everything waiting on it.

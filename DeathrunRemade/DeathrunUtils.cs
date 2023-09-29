@@ -6,6 +6,14 @@ namespace DeathrunRemade
     public static class DeathrunUtils
     {
         /// <summary>
+        /// Convert a float representing a number of seconds to in-game days.
+        /// </summary>
+        public static float TimeToGameDays(double time)
+        {
+            return (float)(time / DayNightCycle.kDayLengthSeconds);
+        }
+        
+        /// <summary>
         /// Get a detailed name for the player's current biome, like individual hallways within the Aurora.
         /// </summary>
         public static string GetDetailedPlayerBiome()

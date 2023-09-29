@@ -40,6 +40,7 @@ Checks at the very end
 - Breathing works as it should in bases, alien bases, vehicles, open water
 - No bends from precursor base elevator
 - Do one huge sweep through all the Patcher classes and ensure nothing was forgotten
+- Nitrogen resets on death
 
 Substantial changes from the original
 - Photosynthetic tanks always work in sunlight, including the surface

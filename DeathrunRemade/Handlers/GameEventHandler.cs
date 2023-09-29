@@ -27,6 +27,18 @@ namespace DeathrunRemade.Handlers
         /// Invoked as a postfix to Player.Awake().
         /// </summary>
         public static event Action<Player> OnPlayerAwake;
+
+        /// <summary>
+        /// Invoked whenever the player dies.
+        /// Using <see cref="Player.playerDeathEvent"/> instead would be nice but for some reason that is called really
+        /// inconsistently.
+        /// </summary>
+        public static event Action<Player, DamageType> OnPlayerDeath;
+
+        /// <summary>
+        /// Invoked as soon as the rocket is launched, i.e. just as the ending cinematic begins.
+        /// </summary>
+        public static event Action<Player> OnPlayerVictory;
         
         /// <summary>
         /// Invoked when the loading screen for a previously saved game is done and the player gains control.
@@ -71,6 +83,20 @@ namespace DeathrunRemade.Handlers
         private static void TriggerPlayerAwake(Player __instance)
         {
             OnPlayerAwake?.Invoke(__instance);
+        }
+        
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(Player), nameof(Player.OnKill))]
+        private static void TriggerPlayerDeath(Player __instance, DamageType damageType)
+        {
+            OnPlayerDeath?.Invoke(__instance, damageType);
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(LaunchRocket), nameof(LaunchRocket.SetLaunchStarted))]
+        private static void TriggerPlayerVictory()
+        {
+            OnPlayerVictory?.Invoke(Player.main);
         }
     }
 }

@@ -32,7 +32,8 @@ namespace DeathrunRemade.Objects
         {
             RunStats stats = new RunStats
             {
-                id = -1,
+                // Give legacy stats a negative id to distinguish them.
+                id = -ID,
                 startPoint = Start,
                 causeOfDeath = Cause,
                 time = RunTime,

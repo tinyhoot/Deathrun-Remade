@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using BepInEx;
 using DeathrunRemade.Components;
+using DeathrunRemade.Components.RunStatsUI;
 using DeathrunRemade.Configuration;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
@@ -30,15 +31,19 @@ namespace DeathrunRemade
         public const string NAME = "Deathrun Remade";
         public const string VERSION = "0.1";
 
+        internal static DeathrunInit _Instance;
         internal static Config _Config;
         internal static ILogHandler _Log;
         internal static NotificationHandler _Notifications;
+        internal static RunHandler _RunHandler;
         internal static TutorialHandler _Tutorials;
         internal static SafeDepthHud _DepthHud;
         private VanillaRecipeChanges _recipeChanges;
         
         // The base object from which the main menu highscores window is instantiated.
-        private GameObject _highscoreWindow;
+        private GameObject _baseStatsWindow;
+        // The object that is actually active.
+        internal static RunStatsWindow _RunStatsWindow;
 
         // Run Update() once per second.
         private const float UpdateInterval = 1f;
@@ -55,11 +60,7 @@ namespace DeathrunRemade
             // Registering config.
             _Config = new Config(Hootils.GetConfigFilePath(NAME), Info.Metadata);
             _Config.RegisterModOptions(NAME, transform);
-            
-            // Load statistics of all runs ever played.
-            DeathrunStats.LoadAsync(Hootils.GetModDirectory() + DeathrunStats.FileName)
-                .ContinueWith(task => DeathrunStats.Main = task.Result);
-            
+
             // Register the in-game save game of the current run.
             SaveData.Main = SaveDataHandler.RegisterSaveDataCache<SaveData>();
             
@@ -165,6 +166,8 @@ namespace DeathrunRemade
         private void InitHandlers()
         {
             _Notifications = new NotificationHandler(_Log);
+            // Load statistics of all runs ever played.
+            _RunHandler = new RunHandler(_Log);
             _Tutorials = new TutorialHandler(_Notifications, SaveData.Main);
         }
 
@@ -181,8 +184,8 @@ namespace DeathrunRemade
             // Load the assets for the highscore window. This was prepared in the unity editor.
             _Log.Debug("Loading assets...");
             AssetBundle bundle = AssetBundleLoadingUtils.LoadFromAssetsFolder(Hootils.GetAssembly(), "highscores");
-            _highscoreWindow = bundle.LoadAsset<GameObject>("Highscores");
-            _highscoreWindow.SetActive(false);
+            _baseStatsWindow = bundle.LoadAsset<GameObject>("Highscores");
+            _baseStatsWindow.SetActive(false);
 
             _Log.Debug("Assets loaded.");
         }
@@ -201,7 +204,8 @@ namespace DeathrunRemade
             // Ensure the highscore window is always ready to go.
             GameEventHandler.OnMainMenuLoaded += () =>
             {
-                var window = Instantiate(_highscoreWindow, uGUI_MainMenu.main.transform, false);
+                var window = Instantiate(_baseStatsWindow, uGUI_MainMenu.main.transform, false);
+                _RunStatsWindow = window.GetComponent<RunStatsWindow>();
                 var option = uGUI_MainMenu.main.primaryOptions.gameObject.AddComponent<MainMenuCustomPrimaryOption>();
                 option.onClick.AddListener(window.GetComponent<MainMenuCustomWindow>().Open);
                 option.SetText("Deathrun Stats");

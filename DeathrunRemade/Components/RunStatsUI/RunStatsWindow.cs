@@ -21,17 +21,12 @@ namespace DeathrunRemade.Components.RunStatsUI
             // in the editor.
             background.color = Color.white;
         }
-
+        
         private void Start()
         {
-            // testing
-            ScoreHandler r = new ScoreHandler(DeathrunInit._Log);
-            foreach (var stats in r.TryLoadLegacyStats())
-            {
-                var modern = stats.ToModernStats();
-                r.UpdateScore(ref modern);
-                AddRun(modern);
-            }
+            // Because this runs the first time the window is set active, we can be sure that it will happen only once
+            // the window is actually opened for the first time. All underlying data is ready by that point.
+            AddRuns(DeathrunInit._RunHandler.ModStats.bestRuns.ToArray());
         }
 
         /// <summary>
@@ -39,13 +34,33 @@ namespace DeathrunRemade.Components.RunStatsUI
         /// </summary>
         public void AddRun(RunStats stats)
         {
+            AddNewRow(stats);
+            // Make sure the new run shows up at the right place.
+            SortRuns();
+        }
+
+        /// <summary>
+        /// Add several runs to the highscore window.
+        /// </summary>
+        public void AddRuns(params RunStats[] stats)
+        {
+            foreach (var run in stats)
+            {
+                AddNewRow(run);
+            }
+            SortRuns();
+        }
+
+        /// <summary>
+        /// Instantiate a new row object for the given run.
+        /// </summary>
+        private void AddNewRow(RunStats stats)
+        {
             GameObject rowObject = Instantiate(statsRow, scorePanel.transform, false);
             var row = rowObject.GetComponent<RunStatsRow>();
             row.Stats = stats;
             row.UpdateRow();
             _runRows.Add(row);
-            // Make sure the new run shows up at the right place.
-            SortRuns();
         }
 
         /// <summary>

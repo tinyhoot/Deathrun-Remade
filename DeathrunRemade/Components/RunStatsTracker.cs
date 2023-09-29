@@ -69,18 +69,17 @@ namespace DeathrunRemade.Components
         /// <summary>
         /// Prepare a stats instance for a new game.
         /// </summary>
-        public static void InitStats(ref RunStats stats, ConfigSave config)
+        public static void InitStats(ref RunStats stats, ConfigSave config, int id)
         {
             stats.config = config;
             stats.startPoint = config.StartLocation;
             stats.gameMode = GameModeUtils.currentGameMode;
-            stats.id = DeathrunStats.Main?.GetNewRunID() ?? -1;
+            stats.id = id;
             stats.version = DeathrunInit.VERSION;
         }
 
         private void RegisterEvents()
         {
-            _player.playerDeathEvent.AddHandler(this, OnDeath);
             // Register a listener for when the player cures their infection.
             StoryGoalHandler.RegisterCustomEvent("Infection_Progress5", OnCure);
 
@@ -111,11 +110,6 @@ namespace DeathrunRemade.Components
         private void OnCure()
         {
             _stats.achievements = _stats.achievements.Unlock(RunAchievements.Cured);
-        }
-        
-        private void OnDeath(Player player)
-        {
-            _stats.deaths++;
         }
 
         /// <summary>

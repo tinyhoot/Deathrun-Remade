@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using DeathrunRemade.Configuration;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
-using HootLib;
-using Newtonsoft.Json;
 using UnityEngine;
 using ILogHandler = HootLib.Interfaces.ILogHandler;
 
@@ -27,7 +24,6 @@ namespace DeathrunRemade.Handlers
     /// </summary>
     internal class ScoreHandler
     {
-        private const string LegacyFileName = "/DeathRun_Stats.json";
         // Score given for every "segment" of time survived.
         private const float TimeScoreBase = 2000f;
         // Score awarded for reaching the very bottom.
@@ -325,48 +321,6 @@ namespace DeathrunRemade.Handlers
             score += _achievementRewards[RunAchievements.Cyclops];
             score += BigBonus;
             return score;
-        }
-        
-        /// <summary>
-        /// Try to find a legacy Deathrun stats file in a few likely locations.
-        /// </summary>
-        /// <returns>True if a file was found, false if not.</returns>
-        public bool TryFindLegacyStatsFile(out FileInfo legacyFile)
-        {
-            // First, try the modern BepInEx approach.
-            legacyFile = new FileInfo(BepInEx.Paths.PluginPath + "/DeathRun" + LegacyFileName);
-            if (legacyFile.Exists)
-                return true;
-            
-            // Or try the ancient QMods way.
-            string gameDirectory = new FileInfo(BepInEx.Paths.BepInExRootPath).Directory?.Parent?.FullName;
-            legacyFile = new FileInfo(gameDirectory + "/QMods/DeathRun" + LegacyFileName);
-            if (legacyFile.Exists)
-                return true;
-            
-            // Or try to find it in this mod's folder - the user may have dropped it here specifically for this migration.
-            legacyFile = new FileInfo(Hootils.GetModDirectory() + LegacyFileName);
-            if (legacyFile.Exists)
-                return true;
-            
-            // No luck! Reset and leave.
-            legacyFile = null;
-            return false;
-        }
-
-        /// <summary>
-        /// Attempt to load a legacy Deathrun stats file from the old mod's folder on disk.
-        /// </summary>
-        /// <returns>A list of the old run data, or null if nothing was found.</returns>
-        public List<LegacyStats> TryLoadLegacyStats()
-        {
-            if (!TryFindLegacyStatsFile(out FileInfo legacyFile))
-                return null;
-
-            using StreamReader reader = new StreamReader(legacyFile.FullName);
-            string json = reader.ReadToEnd();
-            var statsFile = JsonConvert.DeserializeObject<LegacyStatsFile>(json, DeathrunStats.GetSerializerSettings());
-            return statsFile.HighScores;
         }
     }
 }

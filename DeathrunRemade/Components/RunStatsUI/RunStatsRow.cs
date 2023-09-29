@@ -29,7 +29,7 @@ namespace DeathrunRemade.Components.RunStatsUI
             if (string.IsNullOrEmpty(rank.text))
                 rank.text = "-1";
             startPoint.text = Stats.startPoint;
-            time.text = $"{Stats.time / DayNightCycle.kDayLengthSeconds:F0} Days";
+            time.text = $"{DeathrunUtils.TimeToGameDays(Stats.time):F0} Days";
             causeOfDeath.text = Stats.causeOfDeath;
             deaths.text = $"{Stats.deaths}";
             scoreMult.text = $"{Stats.scoreMult:F1}x";
