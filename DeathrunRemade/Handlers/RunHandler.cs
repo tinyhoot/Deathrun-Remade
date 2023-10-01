@@ -104,20 +104,21 @@ namespace DeathrunRemade.Handlers
 
             int deaths = save.Stats.deaths;
             string plural = deaths == 1 ? "" : "s";
-            _log.InGameMessage($"Survived for {DeathrunUtils.TimeToGameDays(save.Stats.time):F0} in {deaths} death{plural}.");
+            _log.InGameMessage($"Survived for {DeathrunUtils.TimeToGameDays(save.Stats.time):F0} days in {deaths} death{plural}.");
             _log.InGameMessage($"Died to {save.Stats.causeOfDeath}.");
         }
 
         private void OnVictory(Player player)
         {
             SaveData save = SaveData.Main;
+            save.Stats.causeOfDeath = "Victory";
             save.Stats.victory = true;
             AddAndSaveRun(save.Stats);
             
             int deaths = save.Stats.deaths;
             string plural = deaths == 1 ? "" : "s";
             string message = deaths > 0 ? $"Victory in {deaths} death{plural} and" : "Flawless victory in";
-            _log.InGameMessage($"{message} {DeathrunUtils.TimeToGameDays(save.Stats.time):F0}!");
+            _log.InGameMessage($"{message} {DeathrunUtils.TimeToGameDays(save.Stats.time):F0} days!");
         }
 
         private void ImportLegacyRuns()
