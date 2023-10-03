@@ -143,13 +143,28 @@ namespace DeathrunRemade.Patches
         
         /// <summary>
         /// To my knowledge this is exclusively used for the Aurora's radiation damage, but I might have missed
-        /// something in unloaded areas of the game. Doesn't hurt to be safe.
+        /// something. Doesn't hurt to be safe.
         /// </summary>
-        [HarmonyPrefix]
+        [HarmonyTranspiler]
         [HarmonyPatch(typeof(DamagePlayerInRadius), nameof(DamagePlayerInRadius.DoDamage))]
-        private static void PatchDamageInRadius(DamagePlayerInRadius __instance)
+        private static IEnumerable<CodeInstruction> PatchDamageInRadius(IEnumerable<CodeInstruction> instructions)
         {
-            DeathrunInit._RunHandler.SetCauseOfDeathOverride(__instance.gameObject);
+            CodeMatcher matcher = new CodeMatcher(instructions);
+            // There's a branching label on the beginning of this method call which makes it annoying to deal with.
+            // Instead of messing with that, we'll insert our method call in the midst of things.
+            // Find the call to LiveMixin.TakeDamage().
+            matcher.MatchForward(true, 
+                    new CodeMatch(OpCodes.Ldarg_0),
+                    new CodeMatch(OpCodes.Ldfld),
+                    new CodeMatch(OpCodes.Ldnull),
+                    new CodeMatch(i => ((MethodInfo)i.operand).Name.Equals("TakeDamage")))
+                // Insert our own call to set the cause of death in between the call and its arguments.
+                .Insert(
+                    CodeInstruction.LoadField(typeof(DeathrunInit), nameof(DeathrunInit._RunHandler)),
+                    new CodeInstruction(OpCodes.Ldarg_0),
+                    new CodeInstruction(OpCodes.Call, AccessTools.Property(typeof(Component), nameof(Component.gameObject)).GetMethod),
+                    CodeInstruction.Call(typeof(RunHandler), nameof(RunHandler.SetCauseOfDeathOverride), new[] { typeof(GameObject) }));
+            return matcher.InstructionEnumeration();
         }
 
         /// <summary>
@@ -164,18 +179,21 @@ namespace DeathrunRemade.Patches
             DeathrunInit._RunHandler.SetCauseOfDeathOverride(__instance.gameObject);
         }
 
-        /// <summary>
-        /// I don't think anyone has ever died to this, but floaters can technically cause normal damage if touched
-        /// while they are not attached to something. If they attach to the player, this causes a tiny bit of damage.
-        /// </summary>
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(Floater), nameof(Floater.OnCollisionEnter))]
-        private static void PatchFloater(Floater __instance, Collider collisionInfo)
-        {
-            if (collisionInfo is null || collisionInfo.GetComponent<Player>() is null)
-                return;
-            DeathrunInit._RunHandler.SetCauseOfDeathOverride(__instance.gameObject);
-        }
+        // I do not understand what is going on with this, but the GetComponent call is causing NullRefs all over.
+        // Since it's very unlikely to happen anyway I simply removed the patch altogether.
+        
+        // /// <summary>
+        // /// I don't think anyone has ever died to this, but floaters can technically cause normal damage if touched
+        // /// while they are not attached to something. If they attach to the player, this causes a tiny bit of damage.
+        // /// </summary>
+        // [HarmonyPrefix]
+        // [HarmonyPatch(typeof(Floater), nameof(Floater.OnCollisionEnter))]
+        // private static void PatchFloater(Floater __instance, Collider collisionInfo)
+        // {
+        //     if (collisionInfo is null || collisionInfo.GetComponent<Player>() is null)
+        //         return;
+        //     DeathrunInit._RunHandler.SetCauseOfDeathOverride(__instance.gameObject);
+        // }
 
         /// <summary>
         /// Lava does normal damage???

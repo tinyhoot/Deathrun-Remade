@@ -29,8 +29,7 @@ namespace DeathrunRemade.Handlers
             ScoreHandler = new ScoreHandler(_log);
             GameEventHandler.OnPlayerDeath += OnDeath;
             GameEventHandler.OnPlayerVictory += OnVictory;
-            DeathrunStats.LoadAsync(Hootils.GetModDirectory() + DeathrunStats.FileName)
-                .ContinueWith(task => Initialise(task.Result));
+            DeathrunStats.LoadAsync().ContinueWith(task => Initialise(task.Result));
         }
 
         /// <summary>
