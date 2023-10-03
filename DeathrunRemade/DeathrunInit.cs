@@ -97,6 +97,7 @@ namespace DeathrunRemade
             // Wow I really wish HarmonyX would update their fork with PatchCategories
             harmony.PatchAll(typeof(GameEventHandler));
             harmony.PatchAll(typeof(BatteryPatcher));
+            harmony.PatchAll(typeof(CauseOfDeathPatcher));
             harmony.PatchAll(typeof(CompassPatcher));
             harmony.PatchAll(typeof(EscapePodPatcher));
             harmony.PatchAll(typeof(ExplosionPatcher));

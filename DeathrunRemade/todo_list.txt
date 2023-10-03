@@ -12,12 +12,16 @@ Items
 
 Monos
 - Complete functionality of deco module and filterchip
+- Nitrogen ascent is not punishing enough
+- Safe depth adjusts at constant rate? Too slowly.
 
 Patches
 - Changing the Lifepod's RigidBody to enable interpolation might solve the stuttering issues caused by low physics update rate.
   Also, you can change the rate even at runtime! Time.fixeddeltatime
 - Don't forget to add countdown timer to explosion
 - When adding power, do not forget to add stuff from EscapePodPatcher
+- Escape pod sinks through the floor?
+- Random start needs the name of the start that was actually chosen
 
 New Ideas
 - Make tanks not refill by themselves. Refill at special point?

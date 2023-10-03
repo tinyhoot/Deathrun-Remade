@@ -4,8 +4,9 @@ using System.Linq;
 using DeathrunRemade.Components;
 using DeathrunRemade.Objects;
 using HootLib;
-using HootLib.Interfaces;
 using Newtonsoft.Json;
+using UnityEngine;
+using ILogHandler = HootLib.Interfaces.ILogHandler;
 
 namespace DeathrunRemade.Handlers
 {
@@ -20,6 +21,7 @@ namespace DeathrunRemade.Handlers
         public DeathrunStats ModStats;
         public ScoreHandler ScoreHandler;
         private ILogHandler _log;
+        private string _deathCauseOverride;
 
         public RunHandler(ILogHandler log)
         {
@@ -69,8 +71,6 @@ namespace DeathrunRemade.Handlers
             // Save immediately to prevent save scumming.
             _ = ModStats.SaveAsync();
             SaveData.Main.Save();
-            // Display the new run.
-            DeathrunInit._RunStatsWindow.AddRun(run);
         }
 
         /// <summary>
@@ -83,6 +83,30 @@ namespace DeathrunRemade.Handlers
             // The stats themselves do not need to be initialised because they are contained in a struct set up in
             // tandem with the save file. The struct defaults to values recognised as the player having done nothing.
             RunStatsTracker.InitStats(ref save.Stats, save.Config, id);
+        }
+
+        /// <summary>
+        /// Figure out the cause of death from the type of damage that killed the player or an override set by a
+        /// helper patch to capture cases the damage system does not cover.
+        /// This works by some damage types <em>always</em> having a cause of death attached, so that causes are either
+        /// never outdated or not applicable.
+        /// </summary>
+        private string GetCauseOfDeath(DamageType damageType)
+        {
+            if (!string.IsNullOrEmpty(_deathCauseOverride)
+                && (damageType == DamageType.Normal || damageType == DamageType.Starve))
+                return _deathCauseOverride;
+
+            string cause = damageType switch
+            {
+                DamageType.Collide => "Heavy Impact",
+                DamageType.Electrical => "Electrocution",
+                DamageType.Explosive => "Explosion",
+                DamageType.Heat => "Unbearable Heat",
+                _ => damageType.ToString()
+            };
+
+            return cause;
         }
         
         /// <summary>
@@ -100,6 +124,7 @@ namespace DeathrunRemade.Handlers
         {
             SaveData save = SaveData.Main;
             save.Stats.deaths++;
+            save.Stats.causeOfDeath = GetCauseOfDeath(damageType);
             AddAndSaveRun(save.Stats);
 
             int deaths = save.Stats.deaths;
@@ -119,6 +144,35 @@ namespace DeathrunRemade.Handlers
             string plural = deaths == 1 ? "" : "s";
             string message = deaths > 0 ? $"Victory in {deaths} death{plural} and" : "Flawless victory in";
             _log.InGameMessage($"{message} {DeathrunUtils.TimeToGameDays(save.Stats.time):F0} days!");
+        }
+        
+        /// <summary>
+        /// Set an override for the cause of death for when the damage type alone just isn't enough.
+        /// </summary>
+        public void SetCauseOfDeathOverride(string cause)
+        {
+            _deathCauseOverride = cause;
+            DeathrunInit._Log.Debug($"Setting death cause override: {_deathCauseOverride}");
+        }
+
+        /// <summary>
+        /// Set an override for the cause of death for when the damage type alone just isn't enough.
+        /// </summary>
+        /// <param name="techType">The <see cref="TechType"/> of the thing or attacker causing the death.</param>
+        public void SetCauseOfDeathOverride(TechType techType)
+        {
+            _deathCauseOverride = techType == TechType.None ? "Unknown Creature" : Language.main.Get(techType.AsString());
+            DeathrunInit._Log.Debug($"Setting death cause override: {_deathCauseOverride}");
+        }
+
+        /// <summary>
+        /// Set an override for the cause of death for when the damage type alone just isn't enough.
+        /// </summary>
+        /// <param name="gameObject">The attacker causing the death.</param>
+        public void SetCauseOfDeathOverride(GameObject gameObject)
+        {
+            TechType techType = CraftData.GetTechType(gameObject);
+            SetCauseOfDeathOverride(techType);
         }
 
         private void ImportLegacyRuns()

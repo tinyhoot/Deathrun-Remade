@@ -274,6 +274,7 @@ namespace DeathrunRemade.Handlers
                 _notifications.AddMessage(NotificationHandler.Centre, "You have the bends! "
                                                                       + "Slow your ascent!").SetDuration(3f);
             }
+            DeathrunInit._RunHandler.SetCauseOfDeathOverride("The Bends");
             health.TakeDamage(damage, type: DamageType.Starve);
             // After damage, adjust the safe depth upwards a bit.
             save.Nitrogen.safeDepth = Mathf.Max(Mathf.Min(currentDepth, GraceDepth),

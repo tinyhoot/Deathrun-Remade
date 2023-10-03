@@ -159,6 +159,7 @@
         <Compile Include="Patches\AggressionPatcher.cs" />
         <Compile Include="Patches\AirPatcher.cs" />
         <Compile Include="Patches\BatteryPatcher.cs" />
+        <Compile Include="Patches\CauseOfDeathPatcher.cs" />
         <Compile Include="Patches\CompassPatcher.cs" />
         <Compile Include="Patches\DamageTakenPatcher.cs" />
         <Compile Include="Patches\EscapePodPatcher.cs" />
