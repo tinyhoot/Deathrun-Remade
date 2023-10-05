@@ -17,7 +17,7 @@ but a release can be expected by Halloween. Hope that doesn't stingray!
   - [x] Aurora and Explosion
   - [x] Challenges and misc. config options
   - [x] Creature Aggression
-  - [ ] 🟡 Main Menu and High Scores
+  - [x] Main Menu and High Scores
   - [x] Nitrogen
   - [x] Power Changes
   - [x] Radiation

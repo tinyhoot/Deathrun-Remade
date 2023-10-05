@@ -11,7 +11,8 @@ namespace DeathrunRemade.Items
     internal class DecompressionModule : DeathrunPrefabBase
     {
         public new static TechType TechType;
-        
+        public const TechType UnlockTechType = TechType.Cyclops;
+
         public DecompressionModule()
         {
             var sprite = SpriteManager.Get(TechType.PowerUpgradeModule);
@@ -35,7 +36,7 @@ namespace DeathrunRemade.Items
                 .WithFabricatorType(CraftTree.Type.SeamothUpgrades)
                 .WithStepsToFabricatorTab(CraftTreeHandler.Paths.VehicleUpgradesCommonModules);
             _prefab.SetPdaGroupCategory(TechGroup.VehicleUpgrades, TechCategory.VehicleUpgrades);
-            _prefab.SetUnlock(TechType.Cyclops);
+            _prefab.SetUnlock(UnlockTechType);
             _prefab.SetEquipment(EquipmentType.VehicleModule)
                 .WithQuickSlotType(QuickSlotType.Passive);
 

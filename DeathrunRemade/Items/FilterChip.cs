@@ -33,7 +33,6 @@ namespace DeathrunRemade.Items
                 .WithFabricatorType(CraftTree.Type.Fabricator)
                 .WithStepsToFabricatorTab(CraftTreeHandler.Paths.FabricatorEquipment);
             _prefab.SetPdaGroupCategory(TechGroup.Personal, TechCategory.Equipment);
-            _prefab.SetUnlock(TechType.Cyclops);
             _prefab.SetEquipment(EquipmentType.Chip)
                 .WithQuickSlotType(QuickSlotType.None);
 

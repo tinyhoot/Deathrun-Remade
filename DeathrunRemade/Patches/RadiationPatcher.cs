@@ -342,7 +342,7 @@ namespace DeathrunRemade.Patches
         /// <summary>
         /// Get the maximum depth that radiation can penetrate under water based on difficulty.
         /// </summary>
-        private static float GetMaxRadiationDepth(Difficulty4 difficulty)
+        public static float GetMaxRadiationDepth(Difficulty4 difficulty)
         {
             return difficulty switch
             {

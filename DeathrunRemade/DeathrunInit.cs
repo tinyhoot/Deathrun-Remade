@@ -38,6 +38,7 @@ namespace DeathrunRemade
         internal static RunHandler _RunHandler;
         internal static TutorialHandler _Tutorials;
         internal static SafeDepthHud _DepthHud;
+        private EncyclopediaHandler _encyclopediaHandler;
         private VanillaRecipeChanges _recipeChanges;
         
         // The base object from which the main menu highscores window is instantiated.
@@ -144,6 +145,10 @@ namespace DeathrunRemade
             player.gameObject.AddComponent<RunStatsTracker>();
             // Set up GUI components.
             RadiationPatcher.CalculateGuiPosition();
+            // Register custom story goals relying on custom items.
+            _encyclopediaHandler.RegisterStoryGoals();
+            // Unlock all encyclopedia entries with Deathrun tutorials.
+            _encyclopediaHandler.UnlockPdaIntroEntries();
             
             // Enable crush depth if the player needs to breathe, i.e. is not in creative mode.
             if (config.PersonalCrushDepth != Difficulty3.Normal && GameModeUtils.RequiresOxygen())
@@ -170,6 +175,8 @@ namespace DeathrunRemade
             // Load statistics of all runs ever played.
             _RunHandler = new RunHandler(_Log);
             _Tutorials = new TutorialHandler(_Notifications, SaveData.Main);
+            _encyclopediaHandler = new EncyclopediaHandler();
+            _encyclopediaHandler.RegisterPdaEntries();
         }
 
         /// <summary>
