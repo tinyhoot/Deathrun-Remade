@@ -48,7 +48,6 @@ namespace DeathrunRemade.Items
             TechType cloneType = variant == Variant.ReinforcedFiltrationSuit ? TechType.WaterFiltrationSuit : TechType.ReinforcedDiveSuit;
             var template = new CloneTemplate(_prefabInfo, cloneType);
             _prefab.SetGameObject(template);
-            _prefab.Register();
         }
 
         private void AssignTechType(PrefabInfo info, Variant variant)

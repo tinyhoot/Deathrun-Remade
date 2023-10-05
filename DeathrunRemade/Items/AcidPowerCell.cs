@@ -39,7 +39,6 @@ namespace DeathrunRemade.Items
 
             var template = new EnergySourceTemplate(_prefabInfo, GetCapacityForDifficulty(difficulty));
             _prefab.SetGameObject(template);
-            _prefab.Register();
         }
 
         public int GetCapacityForDifficulty(Difficulty4 difficulty)

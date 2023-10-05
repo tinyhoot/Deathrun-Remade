@@ -58,7 +58,6 @@ namespace DeathrunRemade.Items
             List<SerialScanData> changes = GetScanData(config.ScansRequired);
             foreach (var scanData in changes)
             {
-                DeathrunInit._Log.Debug($"{scanData.techType}: {scanData.amount}");
                 // We lose the race condition against Nautilus' PDAHandler, which only patches once on PDAScanner init.
                 // Therefore, we need to patch things ourselves. This comes with an unfortunate side effect: Items
                 // which are not unlocked but have their number of scans visible from the start (seaglide, constructor)

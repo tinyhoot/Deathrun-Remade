@@ -38,7 +38,6 @@ namespace DeathrunRemade.Items
 
             var template = new CloneTemplate(_prefabInfo, TechType.Compass);
             _prefab.SetGameObject(template);
-            _prefab.Register();
         }
     }
 }

@@ -8,7 +8,6 @@ Items
 - Acid powercells not accepted in the charger?
 - Batteries need their stuff set at game start, not during item registering.
 - Expand on Kharaa vehicle recipe costs. Only seamoth actually got any changes?
-- Ensure the filterchip gets added to known tech when all leaks have been fixed.
 
 Monos
 - Complete functionality of deco module and filterchip
@@ -25,7 +24,6 @@ Patches
 
 New Ideas
 - Make tanks not refill by themselves. Refill at special point?
-- Add config options for moving the GUI elements relative to top/sides/wherever.
 - Self-updating score multiplier in the options menu, to show you what you'll get
 - Progressively worse Kharaa infection to counteract difficulty being too frontloaded
 - Explicit compatibility with some popular/well fitting mods. Like C2C, Unknown Name, Enhanced Sleep, ...
@@ -63,3 +61,4 @@ Substantial changes from the original
 Known Issues
 - Number of fragment scans not properly reflected by seaglide and constructor until first scan.
 - Sometimes you get flung out of your escape pod at the beginning.
+- Nitrogen bar starts off with the wrong value on game start.

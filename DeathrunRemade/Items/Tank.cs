@@ -53,16 +53,20 @@ namespace DeathrunRemade.Items
             TechType cloneType = variant == Variant.PhotosynthesisTankSmall ? TechType.Tank : TechType.PlasteelTank;
             var template = new CloneTemplate(_prefabInfo, cloneType);
             _prefab.SetGameObject(template);
+            
+            // Add the special tank behaviour to the player as soon as they're ready.
+            // This won't do anything if the player isn't wearing any special tanks, so no config check necessary.
+            GameEventHandler.OnPlayerAwake += player => player.gameObject.EnsureComponent<DeathrunTank>();
+        }
 
+        public override void Register()
+        {
             // Register these special tanks later, and only if they're actually enabled in the config.
             SaveData.OnSaveDataLoaded += data =>
             {
                 if (data.Config.SpecialAirTanks)
                     _prefab.Register();
             };
-            // Add the special tank behaviour to the player as soon as they're ready.
-            // This won't do anything if the player isn't wearing any special tanks, so no config check necessary.
-            GameEventHandler.OnPlayerAwake += player => player.gameObject.EnsureComponent<DeathrunTank>();
         }
         
         private void AssignTechType(PrefabInfo info, Variant variant)
@@ -118,7 +122,7 @@ namespace DeathrunRemade.Items
             return variant switch
             {
                 Variant.ChemosynthesisTank => "A lightweight O2 tank that houses microorganisms that produce oxygen under high temperatures.",
-                Variant.PhotosynthesisTank => "A lightweight air tank housing microorganisms which produce oxygen when exposed to sunlight..",
+                Variant.PhotosynthesisTank => "A lightweight air tank housing microorganisms which produce oxygen when exposed to sunlight.",
                 Variant.PhotosynthesisTankSmall => "An air tank housing microorganisms which produce oxygen when exposed to sunlight.",
                 _ => null
             };

@@ -40,7 +40,6 @@ namespace DeathrunRemade.Items
 
             var template = new CloneTemplate(_prefabInfo, TechType.StalkerTooth);
             _prefab.SetGameObject(template);
-            _prefab.Register();
             
             RegisterHarvestData(variant);
         }

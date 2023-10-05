@@ -42,7 +42,6 @@ namespace DeathrunRemade.Items
 
             var template = new CloneTemplate(_prefabInfo, TechType.VehicleArmorPlating);
             _prefab.SetGameObject(template);
-            _prefab.Register();
         }
     }
 }

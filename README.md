@@ -12,7 +12,7 @@ but a release can be expected by Halloween. Hope that doesn't stingray!
 
 - [x] Config
 - [x] Custom Items
-- [ ] 🟡 Harmony Patches
+- [x] Harmony Patches
   - [x] Additional Item Behaviour
   - [x] Aurora and Explosion
   - [x] Challenges and misc. config options

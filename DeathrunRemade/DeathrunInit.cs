@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using BepInEx;
 using DeathrunRemade.Components;
 using DeathrunRemade.Components.RunStatsUI;
@@ -17,7 +14,6 @@ using HootLib.Components;
 using HootLib.Objects;
 using Nautilus.Handlers;
 using Nautilus.Utility;
-using Newtonsoft.Json;
 using UnityEngine;
 using ILogHandler = HootLib.Interfaces.ILogHandler;
 
@@ -200,8 +196,10 @@ namespace DeathrunRemade
 
         private void RegisterCommands()
         {
+#if DEBUG
             ConsoleCommandsHandler.RegisterConsoleCommand<Action>("loc", DumpLocation);
             ConsoleCommandsHandler.RegisterConsoleCommand<Action>("test", TestMe);
+#endif
         }
 
         private void RegisterGameEvents()
@@ -230,23 +228,21 @@ namespace DeathrunRemade
         /// </summary>
         private void RegisterItems()
         {
-            // Not convinced I'm keeping this list but let's have it ready for now.
-            List<DeathrunPrefabBase> prefabs = new List<DeathrunPrefabBase>();
             // Very basic items first, so later items can rely on them for recipes.
-            prefabs.Add(new MobDrop(MobDrop.Variant.LavaLizardScale));
-            prefabs.Add(new MobDrop(MobDrop.Variant.SpineEelScale));
-            prefabs.Add(new MobDrop(MobDrop.Variant.ThermophileSample));
+            new MobDrop(MobDrop.Variant.LavaLizardScale).Register();
+            new MobDrop(MobDrop.Variant.SpineEelScale).Register();
+            new MobDrop(MobDrop.Variant.ThermophileSample).Register();
             
-            prefabs.Add(new AcidBattery(_Config.BatteryCapacity.Value));
-            prefabs.Add(new AcidPowerCell(_Config.BatteryCapacity.Value));
-            prefabs.Add(new DecompressionModule());
-            prefabs.Add(new FilterChip());
-            prefabs.Add(new Suit(Suit.Variant.ReinforcedFiltrationSuit));
-            prefabs.Add(new Suit(Suit.Variant.ReinforcedSuitMk2));
-            prefabs.Add(new Suit(Suit.Variant.ReinforcedSuitMk3));
-            prefabs.Add(new Tank(Tank.Variant.ChemosynthesisTank));
-            prefabs.Add(new Tank(Tank.Variant.PhotosynthesisTank));
-            prefabs.Add(new Tank(Tank.Variant.PhotosynthesisTankSmall));
+            new AcidBattery(_Config.BatteryCapacity.Value).Register();
+            new AcidPowerCell(_Config.BatteryCapacity.Value).Register();
+            new DecompressionModule().Register();
+            new FilterChip().Register();
+            new Suit(Suit.Variant.ReinforcedFiltrationSuit).Register();
+            new Suit(Suit.Variant.ReinforcedSuitMk2).Register();
+            new Suit(Suit.Variant.ReinforcedSuitMk3).Register();
+            new Tank(Tank.Variant.ChemosynthesisTank).Register();
+            new Tank(Tank.Variant.PhotosynthesisTank).Register();
+            new Tank(Tank.Variant.PhotosynthesisTankSmall).Register();
         }
 
         /// <summary>
@@ -272,37 +268,6 @@ namespace DeathrunRemade
         {
             
             return;
-            // FMODAsset asset = AudioUtils.GetFmodAsset("event:/sub/cyclops/impact_solid_hard");
-            // FMODUWE.PlayOneShot(asset, Player.main.transform.position);
-            // RESULT result = FMODUWE.GetEventInstance(asset.path, out EventInstance instance);
-
-            VanillaRecipeChanges recipe = new VanillaRecipeChanges();
-            // foreach (var c in recipe.LoadFromDiskBetter())
-            // {
-            //     _Log.Debug($"{c._techType}: {c._ingredients}");
-            // }
-
-            recipe.LoadFromDiskAsync().Start();
-            var data = recipe.GetCraftData(Difficulty4.Deathrun);
-            var x = data.ToList();
-            //_Log.Debug(JsonConvert.SerializeObject(data));
-            // _Log.Debug("Done.");
-
-            var settings = JsonConvert.DefaultSettings?.Invoke() ?? new JsonSerializerSettings();
-            // var enumconverter = new StringEnumConverter();
-            // enumconverter.NamingStrategy ??= new DefaultNamingStrategy();
-            // enumconverter.NamingStrategy.ProcessDictionaryKeys = true;
-            // settings.Converters.Add(enumconverter);
-            settings.NullValueHandling = NullValueHandling.Include;
-
-            // using StreamReader reader = new StreamReader(Hootils.GetAssetHandle("test2.json"));
-            // var text = reader.ReadToEnd();
-            // var x = JsonConvert.DeserializeObject<List<SerialTechData>>(text);
-
-            string json = JsonConvert.SerializeObject(
-                new Dictionary<string, List<SerialTechData>> { { "difficulty", x } }, Formatting.Indented, settings);
-            using StreamWriter writer = new StreamWriter(Hootils.GetAssetHandle($"yolo.json"));
-            writer.Write(json);
         }
     }
 }

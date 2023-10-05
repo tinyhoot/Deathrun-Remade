@@ -2,7 +2,7 @@ using Nautilus.Assets;
 
 namespace DeathrunRemade.Items
 {
-    public abstract class DeathrunPrefabBase
+    internal abstract class DeathrunPrefabBase
     {
         protected PrefabInfo _prefabInfo;
         protected CustomPrefab _prefab;
@@ -14,5 +14,10 @@ namespace DeathrunRemade.Items
         public virtual PrefabInfo PrefabInfo => _prefabInfo;
 
         public virtual TechType TechType => _prefabInfo.TechType;
+
+        public virtual void Register()
+        {
+            _prefab.Register();
+        }
     }
 }
