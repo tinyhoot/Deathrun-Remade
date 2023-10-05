@@ -145,6 +145,7 @@ namespace DeathrunRemade
             _encyclopediaHandler.RegisterStoryGoals();
             // Unlock all encyclopedia entries with Deathrun tutorials.
             _encyclopediaHandler.UnlockPdaIntroEntries();
+            TooltipHandler.OverrideVanillaTooltips(config);
             
             // Enable crush depth if the player needs to breathe, i.e. is not in creative mode.
             if (config.PersonalCrushDepth != Difficulty3.Normal && GameModeUtils.RequiresOxygen())

@@ -132,6 +132,7 @@
         <Compile Include="Handlers\ScoreHandler.cs" />
         <Compile Include="Handlers\NitrogenHandler.cs" />
         <Compile Include="Handlers\NotificationHandler.cs" />
+        <Compile Include="Handlers\TooltipHandler.cs" />
         <Compile Include="Handlers\TutorialHandler.cs" />
         <Compile Include="Items\AcidBattery.cs" />
         <Compile Include="Items\AcidPowerCell.cs" />

@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Linq;
 using DeathrunRemade.Items;
@@ -43,41 +42,6 @@ namespace DeathrunRemade.Configuration
                 Difficulty3.Deathrun => 20,
                 _ => throw new InvalidDataException()
             };
-        }
-
-        /// <summary>
-        /// Get the crush depth of the player based on equipped suits.
-        /// </summary>
-        public static float GetPersonalCrushDepth()
-        {
-            TechType suit = Inventory.main.equipment.GetTechTypeInSlot("Body");
-            bool deathrun = _config.PersonalCrushDepth == Difficulty3.Deathrun;
-            float depth = suit switch
-            {
-                TechType.RadiationSuit => 500f,
-                TechType.ReinforcedDiveSuit => deathrun ? 800f : Constants.InfiniteCrushDepth,
-                TechType.WaterFiltrationSuit => deathrun ? 800f : 1300f,
-                _ => 200f,
-            };
-            // If the player wasn't wearing any of the vanilla suits, check for custom ones.
-            depth = Mathf.Max(depth, Suit.GetCrushDepth(suit, deathrun));
-            return depth;
-        }
-
-        /// <summary>
-        /// Get the temperature limit of the player based on their equipment.
-        /// </summary>
-        public static float GetPersonalTemperatureLimit()
-        {
-            TechType suit = Inventory.main.equipment.GetTechTypeInSlot("Body");
-            float tempLimit = Constants.MinTemperatureLimit;
-            if (suit.Equals(TechType.ReinforcedDiveSuit))
-                tempLimit += 15f;
-            // Also check for temperature from custom suits.
-            tempLimit = Math.Max(tempLimit, Suit.GetTemperatureLimit(suit));
-            if (Player.main.HasReinforcedGloves())
-                tempLimit += 6f;
-            return tempLimit;
         }
 
         /// <summary>

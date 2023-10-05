@@ -1,3 +1,5 @@
+using DeathrunRemade.Handlers;
+using DeathrunRemade.Patches;
 using HootLib;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
@@ -156,17 +158,17 @@ namespace DeathrunRemade.Items
         /// <summary>
         /// Get the personal crushdepth for the given techtype.
         /// </summary>
-        /// <param name="techtype">The TechType of one of the suits added by this mod.</param>
+        /// <param name="techType">The TechType of one of the suits added by this mod.</param>
         /// <param name="hardMode">Whether to apply DEATHRUN difficulty.</param>
-        public static float GetCrushDepth(TechType techtype, bool hardMode)
+        public static float GetCrushDepth(TechType techType, bool hardMode)
         {
             float depth = 0f;
-            if (techtype.Equals(ReinforcedFiltration))
-                depth = hardMode ? 1300f : Constants.InfiniteCrushDepth;
-            if (techtype.Equals(ReinforcedMk2))
-                depth = hardMode ? 1300f : Constants.InfiniteCrushDepth;
-            if (techtype.Equals(ReinforcedMk3))
-                depth = Constants.InfiniteCrushDepth;
+            if (techType.Equals(ReinforcedFiltration))
+                depth = hardMode ? 1300f : CrushDepthHandler.InfiniteCrushDepth;
+            if (techType.Equals(ReinforcedMk2))
+                depth = hardMode ? 1300f : CrushDepthHandler.InfiniteCrushDepth;
+            if (techType.Equals(ReinforcedMk3))
+                depth = CrushDepthHandler.InfiniteCrushDepth;
             return depth;
         }
 
@@ -175,7 +177,7 @@ namespace DeathrunRemade.Items
         /// </summary>
         public static float GetTemperatureLimit(TechType techType)
         {
-            float tempLimit = Constants.MinTemperatureLimit;
+            float tempLimit = SuitPatcher.MinTemperatureLimit;
             if (techType.Equals(ReinforcedFiltration))
                 tempLimit += 15f;
             if (techType.Equals(ReinforcedMk2))

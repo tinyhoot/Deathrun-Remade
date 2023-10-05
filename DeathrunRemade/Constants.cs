@@ -14,8 +14,5 @@ namespace DeathrunRemade
 #endif
         public const string WorkbenchSuitTab = ClassIdPrefix + "specialsuits";
         public const string WorkbenchTankTab = ClassIdPrefix + "specialtanks";
-        
-        public const float InfiniteCrushDepth = 10000f;
-        public const float MinTemperatureLimit = 49f;
     }
 }

@@ -1,12 +1,14 @@
-using DeathrunRemade.Configuration;
 using DeathrunRemade.Items;
 using HarmonyLib;
+using UnityEngine;
 
 namespace DeathrunRemade.Patches
 {
     [HarmonyPatch]
     internal class SuitPatcher
     {
+        public const float MinTemperatureLimit = 49f;
+        
         /// <summary>
         /// Ensure that some of the special suits are also recognised as reinforced suits.
         /// </summary>
@@ -30,7 +32,27 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(Player), nameof(Player.UpdateReinforcedSuit))]
         private static void UpdateSuitValues(ref Player __instance)
         {
-            __instance.temperatureDamage.minDamageTemperature = ConfigUtils.GetPersonalTemperatureLimit();
+            TechType suit = Inventory.main.equipment.GetTechTypeInSlot("Body");
+            float limit = GetTemperatureLimit(suit);
+            if (__instance.HasReinforcedGloves())
+                limit += 6f;
+            __instance.temperatureDamage.minDamageTemperature = limit;
+        }
+        
+        /// <summary>
+        /// Get the temperature limit of a suit.
+        /// </summary>
+        public static float GetTemperatureLimit(TechType suit)
+        {
+            if (suit == TechType.None)
+                return MinTemperatureLimit;
+            
+            float tempLimit = MinTemperatureLimit;
+            if (suit.Equals(TechType.ReinforcedDiveSuit))
+                tempLimit += 15f;
+            // Also check for temperature from custom suits.
+            tempLimit = Mathf.Max(tempLimit, Suit.GetTemperatureLimit(suit));
+            return tempLimit;
         }
     }
 }

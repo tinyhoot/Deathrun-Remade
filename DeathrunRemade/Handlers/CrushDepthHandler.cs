@@ -1,4 +1,5 @@
 using DeathrunRemade.Configuration;
+using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using UnityEngine;
@@ -7,6 +8,8 @@ namespace DeathrunRemade.Handlers
 {
     internal static class CrushDepthHandler
     {
+        public const float InfiniteCrushDepth = 10000f;
+        
         /// <summary>
         /// Do the math and check whether the player needs to take crush damage.
         ///
@@ -18,7 +21,8 @@ namespace DeathrunRemade.Handlers
             if (!player.IsUnderwater() || player.currentWaterPark != null)
                 return;
             
-            float crushDepth = ConfigUtils.GetPersonalCrushDepth();
+            TechType suit = Inventory.main.equipment.GetTechTypeInSlot("Body");
+            float crushDepth = GetCrushDepth(suit, SaveData.Main.Config);
             float diff = player.GetDepth() - crushDepth;
             // Not below the crush depth, do nothing.
             if (diff <= 0)
@@ -41,6 +45,24 @@ namespace DeathrunRemade.Handlers
             float damageExp = 1f + Mathf.Clamp(diff / 50f, 1f, 5f);
             player.GetComponent<LiveMixin>().TakeDamage(Mathf.Pow(2f, damageExp), type: DamageType.Pressure);
             DeathrunInit._Log.InGameMessage("The pressure is crushing you!");
+        }
+        
+        /// <summary>
+        /// Get the crush depth of the provided suit based on config values.
+        /// </summary>
+        public static float GetCrushDepth(TechType suit, ConfigSave config)
+        {
+            bool deathrun = config.PersonalCrushDepth == Difficulty3.Deathrun;
+            float depth = suit switch
+            {
+                TechType.RadiationSuit => 500f,
+                TechType.ReinforcedDiveSuit => deathrun ? 800f : InfiniteCrushDepth,
+                TechType.WaterFiltrationSuit => deathrun ? 800f : 1300f,
+                _ => 200f,
+            };
+            // If the player wasn't wearing any of the vanilla suits, check for custom ones.
+            depth = Mathf.Max(depth, Suit.GetCrushDepth(suit, deathrun));
+            return depth;
         }
     }
 }
