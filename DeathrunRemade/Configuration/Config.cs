@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BepInEx;
 using BepInEx.Configuration;
+using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using DeathrunRemade.Patches;
@@ -217,9 +218,9 @@ namespace DeathrunRemade.Configuration
                 description: "Radiation affects the water even when not near the Aurora up to a certain depth."
             ).WithChoiceOptionStringsOverride(
                 "Normal (No changes)",
-                "Hard (30m)",
-                "Deathrun (60m)",
-                "Kharaa (200m)"
+                $"Hard ({RadiationPatcher.GetMaxRadiationDepth(Difficulty4.Hard)}m)",
+                $"Deathrun ({RadiationPatcher.GetMaxRadiationDepth(Difficulty4.Deathrun)}m)",
+                $"Kharaa ({RadiationPatcher.GetMaxRadiationDepth(Difficulty4.Kharaa)}m)"
             ).WithDescription("Radiation");
             RadiationFX = RegisterEntry(
                 section: SectionEnvironment,
@@ -269,9 +270,9 @@ namespace DeathrunRemade.Configuration
                              + "not rechargeable, but can be recycled. Tools do not automatically contain batteries."
             ).WithChoiceOptionStringsOverride(
                 "Normal (No changes)",
-                "Hard (75 power)",
-                "Deathrun (50 power)",
-                "Kharaa (25 power)"
+                $"Hard ({AcidBattery.GetCapacityForDifficulty(Difficulty4.Hard)} power)",
+                $"Deathrun ({AcidBattery.GetCapacityForDifficulty(Difficulty4.Deathrun)} power)",
+                $"Kharaa ({AcidBattery.GetCapacityForDifficulty(Difficulty4.Kharaa)} power)"
             ).WithDescription("Battery Costs");
             PowerCosts = RegisterEntry(
                 section: SectionCosts,

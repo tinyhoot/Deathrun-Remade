@@ -1,8 +1,5 @@
 Things that still need doing because if I don't write them down right now I'll forget
 
-Config
-- At the end, replace hardcoded numbers in the config with calls to functions. That way the numbers are always correct.
-
 Items
 - Check whether putting them into slots and such actually works. Probably wait until items are fully functional.
 - Acid powercells not accepted in the charger?

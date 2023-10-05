@@ -39,7 +39,7 @@ namespace DeathrunRemade.Items
             _prefab.SetGameObject(template);
         }
 
-        public int GetCapacityForDifficulty(Difficulty4 difficulty)
+        public static int GetCapacityForDifficulty(Difficulty4 difficulty)
         {
             return difficulty switch
             {
