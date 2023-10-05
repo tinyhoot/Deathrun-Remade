@@ -122,7 +122,6 @@
         <Compile Include="Configuration\Config.cs" />
         <Compile Include="Configuration\ConfigSave.cs" />
         <Compile Include="Configuration\ConfigUtils.cs" />
-        <Compile Include="Constants.cs" />
         <Compile Include="DeathrunInit.cs" />
         <Compile Include="DeathrunUtils.cs" />
         <Compile Include="Handlers\CrushDepthHandler.cs" />
@@ -159,7 +158,7 @@
         <Compile Include="Objects\SaveData.cs" />
         <Compile Include="Objects\StartLocation.cs" />
         <Compile Include="Patches\AggressionPatcher.cs" />
-        <Compile Include="Patches\AirPatcher.cs" />
+        <Compile Include="Patches\BreathingPatcher.cs" />
         <Compile Include="Patches\BatteryPatcher.cs" />
         <Compile Include="Patches\CauseOfDeathPatcher.cs" />
         <Compile Include="Patches\CompassPatcher.cs" />

@@ -1,4 +1,7 @@
 using DeathrunRemade.Configuration;
+using DeathrunRemade.Items;
+using DeathrunRemade.Objects;
+using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using UnityEngine;
 
@@ -8,7 +11,7 @@ namespace DeathrunRemade.Patches
     /// Poison the surface air and make it difficult to breathe in general. You know, just like real life.
     /// </summary>
     [HarmonyPatch]
-    internal class AirPatcher
+    internal class BreathingPatcher
     {
         /// <summary>
         /// Cancel adding oxygen at the surface if the air is not breathable.
@@ -21,7 +24,7 @@ namespace DeathrunRemade.Patches
             if (!Player.main.oxygenMgr == __instance)
                 return true;
 
-            return ConfigUtils.CanBreathe(Player.main);
+            return CanBreathe(Player.main, SaveData.Main.Config);
         }
 
         /// <summary>
@@ -57,7 +60,7 @@ namespace DeathrunRemade.Patches
             if (!__result)
                 return;
 
-            __result = ConfigUtils.CanBreathe(__instance);
+            __result = CanBreathe(__instance, SaveData.Main.Config);
         }
 
         /// <summary>
@@ -67,7 +70,7 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(Player), nameof(Player.GetBreathPeriod))]
         private static void SubtractOxygen(ref Player __instance, ref float __result)
         {
-            if (!ConfigUtils.CanBreathe(__instance))
+            if (!CanBreathe(__instance, SaveData.Main.Config))
                 __result = 3f;
         }
 
@@ -80,6 +83,39 @@ namespace DeathrunRemade.Patches
         private static void SwimToSurfaceText(ref HintSwimToSurface __instance)
         {
             __instance.message = "Out of Air!";
+        }
+        
+        /// <summary>
+        /// Checks whether the player is able to breathe at their current location.
+        /// </summary>
+        private static bool CanBreathe(Player player, ConfigSave config)
+        {
+            // Special cases like player bases, vehicles or alien bases should always be breathable.
+            if (player.IsInsidePoweredSubOrVehicle() || player.precursorOutOfWater)
+                return true;
+            
+            // If at the surface, check for irradiated air.
+            return IsAirBreathable(config);
+        }
+
+        /// <summary>
+        /// Checks whether the player would be able to breathe at the surface.
+        /// </summary>
+        private static bool IsAirBreathable(ConfigSave config)
+        {
+            if (config.SurfaceAir == Difficulty3.Normal)
+                return true;
+
+            // If this doesn't pass the game is not yet done loading.
+            if (Inventory.main is null || Inventory.main.equipment is null)
+                return true;
+            if (Inventory.main.equipment.GetCount(FilterChip.TechType) > 0)
+                return true;
+
+            // Surface air without a filter is always unbreathable on high difficulties.
+            if (config.SurfaceAir == Difficulty3.Deathrun)
+                return false;
+            return !RadiationPatcher.IsSurfaceIrradiated();
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Linq;
 using DeathrunRemade.Configuration;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Objects;
@@ -51,7 +52,8 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(RandomStart), nameof(RandomStart.GetRandomStartPoint))]
         private static void OverrideStart(ref Vector3 __result)
         {
-            Vector3 start = ConfigUtils.GetStartPoint(out string name);
+            Vector3 start = GetStartPoint(SaveData.Main.Config, out string name);
+            SaveData.Main.Stats.startPoint = name;
             // Show the intro sequence.
             NotificationHandler.Main.AddMessage(NotificationHandler.Centre, $"DEATHRUN\nStart: {name}")
                 .SetDuration(10f, 2f);
@@ -114,6 +116,27 @@ namespace DeathrunRemade.Patches
 
             _previousPos = __instance.transform.position;
             return false;
+        }
+        
+        /// <summary>
+        /// Get the spawn point of the escape pod.
+        /// </summary>
+        /// <returns></returns>
+        public static Vector3 GetStartPoint(ConfigSave config, out string name)
+        {
+            string setting = config.StartLocation;
+            // If the save data has not yet initialised, fall back to the actual config.
+            setting ??= DeathrunInit._Config.StartLocation.Value;
+
+            // This will throw an exception if the setting name has been altered for some reason, but that's intended.
+            StartLocation location = DeathrunInit._Config._startLocations.First(l => l.Name == setting);
+            if (setting == "Random")
+                location = DeathrunInit._Config._startLocations.Where(l => l.Name != "Random").ToList().GetRandom();
+
+            name = location.Name;
+            if (location.Name == "Vanilla")
+                return default;
+            return new Vector3(location.X, location.Y, location.Z);
         }
 
         /// <summary>

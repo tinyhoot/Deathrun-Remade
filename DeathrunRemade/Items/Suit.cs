@@ -14,6 +14,8 @@ namespace DeathrunRemade.Items
     /// </summary>
     internal class Suit : DeathrunPrefabBase
     {
+        public const string WorkbenchSuitTab = ClassIdPrefix + "specialsuits";
+        
         public enum Variant
         {
             ReinforcedSuitMk2,
@@ -41,7 +43,7 @@ namespace DeathrunRemade.Items
             _prefab = new CustomPrefab(_prefabInfo);
             _prefab.SetRecipe(GetRecipe(variant))
                 .WithFabricatorType(CraftTree.Type.Workbench)
-                .WithStepsToFabricatorTab(Constants.WorkbenchSuitTab);
+                .WithStepsToFabricatorTab(WorkbenchSuitTab);
             _prefab.SetPdaGroupCategory(TechGroup.Personal, TechCategory.Equipment);
             _prefab.SetEquipment(EquipmentType.Body);
             _prefabInfo.WithSizeInInventory(new Vector2int(2, 2));
@@ -80,7 +82,7 @@ namespace DeathrunRemade.Items
                 Variant.ReinforcedSuitMk3 => "reinforcedsuit3",
                 _ => null
             };
-            return $"{Constants.ClassIdPrefix}{id}";
+            return $"{ClassIdPrefix}{id}";
         }
 
         /// <summary>

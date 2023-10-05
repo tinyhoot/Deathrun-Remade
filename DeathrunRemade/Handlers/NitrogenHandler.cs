@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using DeathrunRemade.Configuration;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
@@ -225,6 +226,20 @@ namespace DeathrunRemade.Handlers
 
             return modifier;
         }
+        
+        /// <summary>
+        /// Get the damage dealt by decompression sickness.
+        /// </summary>
+        public static int GetBendsDamage(Difficulty3 value)
+        {
+            return value switch
+            {
+                Difficulty3.Normal => 10,
+                Difficulty3.Hard => 10,
+                Difficulty3.Deathrun => 20,
+                _ => throw new InvalidDataException()
+            };
+        }
 
         /// <summary>
         /// Calculate a modifier based on the given depth to indicate how heavily that depth should influence
@@ -253,7 +268,7 @@ namespace DeathrunRemade.Handlers
             LiveMixin health = player.GetComponent<LiveMixin>();
             float depthDiff = save.Nitrogen.safeDepth - currentDepth;
             
-            int baseDamage = ConfigUtils.GetBendsDamage(save.Config.NitrogenBends);
+            int baseDamage = GetBendsDamage(save.Config.NitrogenBends);
             // Make the damage more manageable for small transgressions.
             if (depthDiff < 5)
             {

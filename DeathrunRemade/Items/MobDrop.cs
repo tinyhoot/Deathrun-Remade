@@ -85,10 +85,10 @@ namespace DeathrunRemade.Items
             {
                 Variant.LavaLizardScale => "lavalizardscale",
                 Variant.SpineEelScale => "spineeelscale",
-                Variant.ThermophileSample => "thermophilsample",
+                Variant.ThermophileSample => "thermophilesample",
                 _ => null
             };
-            return $"{Constants.ClassIdPrefix}{id}";
+            return $"{ClassIdPrefix}{id}";
         }
 
         /// <summary>

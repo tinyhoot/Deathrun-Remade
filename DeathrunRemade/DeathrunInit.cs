@@ -121,7 +121,7 @@ namespace DeathrunRemade
             if (config.DamageTaken != DamageDifficulty.Normal)
                 _harmony.PatchAll(typeof(DamageTakenPatcher));
             if (config.SurfaceAir != Difficulty3.Normal)
-                _harmony.PatchAll(typeof(AirPatcher));
+                _harmony.PatchAll(typeof(BreathingPatcher));
             if (config.PowerCosts != Difficulty4.Normal)
                 _harmony.PatchAll(typeof(PowerPatcher));
             if (config.PacifistChallenge)
@@ -254,9 +254,9 @@ namespace DeathrunRemade
             Atlas.Sprite suitIcon = Hootils.LoadSprite("SuitTabIcon.png", true);
             Atlas.Sprite tankIcon = Hootils.LoadSprite("TankTabIcon.png", true);
 
-            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, Constants.WorkbenchSuitTab,
+            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, Suit.WorkbenchSuitTab,
                 "Dive Suit Upgrades", suitIcon);
-            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, Constants.WorkbenchTankTab,
+            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, Tank.WorkbenchTankTab,
                 "Specialty O2 Tanks", tankIcon);
         }
 

@@ -15,6 +15,8 @@ namespace DeathrunRemade.Items
     /// </summary>
     internal class Tank : DeathrunPrefabBase
     {
+        public const string WorkbenchTankTab = ClassIdPrefix + "specialtanks";
+        
         public enum Variant
         {
             ChemosynthesisTank,
@@ -42,7 +44,7 @@ namespace DeathrunRemade.Items
             _prefab = new CustomPrefab(_prefabInfo);
             _prefab.SetRecipe(GetRecipe(variant))
                 .WithFabricatorType(CraftTree.Type.Workbench)
-                .WithStepsToFabricatorTab(Constants.WorkbenchTankTab);
+                .WithStepsToFabricatorTab(WorkbenchTankTab);
             _prefab.SetPdaGroupCategory(TechGroup.Personal, TechCategory.Equipment);
             _prefab.SetEquipment(EquipmentType.Tank);
             _prefabInfo.WithSizeInInventory(new Vector2int(2, 3));
@@ -97,7 +99,7 @@ namespace DeathrunRemade.Items
                 Variant.PhotosynthesisTankSmall => "photosynthesistanksmall",
                 _ => null
             };
-            return $"{Constants.ClassIdPrefix}{id}";
+            return $"{ClassIdPrefix}{id}";
         }
         
         /// <summary>
