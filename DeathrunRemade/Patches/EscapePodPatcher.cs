@@ -22,8 +22,9 @@ namespace DeathrunRemade.Patches
         public static void OnSavedGameLoaded()
         {
             // If the pod is still sinking for some reason, do nothing.
-            if (SaveData.Main.Config.SinkLifepod || !SaveData.Main.EscapePod.isAnchored)
+            if (SaveData.Main.Config.SinkLifepod && !SaveData.Main.EscapePod.isAnchored)
                 return;
+            DeathrunInit._Log.Debug("Re-anchoring life pod.");
             EscapePod pod = EscapePod.main;
             AnchorLifepod(pod, pod.GetComponent<WorldForces>());
         }
