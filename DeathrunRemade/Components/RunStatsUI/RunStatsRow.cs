@@ -7,6 +7,8 @@ namespace DeathrunRemade.Components.RunStatsUI
 {
     internal class RunStatsRow : MonoBehaviour
     {
+        // This is set in the editor, the compiler is freaking out over nothing.
+#pragma warning disable CS0649
         public TextMeshProUGUI rank;
         public TextMeshProUGUI startPoint;
         public TextMeshProUGUI time;
@@ -14,7 +16,9 @@ namespace DeathrunRemade.Components.RunStatsUI
         public TextMeshProUGUI deaths;
         public TextMeshProUGUI scoreMult;
         public TextMeshProUGUI score;
+#pragma warning restore CS0649
         [NonSerialized] public RunStats Stats;
+
 
         public void SetRank(int ranking)
         {

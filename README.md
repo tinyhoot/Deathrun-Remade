@@ -25,7 +25,7 @@ but a release can be expected by Halloween. Hope that doesn't stingray!
   - [x] UI
 - [x] MonoBehaviours
 - [ ] QoL Improvements
-- [ ] PDA Entries, Item Descriptions, Tutorials
+- [x] PDA Entries, Item Descriptions, Tutorials
 - [x] Plugin loading and organisation
 - [x] Recipe Changes
 - [x] Save System

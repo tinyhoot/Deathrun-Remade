@@ -27,7 +27,6 @@ namespace DeathrunRemade
         public const string NAME = "Deathrun Remade";
         public const string VERSION = "0.1";
 
-        internal static DeathrunInit _Instance;
         internal static Config _Config;
         internal static ILogHandler _Log;
         internal static NotificationHandler _Notifications;
@@ -157,6 +156,23 @@ namespace DeathrunRemade
 
             _Log.Debug("Assets loaded.");
         }
+
+        /// <summary>
+        /// Do everything that needs to be done every time the main menu loads, such as setting up the window
+        /// displaying all run stats.
+        /// </summary>
+        private void OnMainMenuLoaded()
+        {
+            // Ensure the highscore window is always ready to go.
+            var window = Instantiate(_baseStatsWindow, uGUI_MainMenu.main.transform, false);
+            _RunStatsWindow = window.GetComponent<RunStatsWindow>();
+            var option = uGUI_MainMenu.main.primaryOptions.gameObject.AddComponent<MainMenuCustomPrimaryOption>();
+            option.onClick.AddListener(window.GetComponent<MainMenuCustomWindow>().Open);
+            option.SetText("Deathrun Stats");
+            // Put this new option in the right place - just after the options menu button.
+            int index = uGUI_MainMenu.main.primaryOptions.transform.Find("PrimaryOptions/MenuButtons/ButtonOptions").GetSiblingIndex();
+            option.SetIndex(index + 1);
+        }
         
         /// <summary>
         /// Do all the necessary work to get the mod going which can only be done when the game has set up most of its
@@ -219,18 +235,7 @@ namespace DeathrunRemade
             GameEventHandler.RegisterEvents();
             // Initialise deathrun messaging as soon as uGUI_Main is ready, i.e. the main menu loads.
             GameEventHandler.OnMainMenuLoaded += _Notifications.OnMainMenuLoaded;
-            // Ensure the highscore window is always ready to go.
-            GameEventHandler.OnMainMenuLoaded += () =>
-            {
-                var window = Instantiate(_baseStatsWindow, uGUI_MainMenu.main.transform, false);
-                _RunStatsWindow = window.GetComponent<RunStatsWindow>();
-                var option = uGUI_MainMenu.main.primaryOptions.gameObject.AddComponent<MainMenuCustomPrimaryOption>();
-                option.onClick.AddListener(window.GetComponent<MainMenuCustomWindow>().Open);
-                option.SetText("Deathrun Stats");
-                // Put this new option in the right place - just after the options menu button.
-                int index = uGUI_MainMenu.main.primaryOptions.transform.Find("PrimaryOptions/MenuButtons/ButtonOptions").GetSiblingIndex();
-                option.SetIndex(index + 1);
-            };
+            GameEventHandler.OnMainMenuLoaded += OnMainMenuLoaded;
             GameEventHandler.OnPlayerAwake += OnPlayerAwake;
             GameEventHandler.OnPlayerGainControl += OnPlayerGainControl;
             GameEventHandler.OnSavedGameLoaded += EscapePodPatcher.OnSavedGameLoaded;
@@ -266,6 +271,8 @@ namespace DeathrunRemade
             Atlas.Sprite suitIcon = Hootils.LoadSprite("SuitTabIcon.png", true);
             Atlas.Sprite tankIcon = Hootils.LoadSprite("TankTabIcon.png", true);
 
+            // This won't actually work because you can't add new tabs to ones which already contain items, but it
+            // should play nicely with mods that reorganise the craft tree.
             CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, Suit.WorkbenchSuitTab,
                 "Dive Suit Upgrades", suitIcon);
             CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, Tank.WorkbenchTankTab,

@@ -9,9 +9,12 @@ namespace DeathrunRemade.Components.RunStatsUI
 {
     internal class RunStatsWindow : MonoBehaviour
     {
+        // This is set in the editor, the compiler is freaking out over nothing.
+#pragma warning disable CS0649
         public GameObject scorePanel;
         public GameObject statsRow;
         public Image background;
+#pragma warning restore CS0649
         private List<RunStatsRow> _runRows = new List<RunStatsRow>();
 
         private void Awake()

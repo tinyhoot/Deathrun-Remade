@@ -51,7 +51,6 @@ namespace DeathrunRemade.Handlers
             
             _notifications.AddMessage(warning.NotificationSlot, warning.Text).SetDuration(DisplayTime);
             warning.SaveField.SetValue(_save.Warnings, DayNightCycle.main.timePassed);
-            _log.Debug($"Field: {warning.SaveField.GetValue(_save.Warnings)}, time: {DayNightCycle.main.timePassed}");
             return true;
         }
 
