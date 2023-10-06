@@ -56,8 +56,6 @@ namespace DeathrunRemade.Configuration
         public ConfigEntryWrapper<bool> PacifistChallenge;
 
         // UI
-        public ConfigEntryWrapper<bool> ShowHighscores;
-        public ConfigEntryWrapper<bool> ShowHighscoreTips;
         public ConfigEntryWrapper<bool> ShowTutorials;
         public ConfigEntryWrapper<Hints> ShowWarnings;
 
@@ -359,18 +357,6 @@ namespace DeathrunRemade.Configuration
 
         private void RegisterUIOptions()
         {
-            ShowHighscores = RegisterEntry(
-                section: SectionUI,
-                key: nameof(ShowHighscores),
-                defaultValue: true,
-                description: "Show highscores in the main menu."
-            ).WithDescription("Show Highscores");
-            ShowHighscoreTips = RegisterEntry(
-                section: SectionUI,
-                key: nameof(ShowHighscoreTips),
-                defaultValue: true,
-                description: "Show tips about how to reach better scores during loading screens."
-            ).WithDescription("Show Highscore Tips");
             ShowTutorials = RegisterEntry(
                 section: SectionUI,
                 key: nameof(ShowTutorials),
@@ -389,7 +375,11 @@ namespace DeathrunRemade.Configuration
 
         public override void RegisterModOptions(string name, Transform separatorParent = null)
         {
-            HootModOptions modOptions = new HootModOptions(name, this, separatorParent);
+            HootModOptions modOptions = new HootModOptions(name, this);
+            
+            modOptions.AddText("Choose carefully. Any options you set here lock in and <color=#FF0000FF>cannot</color>"
+                               + " be changed during an ongoing game.");
+            
             modOptions.AddItem(PersonalCrushDepth.ToModChoiceOption());
             modOptions.AddItem(DamageTaken.ToModChoiceOption());
             modOptions.AddItem(NitrogenBends.ToModChoiceOption());
@@ -399,7 +389,7 @@ namespace DeathrunRemade.Configuration
             modOptions.AddItem(SinkLifepod.ToModToggleOption());
             modOptions.AddItem(ToppleLifepod.ToModToggleOption());
             
-            modOptions.AddSeparatorBeforeOption(CreatureAggression.GetId());
+            modOptions.AddSeparator(separatorParent);
             modOptions.AddItem(CreatureAggression.ToModChoiceOption());
             modOptions.AddItem(WaterMurkiness.ToModChoiceOption());
             modOptions.AddItem(ExplosionDepth.ToModChoiceOption());
@@ -407,7 +397,7 @@ namespace DeathrunRemade.Configuration
             modOptions.AddItem(RadiationDepth.ToModChoiceOption());
             modOptions.AddItem(RadiationFX.ToModChoiceOption());
             
-            modOptions.AddSeparatorBeforeOption(ToolCosts.GetId());
+            modOptions.AddSeparator(separatorParent);
             modOptions.AddItem(ToolCosts.ToModChoiceOption());
             modOptions.AddItem(VehicleCosts.ToModChoiceOption());
             modOptions.AddItem(ScansRequired.ToModChoiceOption());
@@ -415,16 +405,16 @@ namespace DeathrunRemade.Configuration
             modOptions.AddItem(PowerCosts.ToModChoiceOption());
             modOptions.AddItem(VehicleExitPowerLoss.ToModChoiceOption());
             
-            modOptions.AddSeparatorBeforeOption(FoodChallenge.GetId());
+            modOptions.AddSeparator(separatorParent);
             modOptions.AddItem(FoodChallenge.ToModChoiceOption());
             modOptions.AddItem(FarmingChallenge.ToModChoiceOption());
             modOptions.AddItem(IslandFoodChallenge.ToModChoiceOption());
             modOptions.AddItem(FilterPumpChallenge.ToModChoiceOption());
             modOptions.AddItem(PacifistChallenge.ToModToggleOption());
             
-            modOptions.AddSeparatorBeforeOption(ShowHighscores.GetId());
-            modOptions.AddItem(ShowHighscores.ToModToggleOption());
-            modOptions.AddItem(ShowHighscoreTips.ToModToggleOption());
+            modOptions.AddSeparator(separatorParent);
+            modOptions.AddText("These options can always be changed and will take effect immediately, even during a "
+                               + "run. They do not affect your score.");
             modOptions.AddItem(ShowTutorials.ToModToggleOption());
             modOptions.AddItem(ShowWarnings.ToModChoiceOption());
 

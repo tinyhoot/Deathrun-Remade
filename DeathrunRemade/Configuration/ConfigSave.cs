@@ -48,8 +48,6 @@ namespace DeathrunRemade.Configuration
         public readonly bool PacifistChallenge;
         
         // UI
-        public readonly bool ShowHighscores;
-        public readonly bool ShowHighscoreTips;
         public readonly bool ShowTutorials;
         public readonly Hints ShowWarnings;
         
@@ -88,8 +86,6 @@ namespace DeathrunRemade.Configuration
             IslandFoodChallenge = config.IslandFoodChallenge.Value;
             PacifistChallenge = config.PacifistChallenge.Value;
             
-            ShowHighscores = config.ShowHighscores.Value;
-            ShowHighscoreTips = config.ShowHighscoreTips.Value;
             ShowTutorials = config.ShowTutorials.Value;
             ShowWarnings = config.ShowWarnings.Value;
             
