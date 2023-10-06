@@ -29,12 +29,8 @@ namespace DeathrunRemade.Handlers
                 return;
 
             // Show a warning before dealing damage.
-            if (ConfigUtils.ShouldShowWarning(Warning.CrushDepth, 30f))
-            {
-                DeathrunInit._Log.InGameMessage("Personal crush depth exceeded. Return to safe depth!");
-                SaveData.Main.Warnings.lastCrushDepthWarningTime = Time.time;
+            if (WarningHandler.ShowWarning(Warning.CrushDepth))
                 return;
-            }
             
             // Fifty-fifty on whether you take damage this time.
             if (UnityEngine.Random.value < 0.5f)

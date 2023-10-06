@@ -134,6 +134,7 @@ namespace DeathrunRemade
             // Load statistics of all runs ever played.
             _RunHandler = new RunHandler(_Log);
             _Tutorials = new TutorialHandler(_Notifications, SaveData.Main);
+            _ = new WarningHandler(_Config, _Log, _Notifications, SaveData.Main);
             _encyclopediaHandler = new EncyclopediaHandler();
             _encyclopediaHandler.RegisterPdaEntries();
         }

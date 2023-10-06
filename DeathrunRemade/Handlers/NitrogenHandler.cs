@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using DeathrunRemade.Configuration;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
@@ -151,11 +150,7 @@ namespace DeathrunRemade.Handlers
             // and removing time both run at the same update rates.
             _ascentTransgressionTime += Time.deltaTime;
 
-            if (ConfigUtils.ShouldShowWarning(Warning.AscentSpeed, 3f))
-            {
-                save.Warnings.lastAscentWarningTime = Time.time;
-                _notifications.AddMessage(NotificationHandler.TopMiddle, "Ascending too quickly!").SetDuration(3f);
-            }
+            WarningHandler.ShowWarning(Warning.AscentSpeed);
 
             // Increase nitrogen only after longer than the grace time at high speeds.
             if (_ascentRate <= 5 || (_ascentTransgressionTime / UpdateInterval) <= AscentGraceTime)
@@ -183,13 +178,8 @@ namespace DeathrunRemade.Handlers
             // No consequences for any of this happening inside vehicles or bases.
             if (player.IsInsidePoweredSubOrVehicle())
                 return;
-            
-            if (ConfigUtils.ShouldShowWarning(Warning.Decompression, 3f) && !_notifications.IsShowingMessage(NotificationHandler.Centre))
-            {
-                save.Warnings.lastDecompressionWarningTime = Time.time;
-                _notifications.AddMessage(NotificationHandler.Centre, "Decompression Warning\n"
-                                                                      + "Dive to Safe Depth!").SetDuration(3f);
-            }
+
+            WarningHandler.ShowWarning(Warning.Decompression);
 
             _damageTicks++;
             if (_damageTicks > TicksBeforeDamage)
@@ -283,12 +273,7 @@ namespace DeathrunRemade.Handlers
             if (health.health > 0.1f)
                 damage = Mathf.Min(damage, health.health - 0.05f);
 
-            if (ConfigUtils.ShouldShowWarning(Warning.DecompressionDamage, 3f))
-            {
-                save.Warnings.lastDecoDamageWarningTime = Time.time;
-                _notifications.AddMessage(NotificationHandler.Centre, "You have the bends! "
-                                                                      + "Slow your ascent!").SetDuration(3f);
-            }
+            WarningHandler.ShowWarning(Warning.DecompressionDamage);
             DeathrunInit._RunHandler.SetCauseOfDeathOverride("The Bends");
             health.TakeDamage(damage, type: DamageType.Starve);
             // After damage, adjust the safe depth upwards a bit.

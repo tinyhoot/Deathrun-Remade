@@ -65,12 +65,12 @@ namespace DeathrunRemade.Objects
     }
 
     [Serializable]
-    internal struct WarningSave
+    internal class WarningSave
     {
-        public float lastAscentWarningTime;
-        public float lastCrushDepthWarningTime;
-        public float lastBreathWarningTime;
-        public float lastDecompressionWarningTime;
-        public float lastDecoDamageWarningTime;
+        public double lastAscentWarningTime;
+        public double lastCrushDepthWarningTime;
+        public double lastBreathWarningTime;
+        public double lastDecompressionWarningTime;
+        public double lastDecoDamageWarningTime;
     }
 }
