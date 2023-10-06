@@ -50,6 +50,7 @@ namespace DeathrunRemade.Handlers
             Main = this;
             _notifications = DeathrunInit._Notifications;
             _timer = new Hootimer(PDA.GetDeltaTime, UpdateInterval);
+            GameEventHandler.OnPlayerDeath += OnPlayerDeath;
         }
 
         private void FixedUpdate()
@@ -81,6 +82,15 @@ namespace DeathrunRemade.Handlers
             CheckForFastAscent(save);
             CheckForBendsDamage(player, save, currentDepth, save.Nitrogen.safeDepth, save.Nitrogen.nitrogen);
             UpdateHud(oldSafeDepth, save.Nitrogen.safeDepth);
+        }
+
+        /// <summary>
+        /// Reset nitrogen on player death.
+        /// </summary>
+        private void OnPlayerDeath(Player player, DamageType damageType)
+        {
+            SaveData.Main.Nitrogen.nitrogen = 0f;
+            SaveData.Main.Nitrogen.safeDepth = 0f;
         }
 
         /// <summary>
