@@ -221,6 +221,8 @@ namespace DeathrunRemade
                 option.SetIndex(index + 1);
             };
             GameEventHandler.OnPlayerAwake += InGameSetup;
+            GameEventHandler.OnPlayerGainControl += () => EscapePod.main.gameObject.AddComponent<EscapePodRecharge>();
+            GameEventHandler.OnPlayerGainControl += () => EscapePod.main.gameObject.AddComponent<EscapePodStatusScreen>();
             GameEventHandler.OnSavedGameLoaded += EscapePodPatcher.OnSavedGameLoaded;
         }
 
@@ -267,7 +269,12 @@ namespace DeathrunRemade
 
         private void TestMe()
         {
-            
+            _Log.Debug(Language.main.Get("IntroEscapePod3Header"));
+            _Log.Debug(Language.main.Get("IntroEscapePod3Content"));
+            _Log.Debug(Language.main.Get("IntroEscapePod3Power"));
+            _Log.Debug(Language.main.Get("IntroEscapePod4Header"));
+            _Log.Debug(Language.main.Get("IntroEscapePod4Content"));
+            _Log.Debug(Language.main.Get("IntroEscapePod4Power"));
             return;
         }
     }

@@ -34,12 +34,17 @@ namespace DeathrunRemade.Handlers
         /// inconsistently.
         /// </summary>
         public static event Action<Player, DamageType> OnPlayerDeath;
+        
+        /// <summary>
+        /// Invoked when the loading screen for is done and the player gains control.
+        /// </summary>
+        public static event Action OnPlayerGainControl;
 
         /// <summary>
         /// Invoked as soon as the rocket is launched, i.e. just as the ending cinematic begins.
         /// </summary>
         public static event Action<Player> OnPlayerVictory;
-        
+
         /// <summary>
         /// Invoked when the loading screen for a previously saved game is done and the player gains control.
         /// </summary>
@@ -74,8 +79,12 @@ namespace DeathrunRemade.Handlers
         [HarmonyPatch(typeof(FreezeTime), nameof(FreezeTime.End))]
         private static void TriggerSaveGameLoaded(FreezeTime.Id id)
         {
-            if (id == FreezeTime.Id.WaitScreen && Player.main != null && !EscapePod.main.isNewBorn)
-                OnSavedGameLoaded?.Invoke();
+            if (id == FreezeTime.Id.WaitScreen && Player.main != null)
+            {
+                OnPlayerGainControl?.Invoke();
+                if (!EscapePod.main.isNewBorn)
+                    OnSavedGameLoaded?.Invoke();
+            }
         }
         
         [HarmonyPostfix]
