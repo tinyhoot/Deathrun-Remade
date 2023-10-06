@@ -30,7 +30,7 @@ namespace DeathrunRemade.Components
         private TextMeshProUGUI _suffixText;
         private string _meterSuffix;
         private float _fadeModifier;
-        private float _alpha;
+        private float _alpha = 1f;
 
         public bool Visible;
         
@@ -62,6 +62,10 @@ namespace DeathrunRemade.Components
             // Trigger once just to set the default correctly.
             OnLanguageChanged();
             
+            _halfMoon.enabled = true;
+            _shadow.enabled = true;
+            _depthText.enabled = true;
+            _suffixText.enabled = true;
             SetVisible(true);
         }
 
@@ -154,16 +158,6 @@ namespace DeathrunRemade.Components
             _depthText.text = _meterSuffix;
         }
 
-        // private void OnSafeDepthEnabled()
-        // {
-        //     Enabled = true;
-        // }
-        //
-        // private void OnSafeDepthDisabled()
-        // {
-        //     Enabled = false;
-        // }
-
         /// <summary>
         /// Adjust the opacity of the whole component.
         /// </summary>
@@ -193,10 +187,12 @@ namespace DeathrunRemade.Components
         /// </summary>
         public void SetVisible(bool visible)
         {
-            _halfMoon.enabled = visible;
-            _shadow.enabled = visible;
-            _depthText.enabled = visible;
-            _suffixText.enabled = visible;
+            // Set the visual components active/inactive rather than this entire gameobject so that the math still
+            // continues running when e.g. the PDA is open.
+            _halfMoon.gameObject.SetActive(visible);
+            _shadow.gameObject.SetActive(visible);
+            _depthText.gameObject.SetActive(visible);
+            _suffixText.gameObject.SetActive(visible);
             Visible = visible;
         }
 

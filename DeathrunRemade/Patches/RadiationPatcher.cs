@@ -102,8 +102,11 @@ namespace DeathrunRemade.Patches
             // No reason to change anything if it's already displaying.
             if (__result || Player.main is null || LeakingRadiation.main is null)
                 return;
-
             RadiatePlayerInRange radiation = LeakingRadiation.main.radiatePlayerInRange;
+            // Game is still loading.
+            if (radiation.tracker is null)
+                return;
+            
             if (GetRadiationDistance(radiation.tracker) <= radiation.radiateRadius)
             {
                 PDA pda = Player.main.GetPDA();

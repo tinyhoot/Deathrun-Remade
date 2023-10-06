@@ -38,7 +38,7 @@ namespace DeathrunRemade.Handlers
         /// <summary>
         /// Invoked when the loading screen for is done and the player gains control.
         /// </summary>
-        public static event Action OnPlayerGainControl;
+        public static event Action<Player> OnPlayerGainControl;
 
         /// <summary>
         /// Invoked as soon as the rocket is launched, i.e. just as the ending cinematic begins.
@@ -81,7 +81,7 @@ namespace DeathrunRemade.Handlers
         {
             if (id == FreezeTime.Id.WaitScreen && Player.main != null)
             {
-                OnPlayerGainControl?.Invoke();
+                OnPlayerGainControl?.Invoke(Player.main);
                 if (!EscapePod.main.isNewBorn)
                     OnSavedGameLoaded?.Invoke();
             }

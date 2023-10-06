@@ -128,12 +128,41 @@ namespace DeathrunRemade
                 _harmony.PatchAll(typeof(PacifistPatcher));
         }
 
+        private void InitHandlers()
+        {
+            _Notifications = new NotificationHandler(_Log);
+            // Load statistics of all runs ever played.
+            _RunHandler = new RunHandler(_Log);
+            _Tutorials = new TutorialHandler(_Notifications, SaveData.Main);
+            _encyclopediaHandler = new EncyclopediaHandler();
+            _encyclopediaHandler.RegisterPdaEntries();
+        }
+
         /// <summary>
-        /// Do all the necessary work to get the mod going which can only be done when the game is done loading and
-        /// ready to play.
+        /// Load any files or assets the mod needs in order to run.
+        /// </summary>
+        private void LoadFiles()
+        {
+            _Log.Debug("Loading files...");
+            _recipeChanges = new VanillaRecipeChanges();
+            // Ignore a compiler warning.
+            _ = _recipeChanges.LoadFromDiskAsync();
+            
+            // Load the assets for the highscore window. This was prepared in the unity editor.
+            _Log.Debug("Loading assets...");
+            AssetBundle bundle = AssetBundleLoadingUtils.LoadFromAssetsFolder(Hootils.GetAssembly(), "highscores");
+            _baseStatsWindow = bundle.LoadAsset<GameObject>("Highscores");
+            _baseStatsWindow.SetActive(false);
+
+            _Log.Debug("Assets loaded.");
+        }
+        
+        /// <summary>
+        /// Do all the necessary work to get the mod going which can only be done when the game has set up most of its
+        /// systems and is about to be ready to play.
         /// </summary>
         /// <param name="player">A freshly awoken player instance.</param>
-        private void InGameSetup(Player player)
+        private void OnPlayerAwake(Player player)
         {
             ConfigSave config = SaveData.Main.Config;
             
@@ -166,33 +195,14 @@ namespace DeathrunRemade
             _recipeChanges.RegisterRecipeChanges(config);
         }
 
-        private void InitHandlers()
-        {
-            _Notifications = new NotificationHandler(_Log);
-            // Load statistics of all runs ever played.
-            _RunHandler = new RunHandler(_Log);
-            _Tutorials = new TutorialHandler(_Notifications, SaveData.Main);
-            _encyclopediaHandler = new EncyclopediaHandler();
-            _encyclopediaHandler.RegisterPdaEntries();
-        }
-
         /// <summary>
-        /// Load any files or assets the mod needs in order to run.
+        /// Initialise parts that need to be set up at the very last moment before the loading screen vanishes and
+        /// the player gains control of their character.
         /// </summary>
-        private void LoadFiles()
+        private void OnPlayerGainControl(Player player)
         {
-            _Log.Debug("Loading files...");
-            _recipeChanges = new VanillaRecipeChanges();
-            // Ignore a compiler warning.
-            _ = _recipeChanges.LoadFromDiskAsync();
-            
-            // Load the assets for the highscore window. This was prepared in the unity editor.
-            _Log.Debug("Loading assets...");
-            AssetBundle bundle = AssetBundleLoadingUtils.LoadFromAssetsFolder(Hootils.GetAssembly(), "highscores");
-            _baseStatsWindow = bundle.LoadAsset<GameObject>("Highscores");
-            _baseStatsWindow.SetActive(false);
-
-            _Log.Debug("Assets loaded.");
+            EscapePod.main.gameObject.AddComponent<EscapePodRecharge>();
+            EscapePod.main.gameObject.AddComponent<EscapePodStatusScreen>();
         }
 
         private void RegisterCommands()
@@ -220,9 +230,8 @@ namespace DeathrunRemade
                 int index = uGUI_MainMenu.main.primaryOptions.transform.Find("PrimaryOptions/MenuButtons/ButtonOptions").GetSiblingIndex();
                 option.SetIndex(index + 1);
             };
-            GameEventHandler.OnPlayerAwake += InGameSetup;
-            GameEventHandler.OnPlayerGainControl += () => EscapePod.main.gameObject.AddComponent<EscapePodRecharge>();
-            GameEventHandler.OnPlayerGainControl += () => EscapePod.main.gameObject.AddComponent<EscapePodStatusScreen>();
+            GameEventHandler.OnPlayerAwake += OnPlayerAwake;
+            GameEventHandler.OnPlayerGainControl += OnPlayerGainControl;
             GameEventHandler.OnSavedGameLoaded += EscapePodPatcher.OnSavedGameLoaded;
         }
 
@@ -269,12 +278,7 @@ namespace DeathrunRemade
 
         private void TestMe()
         {
-            _Log.Debug(Language.main.Get("IntroEscapePod3Header"));
-            _Log.Debug(Language.main.Get("IntroEscapePod3Content"));
-            _Log.Debug(Language.main.Get("IntroEscapePod3Power"));
-            _Log.Debug(Language.main.Get("IntroEscapePod4Header"));
-            _Log.Debug(Language.main.Get("IntroEscapePod4Content"));
-            _Log.Debug(Language.main.Get("IntroEscapePod4Power"));
+            _Log.Debug($"{Time.time}, {PDA.time}, {DayNightCycle.main.timePassed}");
             return;
         }
     }
