@@ -57,8 +57,8 @@ namespace DeathrunRemade.Handlers
                 + $"seek shelter as deep as possible, preferably inside a reinforced structure.\n\n"
                 + $"1. Explosion shockwave down to {ExplosionPatcher.GetExplosionDepth(Difficulty3.Deathrun)}m.\n"
                 + $"2. Seek shelter as deep as possible.");
-            PDAHandler.AddEncyclopediaEntry(_encyKeys["Lifepod"], EncyCategory, "Lifepod Floatation Failure", 
-                "This lifepod has malfunctioned and its floatation devices have failed. Any repair costs incurred "
+            PDAHandler.AddEncyclopediaEntry(_encyKeys["Lifepod"], EncyCategory, "Lifepod Flotation Failure", 
+                "This lifepod has malfunctioned and its flotation devices have failed. Any repair costs incurred "
                 + "from returning the pod in an inadequate state will be deducted from your pay.");
             PDAHandler.AddEncyclopediaEntry(_encyKeys["Nitrogen"], EncyCategory, "Nitrogen and The Bends", 
                 "The deeper you go, the higher your blood nitrogen level will be. In Deathrun your 'Safe Depth' "

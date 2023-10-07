@@ -30,6 +30,7 @@ New Ideas
 - Some extra stuff from RadiationChallenge? Lifepod no longer safe, that kind of thing?
 - Add additional window to run stats to view all the details about a run and make the scoring more transparent.
 - Vehicles move more slowly when damaged
+- Increase oxygen use with depth
 
 Checks at the very end
 - All items craft properly and fit into their slots
@@ -54,3 +55,12 @@ Known Issues
 - Number of fragment scans not properly reflected by seaglide and constructor until first scan.
 - Sometimes you get flung out of your escape pod at the beginning.
 - Nitrogen bar starts off with the wrong value on game start.
+
+Bug Reports
+- No items purge nitrogen
+- Explosion timer
+- Escape pod not righting itself
+- You start the game with too much health
+- Nitrogen/Safe depth increases even during pda pause
+- First aid kits can't go to quickslots
+- Forgot to remove batteries from recipes

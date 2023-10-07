@@ -224,7 +224,7 @@ namespace DeathrunRemade.Configuration
                 section: SectionEnvironment,
                 key: nameof(RadiationFX),
                 defaultValue: RadiationVisuals.Chernobyl,
-                description: "Determines what kind of radiation visuals to play while immune to radiation. On the "
+                description: "Determines what kind of radiation visuals to display while immune to radiation. On the "
                              + "highest setting, the effects get worse as you approach the Aurora and make it "
                              + "difficult to see while inside."
             ).WithChoiceOptionStringsOverride(
