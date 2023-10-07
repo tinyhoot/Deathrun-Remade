@@ -181,7 +181,7 @@
       <None Include="packages.config" />
     </ItemGroup>
     <ItemGroup>
-      <EmbeddedResource Include="Assets\DeathrunStarts.csv" />
+      <Content Include="Assets\DeathrunStarts.csv" />
       <Content Include="Assets\RecipeChanges.json" />
       <Content Include="Assets\ScanNumberChanges.json" />
       <Content Include="Assets\highscores" />
