@@ -170,6 +170,7 @@
         <Compile Include="Patches\FarmingChallengePatcher.cs" />
         <Compile Include="Patches\FilterPumpPatcher.cs" />
         <Compile Include="Patches\FoodChallengePatcher.cs" />
+        <Compile Include="Patches\SurvivalPatcher.cs" />
         <Compile Include="Patches\PacifistPatcher.cs" />
         <Compile Include="Patches\PowerPatcher.cs" />
         <Compile Include="Patches\RadiationPatcher.cs" />

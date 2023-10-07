@@ -121,6 +121,8 @@ namespace DeathrunRemade
                 _harmony.PatchAll(typeof(DamageTakenPatcher));
             if (config.SurfaceAir != Difficulty3.Normal)
                 _harmony.PatchAll(typeof(BreathingPatcher));
+            if (config.NitrogenBends != Difficulty3.Normal)
+                _harmony.PatchAll(typeof(SurvivalPatcher));
             if (config.PowerCosts != Difficulty4.Normal)
                 _harmony.PatchAll(typeof(PowerPatcher));
             if (config.PacifistChallenge)
@@ -210,6 +212,9 @@ namespace DeathrunRemade
             // Deal with any recipe changes.
             _recipeChanges.RegisterFragmentChanges(config);
             _recipeChanges.RegisterRecipeChanges(config);
+            // Add first aid kits to quick slots.
+            CraftDataHandler.SetQuickSlotType(TechType.FirstAidKit, QuickSlotType.Selectable);
+            CraftDataHandler.SetEquipmentType(TechType.FirstAidKit, EquipmentType.Hand);
         }
 
         /// <summary>

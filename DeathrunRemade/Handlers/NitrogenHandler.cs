@@ -115,6 +115,26 @@ namespace DeathrunRemade.Handlers
         }
 
         /// <summary>
+        /// Remove nitrogen from the player. If safe depth is active, reduce that instead.
+        /// </summary>
+        public void RemoveNitrogen(float nitrogen)
+        {
+            SaveData save = SaveData.Main;
+            if (save is null)
+                return;
+
+            float safeDepthPortion = save.Nitrogen.safeDepth - GraceDepth + 1;
+            if (safeDepthPortion <= 0)
+            {
+                save.Nitrogen.nitrogen -= Mathf.Min(nitrogen, save.Nitrogen.nitrogen);
+                return;
+            }
+
+            save.Nitrogen.safeDepth -= safeDepthPortion;
+            save.Nitrogen.nitrogen -= Mathf.Min(nitrogen - safeDepthPortion, save.Nitrogen.nitrogen);
+        }
+
+        /// <summary>
         /// Calculate the player's current safe depth status based on how close they're cutting it.
         /// </summary>
         public static SafeDepthStatus CalculateDepthStatus(float depth, float safeDepth)

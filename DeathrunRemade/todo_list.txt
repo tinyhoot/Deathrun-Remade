@@ -57,9 +57,8 @@ Known Issues
 - Nitrogen bar starts off with the wrong value on game start.
 
 Bug Reports
-- No items purge nitrogen
 - Explosion timer
 - Escape pod not righting itself
 - You start the game with too much health
-- First aid kits can't go to quickslots
 - Forgot to remove batteries from recipes
+- No vehicle challenge needs changes to rocket head for lack of shield generator
