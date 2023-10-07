@@ -49,7 +49,7 @@ namespace DeathrunRemade.Handlers
         {
             Main = this;
             _notifications = DeathrunInit._Notifications;
-            _timer = new Hootimer(PDA.GetDeltaTime, UpdateInterval);
+            _timer = new Hootimer(() => Time.deltaTime, UpdateInterval);
             GameEventHandler.OnPlayerDeath += OnPlayerDeath;
         }
 

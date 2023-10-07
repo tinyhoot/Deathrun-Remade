@@ -61,6 +61,5 @@ Bug Reports
 - Explosion timer
 - Escape pod not righting itself
 - You start the game with too much health
-- Nitrogen/Safe depth increases even during pda pause
 - First aid kits can't go to quickslots
 - Forgot to remove batteries from recipes
