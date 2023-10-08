@@ -1,3 +1,4 @@
+using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using HootLib;
 using Nautilus.Assets;
@@ -5,6 +6,7 @@ using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
 using Nautilus.Crafting;
 using Nautilus.Handlers;
+using UnityEngine;
 using static CraftData;
 
 namespace DeathrunRemade.Items
@@ -13,14 +15,13 @@ namespace DeathrunRemade.Items
     {
         public new static TechType TechType;
         
-        public AcidPowerCell(Difficulty4 difficulty)
+        public AcidPowerCell()
         {
             var sprite = Hootils.LoadSprite("AcidPowerCell.png", true);
             _prefabInfo = Hootils.CreatePrefabInfo(
                 ClassIdPrefix + "acidpowercell",
                 "Lead Acid Power Cell",
-                "A basic lead/acid vehicle power source - not super powerful, but it IS rechargeable. "
-                + "Keep fully charged during winter months!",
+                "A basic lead/acid vehicle power source - not super powerful, but it IS rechargeable.",
                 sprite
             );
             TechType = _prefabInfo.TechType;
@@ -34,11 +35,22 @@ namespace DeathrunRemade.Items
                 .WithFabricatorType(CraftTree.Type.Fabricator)
                 .WithStepsToFabricatorTab(CraftTreeHandler.Paths.FabricatorsElectronics);
             _prefab.SetPdaGroupCategory(TechGroup.Resources, TechCategory.Electronics);
-            _prefab.SetUnlock(TechType.AcidMushroom);
+            _prefab.SetUnlock(AcidBattery.TechType);
             _prefab.SetEquipment(EquipmentType.PowerCellCharger);
 
-            var template = new EnergySourceTemplate(_prefabInfo, GetCapacityForDifficulty(difficulty));
+            var template = new EnergySourceTemplate(_prefabInfo, 200);
+            template.ModifyPrefab += ChangeCapacity;
             _prefab.SetGameObject(template);
+        }
+
+        /// <summary>
+        /// The template requires the capacity value before our save data has loaded. Use this extra method to change
+        /// the capacity every time an acid power cell is created.
+        /// </summary>
+        private void ChangeCapacity(GameObject gameObject)
+        {
+            int capacity = GetCapacityForDifficulty(SaveData.Main.Config.BatteryCapacity);
+            gameObject.GetComponent<Battery>()._capacity = capacity;
         }
 
         public int GetCapacityForDifficulty(Difficulty4 difficulty)

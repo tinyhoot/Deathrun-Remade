@@ -4,6 +4,7 @@ using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
+using Nautilus.Handlers;
 using UnityEngine;
 
 namespace DeathrunRemade.Patches
@@ -37,6 +38,21 @@ namespace DeathrunRemade.Patches
                 return;
             if (item.item.GetTechType().Equals(AcidPowerCell.TechType))
                 __instance.batteryModels[0].model.SetActive(true);
+        }
+
+        /// <summary>
+        /// Remove the recipe for batteries from the recipes the player knows from the beginning of the game.
+        /// </summary>
+        /// <param name="data"></param>
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(KnownTech), nameof(KnownTech.Initialize))]
+        private static void LockBatteryBlueprint(PDAData data)
+        {
+            if (SaveData.Main is null || SaveData.Main.Config.BatteryCapacity == Difficulty4.Normal)
+                return;
+            // Lock the vanilla battery recipe behind lithium.
+            data.defaultTech.Remove(TechType.Battery);
+            KnownTechHandler.SetAnalysisTechEntry(TechType.Lithium, new [] { TechType.Battery });
         }
 
         /// <summary>

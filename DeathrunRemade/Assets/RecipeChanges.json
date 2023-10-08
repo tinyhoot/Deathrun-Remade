@@ -1,4 +1,74 @@
 {
+  "RemoveBatteries": [
+    {
+      "techType": "Flashlight",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "Glass",
+          "amount": 1
+        },
+        {
+          "techType": "Titanium",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "Gravsphere",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "AcidMushroom",
+          "amount": 2
+        },
+        {
+          "techType": "Copper",
+          "amount": 1
+        },
+        {
+          "techType": "Lead",
+          "amount": 1
+        },
+        {
+          "techType": "Titanium",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "LaserCutter",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "Diamond",
+          "amount": 2
+        },
+        {
+          "techType": "Titanium",
+          "amount": 1
+        },
+        {
+          "techType": "CrashPowder",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "techType": "Scanner",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "Titanium",
+          "amount": 1
+        },
+        {
+          "techType": "Copper",
+          "amount": 1
+        }
+      ]
+    }
+  ],
   "Difficulty3.Normal": [
     {
       "techType": "Seaglide",

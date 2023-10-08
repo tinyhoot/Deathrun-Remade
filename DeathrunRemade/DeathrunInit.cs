@@ -256,8 +256,10 @@ namespace DeathrunRemade
             new MobDrop(MobDrop.Variant.SpineEelScale).Register();
             new MobDrop(MobDrop.Variant.ThermophileSample).Register();
             
-            new AcidBattery(_Config.BatteryCapacity.Value).Register();
-            new AcidPowerCell(_Config.BatteryCapacity.Value).Register();
+            new AcidBattery().Register();
+            new AcidPowerCell().Register();
+            // Do this here so that the order of recipes is correct.
+            AcidBattery.AddRecyclingRecipe();
             new DecompressionModule().Register();
             new FilterChip().Register();
             new Suit(Suit.Variant.ReinforcedFiltrationSuit).Register();

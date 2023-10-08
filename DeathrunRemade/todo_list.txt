@@ -60,5 +60,6 @@ Bug Reports
 - Explosion timer
 - Escape pod not righting itself
 - You start the game with too much health
-- Forgot to remove batteries from recipes
 - No vehicle challenge needs changes to rocket head for lack of shield generator
+- Mob drops should not show up as blueprints in crafting menu
+- Leftover harmonydebug on survivalpatcher

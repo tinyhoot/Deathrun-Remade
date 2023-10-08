@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using DeathrunRemade.Configuration;
 using DeathrunRemade.Objects;
+using DeathrunRemade.Objects.Enums;
 using HootLib;
 using Nautilus.Handlers;
 using Newtonsoft.Json;
@@ -26,6 +28,43 @@ namespace DeathrunRemade.Items
             return _recipeJson.TryGetValue(key, out List<SerialTechData> data) ? data : null;
         }
         
+        /// <summary>
+        /// Get all recipe changes marked with the specified key.
+        /// </summary>
+        public List<SerialTechData> GetCraftData(string key)
+        {
+            return _recipeJson.TryGetValue(key, out List<SerialTechData> data) ? data : null;
+        }
+        
+        /// <summary>
+        /// Set up all changes related to batteries based on the given config values.
+        /// </summary>
+        /// <param name="config">The config values to use.</param>
+        public List<SerialTechData> GetBatteryChanges(Difficulty4 difficulty)
+        {
+            if (difficulty == Difficulty4.Normal)
+                return null;
+
+            // Remove the now-harder batteries from some early game tools.
+            List<SerialTechData> changes = GetCraftData("RemoveBatteries");
+            // Regular batteries are a bit more involved.
+            SerialTechData batteryRecipe = new SerialTechData
+            {
+                techType = TechType.Battery,
+                craftAmount = 1,
+                ingredients = new List<SerialIngredient>
+                {
+                    new SerialIngredient(TechType.Lithium), new SerialIngredient(TechType.Salt)
+                }
+            };
+            // On higher difficulties, make the battery recipe harder.
+            if (difficulty != Difficulty4.Hard)
+                batteryRecipe.ingredients.AddRange(new[]
+                    { new SerialIngredient(TechType.Diamond), new SerialIngredient(TechType.Silicone) });
+            changes.Add(batteryRecipe);
+            return changes;
+        }
+
         /// <summary>
         /// Get all fragment scan number changes for a specific target difficulty.
         /// </summary>
@@ -81,7 +120,8 @@ namespace DeathrunRemade.Items
         {
             List<SerialTechData> changes = GetCraftData(config.ToolCosts);
             changes.AddRange(GetCraftData(config.VehicleCosts));
-            foreach (var craftData in changes)
+            changes.AddRange(GetBatteryChanges(config.BatteryCapacity));
+            foreach (var craftData in changes.Where(techData => techData != null))
             {
                 CraftDataHandler.SetRecipeData(craftData.techType, craftData.ToTechData());
             }
