@@ -63,7 +63,6 @@ namespace DeathrunRemade.Patches
         /// <summary>
         /// Add tooltips about the nitrogen removal similar to food and water to the items that need it.
         /// </summary>
-        [HarmonyDebug]
         [HarmonyTranspiler]
         [HarmonyPatch(typeof(TooltipFactory), nameof(TooltipFactory.ItemCommons))]
         private static IEnumerable<CodeInstruction> AddNitrogenTooltip(IEnumerable<CodeInstruction> instructions)

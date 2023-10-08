@@ -62,4 +62,3 @@ Bug Reports
 - You start the game with too much health
 - No vehicle challenge needs changes to rocket head for lack of shield generator
 - Mob drops should not show up as blueprints in crafting menu
-- Leftover harmonydebug on survivalpatcher
