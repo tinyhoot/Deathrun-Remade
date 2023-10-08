@@ -32,13 +32,13 @@ namespace DeathrunRemade.Handlers
             if (WarningHandler.ShowWarning(Warning.CrushDepth))
                 return;
             
-            // Fifty-fifty on whether you take damage this time.
-            if (UnityEngine.Random.value < 0.5f)
+            // Small chance to not take damage this time.
+            if (UnityEngine.Random.value < 0.3f)
                 return;
             
-            // At 50 depth, ^2 (4dmg). At 250 depth, ^6 (64dmg).
+            // At 8 depth, ^2 (4dmg). At 40 depth, ^6 (64dmg).
             // Together with the separate global damage multiplier, this gets quite punishing.
-            float damageExp = 1f + Mathf.Clamp(diff / 50f, 1f, 5f);
+            float damageExp = 1f + Mathf.Clamp(diff / 8f, 1f, 5f);
             player.GetComponent<LiveMixin>().TakeDamage(Mathf.Pow(2f, damageExp), type: DamageType.Pressure);
             DeathrunInit._Log.InGameMessage("The pressure is crushing you!");
         }
