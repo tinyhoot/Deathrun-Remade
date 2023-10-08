@@ -31,6 +31,7 @@ New Ideas
 - Add additional window to run stats to view all the details about a run and make the scoring more transparent.
 - Vehicles move more slowly when damaged
 - Increase oxygen use with depth
+- Grey out non-deathrun saves in the save load menu and add current score to deathrun saves.
 
 Checks at the very end
 - All items craft properly and fit into their slots
