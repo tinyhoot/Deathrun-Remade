@@ -71,6 +71,8 @@ namespace DeathrunRemade.Components.RunStatsUI
         /// </summary>
         public void SortRuns()
         {
+            if (_runRows.Count == 0)
+                return;
             // Sort the list descending, best runs first.
             _runRows.Sort((first, second) => ScoreHandler.CompareRuns(first.Stats, second.Stats));
             _runRows.Reverse();
