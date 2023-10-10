@@ -17,9 +17,8 @@ namespace DeathrunRemade.Handlers
         public static NitrogenHandler Main;
 
         private const float AccumulationScalar = 10f * UpdateInterval;
-        private const float AscentGraceTime = 2f; // Number of seconds at fast speeds before consequences set in.
-        private const float AscentNitrogenPerSec = 30f;
-        private const float AscentDepthPerSec = 6f;
+        private const float AscentGraceTime = 1.5f; // Number of seconds at fast speeds before consequences set in.
+        private const float AscentNitrogenPerSec = 10f;
         private const float GraceDepth = 10f; // Consider this value and below as completely safe, no bends.
         private const int TicksBeforeDamage = (int)(2f / UpdateInterval); // Number of seconds relative to ups.
         private const float UpdateInterval = 0.25f;
@@ -42,13 +41,11 @@ namespace DeathrunRemade.Handlers
         private float _ascentTransgressionTime;
         private float _lastAscentPunishTime;
         private int _damageTicks;
-        private NotificationHandler _notifications;
         private Hootimer _timer;
 
         private void Awake()
         {
             Main = this;
-            _notifications = DeathrunInit._Notifications;
             _timer = new Hootimer(() => Time.deltaTime, UpdateInterval);
             GameEventHandler.OnPlayerDeath += OnPlayerDeath;
         }
@@ -164,7 +161,7 @@ namespace DeathrunRemade.Handlers
         private void CheckForFastAscent(SaveData save)
         {
             // Reset punishments if we're moving at comfortable speeds.
-            if (_ascentRate <= 2)
+            if (_ascentRate <= 1.5f)
             {
                 _ascentTransgressionTime = Math.Max(_ascentTransgressionTime - Time.deltaTime, 0f);
                 _lastAscentPunishTime = 0f;
@@ -172,28 +169,26 @@ namespace DeathrunRemade.Handlers
             }
 
             // Do nothing at medium speeds.
-            if (_ascentRate <= 4)
+            if (_ascentRate <= 4f)
                 return;
             
             // Starting to get too fast. Start accruing "bad behaviour time".
             // *Technically* this assumes that the update runs every frame but the math works out so long as adding
             // and removing time both run at the same update rates.
             _ascentTransgressionTime += Time.deltaTime;
-
             WarningHandler.ShowWarning(Warning.AscentSpeed);
 
             // Increase nitrogen only after longer than the grace time at high speeds.
-            if (_ascentRate <= 5 || (_ascentTransgressionTime / UpdateInterval) <= AscentGraceTime)
+            if (_ascentRate <= 4.5 || (_ascentTransgressionTime / UpdateInterval) <= AscentGraceTime)
                 return;
+            if (_lastAscentPunishTime == 0)
+                _lastAscentPunishTime = Time.time;
 
-            float interval = 1 / (save.Nitrogen.nitrogen >= 100f ? AscentDepthPerSec : AscentNitrogenPerSec);
-            if (Time.time >= _lastAscentPunishTime + interval)
+            if (Time.time > _lastAscentPunishTime)
             {
-                if (_lastAscentPunishTime == 0f)
-                    AddNitrogen(1f);
-                else
-                    // Ideally only adds one at a time, but adjusts for lower frame rates / update rates.
-                    AddNitrogen((Time.time - _lastAscentPunishTime) / interval);
+                // Punishes with a constant value plus a percentage of your current nitrogen. Automatically
+                // adjusts for lower frame rates / update rates.
+                AddNitrogen((Time.time - _lastAscentPunishTime) * (AscentNitrogenPerSec + save.Nitrogen.safeDepth / 10f));
                 _lastAscentPunishTime = Time.time;
             }
         }
