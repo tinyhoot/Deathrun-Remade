@@ -12,7 +12,6 @@ namespace DeathrunRemade.Patches
         /// <summary>
         /// Insert custom tooltips in item descriptions.
         /// </summary>
-        [HarmonyDebug]
         [HarmonyTranspiler]
         [HarmonyPatch(typeof(TooltipFactory), nameof(TooltipFactory.ItemCommons))]
         private static IEnumerable<CodeInstruction> AddTooltips(IEnumerable<CodeInstruction> instructions)

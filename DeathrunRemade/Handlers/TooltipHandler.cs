@@ -85,6 +85,8 @@ namespace DeathrunRemade.Handlers
         /// </summary>
         public static void WriteNitrogenTooltip(StringBuilder sb, Eatable eatable)
         {
+            if (SaveData.Main.Config.NitrogenBends == Difficulty3.Normal)
+                return;
             if (!SurvivalPatcher.TryGetNitrogenValue(eatable, out float nitrogen))
                 return;
             sb.AppendFormat(GetTooltipFormat(), $"NITROGEN: {nitrogen:F0}");
