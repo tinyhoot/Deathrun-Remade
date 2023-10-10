@@ -11,35 +11,35 @@ namespace DeathrunRemade.Patches
     {
         /// <summary>
         /// Insert custom tooltips in item descriptions.
+        /// This method is very long and consists of many successive if statements checking whether X kind of tooltip
+        /// should be added to the item. This transpiler inserts our own extra tooltips roughly in the middle, after
+        /// food and water values.
         /// </summary>
         [HarmonyTranspiler]
         [HarmonyPatch(typeof(TooltipFactory), nameof(TooltipFactory.ItemCommons))]
         private static IEnumerable<CodeInstruction> AddTooltips(IEnumerable<CodeInstruction> instructions)
         {
             CodeMatcher matcher = new CodeMatcher(instructions);
+            // Advance to just after water values were written, right before any oxygen values. Multiple if statements
+            // from the food and water blocks end here. We match on the first time the local variable for oxygen
+            // comes into play as it is populated with the component from the GameObject of the item.
             matcher
-                // // Find the place just after where the first aid kit's special tooltip gets written.
-                // .MatchForward(true, new CodeMatch(OpCodes.Ldc_I4, (int)TechType.FirstAidKit))
-                // .MatchForward(true,
-                //     new CodeMatch(i =>
-                //         i.opcode == OpCodes.Call && ((MethodInfo)i.operand).Name.Equals("WriteDescription")))
-                // .Advance(1)
-                // // Add our own extra first aid kit tooltip here.
-                // .Insert(
-                //     new CodeInstruction(OpCodes.Ldarg_0),
-                //     CodeInstruction.Call(typeof(SurvivalPatcher), nameof(WriteFirstAidKitTooltip)))
-                
-                // Next, advance to just after water values were written, right before any oxygen values.
                 .MatchForward(false,
+                    // The GameObject of the item in the inventory.
                     new CodeMatch(OpCodes.Ldarg_2),
-                    new CodeMatch(),
+                    new CodeMatch(OpCodes.Callvirt), // A Unity GetComponent() call.
+                    // Matches on the instruction storing the component in a local variable.
                     HootTranspiler.VariableMatch(OpCodes.Stloc_S, typeof(IOxygenSource)),
                     HootTranspiler.VariableMatch(OpCodes.Ldloc_S, typeof(IOxygenSource)))
-                // Add our own instructions as the new target for the end of all the previous if statements.
+                // We are at the dividing line between food/water and oxygen. Insert our own instructions here and move
+                // the oxygen down a little. To do that, we need to preserve the jump labels in-place so that the if
+                // statements of food and water point to *here* rather than to oxygen.
                 .InsertAndPreserveLabels(
+                    // Load the StringBuilder for the description and the Eatable component.
                     new CodeInstruction(OpCodes.Ldarg_0),
                     new CodeInstruction(OpCodes.Ldloc_3),
                     CodeInstruction.Call(typeof(TooltipHandler), nameof(TooltipHandler.WriteNitrogenTooltip)), 
+                    // Load the StringBuilder for the description and the TechType of the item.
                     new CodeInstruction(OpCodes.Ldarg_0),
                     new CodeInstruction(OpCodes.Ldarg_1),
                     CodeInstruction.Call(typeof(TooltipHandler), nameof(TooltipHandler.WriteCrushDepthTooltip)));
@@ -56,9 +56,11 @@ namespace DeathrunRemade.Patches
         private static IEnumerable<CodeInstruction> RestoreBatteryTooltips(IEnumerable<CodeInstruction> instructions)
         {
             CodeMatcher matcher = new CodeMatcher(instructions);
-            // The first boolean variable is the flag for whether this item is a battery.
             matcher
-                .MatchForward(false, 
+                // The first time a bool is set to false in the code is just after the tooltip for battery charge has
+                // been added. Find and override this instruction to trick the game into thinking it isn't actually
+                // dealing with a battery and always add the full description.
+                .MatchForward(false,
                     new CodeMatch(OpCodes.Ldc_I4_0),
                     HootTranspiler.VariableMatch(OpCodes.Stloc_S, typeof(bool)))
                 // Always set the value to true to bypass the check.
