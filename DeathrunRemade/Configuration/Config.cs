@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BepInEx;
 using BepInEx.Configuration;
+using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
@@ -88,8 +89,9 @@ namespace DeathrunRemade.Configuration
                 section: SectionSurvival,
                 key: nameof(PersonalCrushDepth),
                 defaultValue: Difficulty3.Deathrun,
-                description: "You have a personal crush depth of 200m and need to craft advanced suits to survive "
-                             + "greater depths."
+                description: $"You have a personal crush depth of {CrushDepthHandler.SuitlessCrushDepth:F0}m and need "
+                             + $"to craft advanced suits to survive greater depths. "
+                             + $"On Deathrun, your suit will require more upgrades."
             ).WithChoiceOptionStringsOverride(
                 "Normal (Inactive)",
                 "Hard (Reinforced Suit)",

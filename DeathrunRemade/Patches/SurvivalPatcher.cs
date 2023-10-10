@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Reflection.Emit;
-using System.Text;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Objects;
 using HarmonyLib;
@@ -61,40 +59,6 @@ namespace DeathrunRemade.Patches
         }
 
         /// <summary>
-        /// Add tooltips about the nitrogen removal similar to food and water to the items that need it.
-        /// </summary>
-        [HarmonyTranspiler]
-        [HarmonyPatch(typeof(TooltipFactory), nameof(TooltipFactory.ItemCommons))]
-        private static IEnumerable<CodeInstruction> AddNitrogenTooltip(IEnumerable<CodeInstruction> instructions)
-        {
-            CodeMatcher matcher = new CodeMatcher(instructions);
-            matcher
-                // // Find the place just after where the first aid kit's special tooltip gets written.
-                // .MatchForward(true, new CodeMatch(OpCodes.Ldc_I4, (int)TechType.FirstAidKit))
-                // .MatchForward(true,
-                //     new CodeMatch(i =>
-                //         i.opcode == OpCodes.Call && ((MethodInfo)i.operand).Name.Equals("WriteDescription")))
-                // .Advance(1)
-                // // Add our own extra first aid kit tooltip here.
-                // .Insert(
-                //     new CodeInstruction(OpCodes.Ldarg_0),
-                //     CodeInstruction.Call(typeof(SurvivalPatcher), nameof(WriteFirstAidKitTooltip)))
-                
-                // Next, advance to just after water values were written, right before any oxygen values.
-                .MatchForward(true,
-                    new CodeMatch(i =>
-                        i.opcode == OpCodes.Stloc_S && ((LocalBuilder)i.operand).LocalType == typeof(IOxygenSource)),
-                    new CodeMatch(i =>
-                        i.opcode == OpCodes.Ldloc_S && ((LocalBuilder)i.operand).LocalType == typeof(IOxygenSource)))
-                .Insert(
-                    new CodeInstruction(OpCodes.Ldarg_0),
-                    new CodeInstruction(OpCodes.Ldloc_3),
-                    CodeInstruction.Call(typeof(SurvivalPatcher), nameof(WriteNitrogenTooltip)));
-            
-            return matcher.InstructionEnumeration();
-        }
-
-        /// <summary>
         /// Reduce the nitrogen benefit of an Eatable as it decomposes.
         /// </summary>
         private static float DecomposeNitrogenValue(Eatable eatable, float nitrogen)
@@ -109,7 +73,7 @@ namespace DeathrunRemade.Patches
         /// <summary>
         /// Try to get the nitrogen gained from eating something.
         /// </summary>
-        private static bool TryGetNitrogenValue(Eatable eatable, out float nitrogen)
+        public static bool TryGetNitrogenValue(Eatable eatable, out float nitrogen)
         {
             nitrogen = 0f;
             if (eatable is null)
@@ -120,16 +84,6 @@ namespace DeathrunRemade.Patches
             // Adjust for how rotten the eatable is.
             nitrogen = DecomposeNitrogenValue(eatable, baseValue);
             return true;
-        }
-
-        /// <summary>
-        /// Write the tooltip displaying nitrogen values on an item in the inventory.
-        /// </summary>
-        private static void WriteNitrogenTooltip(StringBuilder sb, Eatable eatable)
-        {
-            if (!TryGetNitrogenValue(eatable, out float nitrogen))
-                return;
-            sb.Append($"\n<size=20><color=#DDDEDEFF>NITROGEN: {nitrogen:F0}</color></size>");
         }
     }
 }

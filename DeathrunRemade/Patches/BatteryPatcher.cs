@@ -1,31 +1,15 @@
 using System.Collections.Generic;
-using System.Text;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using Nautilus.Handlers;
-using UnityEngine;
 
 namespace DeathrunRemade.Patches
 {
     [HarmonyPatch]
     internal static class BatteryPatcher
     {
-        /// <summary>
-        /// Subnautica usually does not show descriptive tooltips for batteries, which is bad since this mod introduces
-        /// more differences between them. This patch re-adds the tooltip text.
-        /// </summary>
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(TooltipFactory), nameof(TooltipFactory.ItemCommons))]
-        private static void AddTooltipsToBatteries(StringBuilder sb, TechType techType, GameObject obj)
-        {
-            IBattery battery = obj.GetComponent<IBattery>();
-            if (battery != null)
-                TooltipFactory.WriteDescription(sb,
-                    Language.main.Get(TooltipFactory.techTypeTooltipStrings.Get(techType)));
-        }
-
         /// <summary>
         /// Make sure vehicles with visible powercells show the model when a different cell-like battery is in the slot.
         /// </summary>

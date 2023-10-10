@@ -175,6 +175,7 @@
         <Compile Include="Patches\PowerPatcher.cs" />
         <Compile Include="Patches\RadiationPatcher.cs" />
         <Compile Include="Patches\SuitPatcher.cs" />
+        <Compile Include="Patches\TooltipPatcher.cs" />
         <Compile Include="Patches\WaterMurkPatcher.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>

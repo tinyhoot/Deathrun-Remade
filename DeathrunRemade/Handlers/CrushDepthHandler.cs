@@ -9,6 +9,7 @@ namespace DeathrunRemade.Handlers
     internal static class CrushDepthHandler
     {
         public const float InfiniteCrushDepth = 10000f;
+        public const float SuitlessCrushDepth = 200f;
         
         /// <summary>
         /// Do the math and check whether the player needs to take crush damage.
@@ -54,7 +55,7 @@ namespace DeathrunRemade.Handlers
                 TechType.RadiationSuit => 500f,
                 TechType.ReinforcedDiveSuit => deathrun ? 800f : InfiniteCrushDepth,
                 TechType.WaterFiltrationSuit => deathrun ? 800f : 1300f,
-                _ => 200f,
+                _ => SuitlessCrushDepth,
             };
             // If the player wasn't wearing any of the vanilla suits, check for custom ones.
             depth = Mathf.Max(depth, Suit.GetCrushDepth(suit, deathrun));
