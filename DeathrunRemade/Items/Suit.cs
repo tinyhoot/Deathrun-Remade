@@ -5,6 +5,7 @@ using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
 using Nautilus.Crafting;
+using Nautilus.Handlers;
 using static CraftData;
 
 namespace DeathrunRemade.Items
@@ -47,7 +48,8 @@ namespace DeathrunRemade.Items
             _prefab.SetPdaGroupCategory(TechGroup.Personal, TechCategory.Equipment);
             _prefab.SetEquipment(EquipmentType.Body);
             _prefabInfo.WithSizeInInventory(new Vector2int(2, 2));
-            _prefab.SetUnlock(TechType.HatchingEnzymes);
+            _prefab.SetUnlock(GetUnlock(variant))
+                .WithAnalysisTech(null, unlockSound: PDAHandler.UnlockImportant);
 
             TechType cloneType = variant == Variant.ReinforcedFiltrationSuit ? TechType.WaterFiltrationSuit : TechType.ReinforcedDiveSuit;
             var template = new CloneTemplate(_prefabInfo, cloneType);
@@ -155,6 +157,36 @@ namespace DeathrunRemade.Items
                 _ => null
             };
             return Hootils.LoadSprite(filePath, true);
+        }
+
+        /// <summary>
+        /// Gets the right unlocking item for the type of suit.
+        /// </summary>
+        private TechType GetUnlock(Variant variant)
+        {
+            return variant switch
+            {
+                Variant.ReinforcedFiltrationSuit => MobDrop.SpineEelScale,
+                Variant.ReinforcedSuitMk2 => MobDrop.SpineEelScale,
+                Variant.ReinforcedSuitMk3 => MobDrop.LavaLizardScale,
+                _ => TechType.None
+            };
+        }
+
+        /// <summary>
+        /// In addition to unlocking when the right item is picked up, also unlock these suits when the fish the item
+        /// belongs to is scanned.
+        /// </summary>
+        public static void UnlockSuitOnScanFish(PDAScanner.Entry entry)
+        {
+            if (entry is null)
+                return;
+            TechType techType = entry.techType;
+            if (techType == TechType.SpineEel)
+                KnownTech.AddRange(new []{ ReinforcedFiltration, ReinforcedMk2 }, true);
+            if (techType == TechType.LavaLizard)
+                KnownTech.Add(ReinforcedMk3, true);
+            
         }
 
         /// <summary>

@@ -256,7 +256,7 @@ namespace DeathrunRemade
             new MobDrop(MobDrop.Variant.LavaLizardScale).Register();
             new MobDrop(MobDrop.Variant.SpineEelScale).Register();
             new MobDrop(MobDrop.Variant.ThermophileSample).Register();
-            
+
             new AcidBattery().Register();
             new AcidPowerCell().Register();
             // Do this here so that the order of recipes is correct.
@@ -266,6 +266,7 @@ namespace DeathrunRemade
             new Suit(Suit.Variant.ReinforcedFiltrationSuit).Register();
             new Suit(Suit.Variant.ReinforcedSuitMk2).Register();
             new Suit(Suit.Variant.ReinforcedSuitMk3).Register();
+            PDAScanner.onAdd += Suit.UnlockSuitOnScanFish;
             new Tank(Tank.Variant.ChemosynthesisTank).Register();
             new Tank(Tank.Variant.PhotosynthesisTank).Register();
             new Tank(Tank.Variant.PhotosynthesisTankSmall).Register();
