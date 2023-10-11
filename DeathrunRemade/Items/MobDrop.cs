@@ -1,6 +1,5 @@
 using HootLib;
 using Nautilus.Assets;
-using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
 using Nautilus.Handlers;
 
@@ -36,7 +35,7 @@ namespace DeathrunRemade.Items
             AssignTechType(_prefabInfo, variant);
 
             _prefab = new CustomPrefab(_prefabInfo);
-            _prefab.SetPdaGroupCategory(TechGroup.Resources, TechCategory.BasicMaterials);
+            //_prefab.SetPdaGroupCategory(TechGroup.Resources, TechCategory.BasicMaterials);
 
             var template = new CloneTemplate(_prefabInfo, TechType.StalkerTooth);
             _prefab.SetGameObject(template);
