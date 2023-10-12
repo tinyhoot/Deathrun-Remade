@@ -79,7 +79,7 @@ namespace DeathrunRemade.Components
         {
             Player player = Player.main;
             SaveData save = SaveData.Main;
-            if (player is null || save is null)
+            if (player == null || save == null)
                 return;
             
             float depth = player.GetDepth();
