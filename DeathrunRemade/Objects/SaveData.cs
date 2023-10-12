@@ -48,6 +48,7 @@ namespace DeathrunRemade.Objects
     internal struct EscapePodSave
     {
         public bool isAnchored;
+        public bool isToppled;
     }
 
     [Serializable]

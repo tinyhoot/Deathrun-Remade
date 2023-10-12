@@ -76,15 +76,6 @@ namespace DeathrunRemade.Components
         }
 
         /// <summary>
-        /// Check whether the pod has already been repaired. This way is more reliable than checking for damaged
-        /// effects since those don't start until after the cutscene ends.
-        /// </summary>
-        private bool IsRepaired()
-        {
-            return _pod.liveMixin.IsFullHealth();
-        }
-
-        /// <summary>
         /// Make the text blink in two different colours for extra emphasis.
         /// </summary>
         private void SetTextColour(bool doBlink)
@@ -97,9 +88,9 @@ namespace DeathrunRemade.Components
         /// </summary>
         private void UpdateText()
         {
-            if (IsRepaired())
+            if (DeathrunUtils.IsPodRepaired(_pod))
                 SetTextColour(_blinkOn);
-            _screen.content.text = IsRepaired() ? GetRepairedText(_blinkOn) : GetDamagedText(_blinkOn);
+            _screen.content.text = DeathrunUtils.IsPodRepaired(_pod) ? GetRepairedText(_blinkOn) : GetDamagedText(_blinkOn);
         }
 
         private string GetAtmosphereLine(bool doBlink)

@@ -57,5 +57,14 @@ namespace DeathrunRemade
                 return player.currentSub.powerRelay != null && player.currentSub.powerRelay.IsPowered();
             return player.IsInsidePoweredVehicle();
         }
+
+        /// <summary>
+        /// Check whether the escape pod has already been repaired. This way is more reliable than checking for damaged
+        /// effects since those don't start until after the cutscene ends.
+        /// </summary>
+        public static bool IsPodRepaired(EscapePod pod)
+        {
+            return pod.liveMixin.IsFullHealth();
+        }
     }
 }

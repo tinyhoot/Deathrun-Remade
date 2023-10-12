@@ -244,7 +244,7 @@ namespace DeathrunRemade
             GameEventHandler.OnMainMenuLoaded += OnMainMenuLoaded;
             GameEventHandler.OnPlayerAwake += OnPlayerAwake;
             GameEventHandler.OnPlayerGainControl += OnPlayerGainControl;
-            GameEventHandler.OnSavedGameLoaded += EscapePodPatcher.OnSavedGameLoaded;
+            GameEventHandler.OnSavedGameLoaded += EscapePodSinker.OnSavedGameLoaded;
         }
 
         /// <summary>

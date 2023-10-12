@@ -1,7 +1,6 @@
 Things that still need doing because if I don't write them down right now I'll forget
 
 Items
-- Batteries need their stuff set at game start, not during item registering.
 - Expand on Kharaa vehicle recipe costs. Only seamoth actually got any changes?
 
 Monos
@@ -10,10 +9,7 @@ Monos
 - Safe depth adjusts at constant rate? Too slowly.
 
 Patches
-- Changing the Lifepod's RigidBody to enable interpolation might solve the stuttering issues caused by low physics update rate.
-  Also, you can change the rate even at runtime! Time.fixeddeltatime
 - Don't forget to add countdown timer to explosion
-- Escape pod sinks through the floor?
 
 New Ideas
 - Make tanks not refill by themselves. Refill at special point?
@@ -32,6 +28,15 @@ New Ideas
 - Vehicles move more slowly when damaged
 - Increase oxygen use with depth
 - Grey out non-deathrun saves in the save load menu and add current score to deathrun saves.
+
+API
+- Make API a component
+- Add to new child gameobject under the bepinex loader
+- Benefits:
+  - Can be found and interacted with very easily
+  - Can use gameObject.sendMessage()
+  - Can use runtime editor to explore options
+  - Very clear when it is ready/available and when it isn't
 
 Checks at the very end
 - All items craft properly and fit into their slots
@@ -59,7 +64,5 @@ Known Issues
 
 Bug Reports
 - Explosion timer
-- Escape pod not righting itself
 - You start the game with too much health
 - No vehicle challenge needs changes to rocket head for lack of shield generator
-- Mob drops should not show up as blueprints in crafting menu
