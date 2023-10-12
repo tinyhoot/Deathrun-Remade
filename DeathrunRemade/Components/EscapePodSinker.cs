@@ -187,6 +187,8 @@ namespace DeathrunRemade.Components
         {
             // Move the pod back up a bit to give it some space to fall over.
             transform.Translate(0f, 3f, 0f);
+            // This doesn't seem to move the player with it so do it manually.
+            Player.main.transform.Translate(0f, 3f, 0f);
             // Figure out a random rotation to topple to such that the lifepod is sideways or upside down.
             float angle = Random.Range(0.35f, 1f) * 180f;
             float tiltX = Random.Range(0f, 1f);

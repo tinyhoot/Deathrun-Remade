@@ -15,7 +15,7 @@ New Ideas
 - Make tanks not refill by themselves. Refill at special point?
 - Self-updating score multiplier in the options menu, to show you what you'll get
 - Progressively worse Kharaa infection to counteract difficulty being too frontloaded
-- Explicit compatibility with some popular/well fitting mods. Like C2C, Unknown Name, Enhanced Sleep, ...
+- Explicit compatibility with some popular/well fitting mods. Like C2C, Unknown Name, Enhanced Sleep, Custom Batteries, ...
 - Add game quit/reload warning on loading screen to hootils
 - Introduce QoL way to get stalker teeth because YOU NEED SO MANY
 - Change nuget packages.config to csproj PackageReference?
@@ -59,7 +59,6 @@ Substantial changes from the original
 
 Known Issues
 - Number of fragment scans not properly reflected by seaglide and constructor until first scan.
-- Sometimes you get flung out of your escape pod at the beginning.
 - Nitrogen bar starts off with the wrong value on game start.
 
 Bug Reports
