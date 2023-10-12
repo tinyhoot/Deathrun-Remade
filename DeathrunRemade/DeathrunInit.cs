@@ -226,6 +226,10 @@ namespace DeathrunRemade
         {
             EscapePod.main.gameObject.AddComponent<EscapePodRecharge>();
             EscapePod.main.gameObject.AddComponent<EscapePodStatusScreen>();
+            // Ensure we always know about the player's current radiation immunity.
+            RadiationPatcher.UpdateIsImmune(null, null);
+            Inventory.main.equipment.onEquip += RadiationPatcher.UpdateIsImmune;
+            Inventory.main.equipment.onUnequip += RadiationPatcher.UpdateIsImmune;
         }
 
         private void RegisterCommands()

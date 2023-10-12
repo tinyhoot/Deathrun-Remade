@@ -17,6 +17,7 @@ namespace DeathrunRemade.Patches
         private static readonly string _radiationImmuneMsg = "Radiation (Immune)";
         private static Vector3 _radWarningPos;
         private static Vector3 _radWarningImmunePos;
+        private static bool _playerIsImmune;
         // This looks odd (no dictionary), but we'll be iterating over this in descending order.
         private static readonly List<(string, float)> RadiationFXStrength = new List<(string, float)>
         {
@@ -35,6 +36,10 @@ namespace DeathrunRemade.Patches
             ("CrashedShip", 0.4f),
             ("GeneratorRoom", 0.4f),
             ("CrashZone", 0.3f)
+        };
+        private static readonly List<TechType> RadSafeEquipment = new List<TechType>
+        {
+            TechType.RadiationHelmet, TechType.RadiationSuit, TechType.RadiationGloves
         };
 
         /// <summary>
@@ -64,19 +69,23 @@ namespace DeathrunRemade.Patches
         private static IEnumerable<CodeInstruction> RadiateRangePatch(IEnumerable<CodeInstruction> instructions)
         {
             CodeMatcher matcher = new CodeMatcher(instructions);
-            matcher.MatchForward(true,
-                new CodeMatch(OpCodes.Ldarg_0),
-                new CodeMatch(OpCodes.Ldfld),
-                new CodeMatch(i => i.opcode == OpCodes.Callvirt && ((MemberInfo)i.operand).Name.Contains("distanceToPlayer")))
-                // Replace the function call in this place with our own.
+            matcher
+                // Match to where the game loads the PlayerDistanceTracker and tries to grab its value for the
+                // Aurora's distance to the player.
+                .MatchForward(true, 
+                    new CodeMatch(OpCodes.Ldarg_0), 
+                    new CodeMatch(OpCodes.Ldfld), 
+                    new CodeMatch(i => i.opcode == OpCodes.Callvirt && ((MemberInfo)i.operand).Name.Contains("distanceToPlayer")))
+                // Replace the function call in this place with our own to effectively overwrite distance calculations.
                 .SetInstruction(CodeInstruction.Call(typeof(RadiationPatcher), nameof(GetRadiationDistance)))
                 // Skip ahead to near the end of the function.
                 .MatchForward(false, 
                     new CodeMatch(OpCodes.Ldloc_2),
                     new CodeMatch(i => i.opcode == OpCodes.Call && ((MemberInfo)i.operand).Name == nameof(Mathf.Clamp01)))
-                // Advance once to get past the last branch label so we don't have to deal with any of that.
+                // Advance once to get past the last branch label so we don't have to deal with labels.
                 .Advance(1)
-                // Insert a quick delegate to reduce the radiation severity when inside.
+                // Insert a quick delegate to reduce the radiation severity when inside. This consumes the variable on
+                // the stack that was meant for a vanilla method.
                 .Insert(
                     Transpilers.EmitDelegate<Func<float, float>>(rad =>
                     {
@@ -86,6 +95,8 @@ namespace DeathrunRemade.Patches
                             rad /= 2;
                         return rad;
                     }),
+                    // Store the result to the local variable and load it on the stack so the vanilla method can work
+                    // as expected.
                     new CodeInstruction(OpCodes.Stloc_2),
                     new CodeInstruction(OpCodes.Ldloc_2));
 
@@ -100,18 +111,18 @@ namespace DeathrunRemade.Patches
         private static void DisplayRadiationWarningIfImmune(uGUI_RadiationWarning __instance, ref bool __result)
         {
             // No reason to change anything if it's already displaying.
-            if (__result || Player.main is null || LeakingRadiation.main is null)
+            if (__result || Player.main == null || LeakingRadiation.main == null)
                 return;
             RadiatePlayerInRange radiation = LeakingRadiation.main.radiatePlayerInRange;
             // Game is still loading.
-            if (radiation.tracker is null)
+            if (radiation.tracker == null)
                 return;
             
             if (GetRadiationDistance(radiation.tracker) <= radiation.radiateRadius)
             {
                 PDA pda = Player.main.GetPDA();
                 // Display while the PDA is not being used.
-                __result = pda is null || !pda.isInUse;
+                __result = pda == null || !pda.isInUse;
             }
         }
 
@@ -123,21 +134,18 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(uGUI_RadiationWarning), nameof(uGUI_RadiationWarning.Update))]
         private static void MoveRadiationWarning(uGUI_RadiationWarning __instance)
         {
-            if (Player.main is null)
+            if (Player.main == null)
                 return;
 
             // Get the animation for the radiation warning.
             Animation animation = __instance.warning.GetComponent<Animation>();
-
-            // Update() does not run if the warning is not on screen, so we can check for immunity this way.
-            bool isImmune = Player.main.radiationAmount <= 0;
             bool isImmuneMsg = __instance.text.text.Equals(_radiationImmuneMsg);
 
             // Check whether any update is necessary at all.
-            if (isImmune == isImmuneMsg)
+            if (_playerIsImmune == isImmuneMsg)
                 return;
             
-            if (isImmune)
+            if (_playerIsImmune)
             {
                 // Move warning to top right corner, stop the animation.
                 __instance.text.text = _radiationImmuneMsg;
@@ -194,6 +202,14 @@ namespace DeathrunRemade.Patches
                 });
             return matcher.InstructionEnumeration();
         }
+
+        /// <summary>
+        /// Check whether the player is immune to radiation whenever their equipment changes.
+        /// </summary>
+        public static void UpdateIsImmune(string slot, InventoryItem item)
+        {
+            _playerIsImmune = IsImmune();
+        }
         
         #region helpers
 
@@ -224,7 +240,7 @@ namespace DeathrunRemade.Patches
             // This is the vanilla value.
             float playerRads = player.radiationAmount;
             // Proceed as normal if we have nothing to do.
-            if (LeakingRadiation.main is null || fxConfig == RadiationVisuals.Normal)
+            if (LeakingRadiation.main == null || fxConfig == RadiationVisuals.Normal)
                 return playerRads;
             
             float environmentRads = 0f;
@@ -332,7 +348,7 @@ namespace DeathrunRemade.Patches
         /// </summary>
         private static float GetRadiationDepth(Difficulty4 difficulty)
         {
-            if (LeakingRadiation.main is null)
+            if (LeakingRadiation.main == null)
                 return 0f;
             
             float radStrength = LeakingRadiation.main.currentRadius / LeakingRadiation.main.kMaxRadius;
@@ -357,6 +373,21 @@ namespace DeathrunRemade.Patches
         }
 
         /// <summary>
+        /// Check whether the player is currently immune to radiation.
+        /// </summary>
+        public static bool IsImmune()
+        {
+            // Consider the player immune if things have not loaded yet.
+            if (Inventory.main == null)
+                return true;
+            Equipment equipment = Inventory.main.equipment;
+            // Count the total number of radiation safe equipment the player is wearing.
+            int total = RadSafeEquipment.Sum(techType => equipment.GetCount(techType));
+            // If wearing any combination of 3 (Helmet, Suit, Gloves) they are safe.
+            return total >= 3;
+        }
+
+        /// <summary>
         /// Check whether the given object is within the range of the Aurora's post-explosion radiation.
         /// </summary>
         public static bool IsInRadiationRadius(Transform transform)
@@ -378,7 +409,7 @@ namespace DeathrunRemade.Patches
         /// </summary>
         public static bool IsRadiationFixed()
         {
-            if (LeakingRadiation.main is null)
+            if (LeakingRadiation.main == null)
                 return false;
             return LeakingRadiation.main.radiationFixed;
         }
@@ -389,12 +420,12 @@ namespace DeathrunRemade.Patches
         public static bool IsSurfaceIrradiated()
         {
             // If these do not exist the game is probably still loading.
-            if (CrashedShipExploder.main is null || LeakingRadiation.main is null)
+            if (CrashedShipExploder.main == null || LeakingRadiation.main == null)
                 return false;
             if (!CrashedShipExploder.main.IsExploded())
                 return false;
             // Surface is decontaminated once leaks are fixed and radiation has completely dissipated.
-            return LeakingRadiation.main.radiationFixed && LeakingRadiation.main.currentRadius < 5f;
+            return !LeakingRadiation.main.radiationFixed || LeakingRadiation.main.currentRadius > 5f;
         }
         
         #endregion helpers
