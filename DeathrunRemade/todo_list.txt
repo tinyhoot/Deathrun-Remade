@@ -8,9 +8,6 @@ Monos
 - Nitrogen ascent is not punishing enough
 - Safe depth adjusts at constant rate? Too slowly.
 
-Patches
-- Don't forget to add countdown timer to explosion
-
 New Ideas
 - Make tanks not refill by themselves. Refill at special point?
 - Self-updating score multiplier in the options menu, to show you what you'll get
@@ -19,7 +16,6 @@ New Ideas
 - Add game quit/reload warning on loading screen to hootils
 - Introduce QoL way to get stalker teeth because YOU NEED SO MANY
 - Change nuget packages.config to csproj PackageReference?
-- Add some way to remove passive power drain from the scanner room. It gets really rough with the multiplier.
 - Probably difficult. Partial base flooding on entry? Stoppable with bulkhead? Apparently they already do that in
   vanilla, so it could be doable.
 - Draining water costs power
@@ -56,12 +52,12 @@ Substantial changes from the original
 - Pacifist challenge covers many more ways to damage things.
 - Re-introduces a patch that lets you deploy filterpumps from the water surface.
 - Scoring system is reworked. Legacy runs can be imported, but will show different scores.
+- The scanner room does not passively drain power.
 
 Known Issues
 - Number of fragment scans not properly reflected by seaglide and constructor until first scan.
 - Nitrogen bar starts off with the wrong value on game start.
 
 Bug Reports
-- Explosion timer
 - You start the game with too much health
 - No vehicle challenge needs changes to rocket head for lack of shield generator

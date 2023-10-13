@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
@@ -72,6 +74,26 @@ namespace DeathrunRemade.Patches
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// The scanner room has a passive power drain even when it is not actively running. This gets extremely
+        /// punishing and honestly unfair when combined with the power cost increases. This transpiler removes the
+        /// inactive power cost entirely.
+        /// </summary>
+        [HarmonyTranspiler]
+        [HarmonyPatch(typeof(MapRoomFunctionality), nameof(MapRoomFunctionality.UpdateScanning))]
+        private static IEnumerable<CodeInstruction> RemovePassiveScannerDrain(IEnumerable<CodeInstruction> instructions)
+        {
+            CodeMatcher matcher = new CodeMatcher(instructions);
+            // Find the constant used for the passive drain.
+            matcher.MatchForward(false, new CodeMatch(OpCodes.Ldc_R4, 0.15f));
+            // This is a likely target for other mods to patch too. Only try and change anything if we actually found
+            // the constant. Replacing the constant with a zero makes the scanner room drain no power.
+            if (matcher.IsValid)
+                matcher.Set(OpCodes.Ldc_R4, 0f);
+            
+            return matcher.InstructionEnumeration();
         }
 
         /// <summary>
