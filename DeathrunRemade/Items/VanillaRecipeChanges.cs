@@ -22,31 +22,31 @@ namespace DeathrunRemade.Items
         /// <summary>
         /// Get all recipe changes for a specific target difficulty.
         /// </summary>
-        public List<SerialTechData> GetCraftData<TEnum>(TEnum targetDifficulty) where TEnum : Enum
+        public IEnumerable<SerialTechData> GetCraftData<TEnum>(TEnum targetDifficulty) where TEnum : Enum
         {
             string key = $"{targetDifficulty.GetType().Name}.{targetDifficulty}";
-            return _recipeJson.TryGetValue(key, out List<SerialTechData> data) ? data : null;
+            return _recipeJson.TryGetValue(key, out List<SerialTechData> data) ? data : Enumerable.Empty<SerialTechData>();
         }
         
         /// <summary>
         /// Get all recipe changes marked with the specified key.
         /// </summary>
-        public List<SerialTechData> GetCraftData(string key)
+        public IEnumerable<SerialTechData> GetCraftData(string key)
         {
-            return _recipeJson.TryGetValue(key, out List<SerialTechData> data) ? data : null;
+            return _recipeJson.TryGetValue(key, out List<SerialTechData> data) ? data : Enumerable.Empty<SerialTechData>();
         }
         
         /// <summary>
         /// Set up all changes related to batteries based on the given config values.
         /// </summary>
-        /// <param name="config">The config values to use.</param>
+        /// <param name="difficulty">The config values to use.</param>
         public List<SerialTechData> GetBatteryChanges(Difficulty4 difficulty)
         {
             if (difficulty == Difficulty4.Normal)
                 return null;
 
             // Remove the now-harder batteries from some early game tools.
-            List<SerialTechData> changes = GetCraftData("RemoveBatteries");
+            List<SerialTechData> changes = GetCraftData("RemoveBatteries").ToList();
             // Regular batteries are a bit more involved.
             SerialTechData batteryRecipe = new SerialTechData
             {
@@ -118,7 +118,7 @@ namespace DeathrunRemade.Items
         /// <param name="config">The config values to use.</param>
         public void RegisterRecipeChanges(ConfigSave config)
         {
-            List<SerialTechData> changes = GetCraftData(config.ToolCosts);
+            List<SerialTechData> changes = GetCraftData(config.ToolCosts).ToList();
             changes.AddRange(GetCraftData(config.VehicleCosts));
             changes.AddRange(GetBatteryChanges(config.BatteryCapacity));
             foreach (var craftData in changes.Where(techData => techData != null))
