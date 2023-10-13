@@ -45,9 +45,10 @@ namespace DeathrunRemade.Patches
         /// </summary>
         [HarmonyPostfix]
         [HarmonyPatch(typeof(Survival), nameof(Survival.Use))]
-        private static void RemoveNitrogenWithFirstAidKits(GameObject useObj)
+        private static void RemoveNitrogenWithFirstAidKits(GameObject useObj, bool __result)
         {
-            if (useObj is null)
+            // Do not give away free nitrogen heals if the first aid kit cannot be consumed.
+            if (useObj == null || __result is false)
                 return;
             TechType techType = CraftData.GetTechType(useObj);
             if (techType != TechType.FirstAidKit)
@@ -56,6 +57,31 @@ namespace DeathrunRemade.Patches
             // Purge around half of the current nitrogen level.
             float reduction = (SaveData.Main.Nitrogen.safeDepth + SaveData.Main.Nitrogen.nitrogen) / 2f;
             NitrogenHandler.Main.RemoveNitrogen(reduction);
+        }
+
+        /// <summary>
+        /// Make it possible to use a first aid kit from a quick slot.
+        /// </summary>
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(QuickSlots), nameof(QuickSlots.Drop))]
+        private static bool UseFirstAidKitFromQuickSlot(QuickSlots __instance)
+        {
+            if (__instance._heldItem == null || __instance._heldItem.techType != TechType.FirstAidKit)
+                return true;
+
+            // Try to use the first aid kit and abort if that does not work for some reason, such as full health.
+            Survival survival = Player.main.GetComponent<Survival>();
+            if (survival == null || !survival.Use(__instance._heldItem.item.gameObject))
+                return false;
+            
+            // This is duplicated from the original method but I was not about to transpile a whole mess into that for
+            // just one type of item. Refills the quickslot if we have more first aid kits in the inventory.
+            __instance.refillTechType = TechType.FirstAidKit;
+            __instance.refillSlot = __instance.GetSlotByItem(__instance._heldItem);
+            __instance.desiredSlot = __instance.refillSlot;
+            // Actually consume the item.
+            Object.Destroy(__instance._heldItem.item.gameObject);
+            return false;
         }
 
         /// <summary>
