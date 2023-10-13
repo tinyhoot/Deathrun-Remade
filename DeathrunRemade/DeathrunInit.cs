@@ -1,5 +1,4 @@
-﻿using System;
-using BepInEx;
+﻿using BepInEx;
 using DeathrunRemade.Components;
 using DeathrunRemade.Components.RunStatsUI;
 using DeathrunRemade.Configuration;
@@ -26,7 +25,7 @@ namespace DeathrunRemade
     {
         public const string GUID = "com.github.tinyhoot.DeathrunRemade";
         public const string NAME = "Deathrun Remade";
-        public const string VERSION = "0.1";
+        public const string VERSION = "0.1.3";
 
         internal static Config _Config;
         internal static ILogHandler _Log;
