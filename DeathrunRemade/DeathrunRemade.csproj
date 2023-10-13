@@ -117,6 +117,7 @@
         <Compile Include="Components\EscapePodRecharge.cs" />
         <Compile Include="Components\EscapePodSinker.cs" />
         <Compile Include="Components\EscapePodStatusScreen.cs" />
+        <Compile Include="Components\ExplosionCountdown.cs" />
         <Compile Include="Components\RunStatsTracker.cs" />
         <Compile Include="Components\RunStatsUI\ButtonEventTrigger.cs" />
         <Compile Include="Components\RunStatsUI\RunStatsWindow.cs" />

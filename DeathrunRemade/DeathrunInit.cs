@@ -14,6 +14,7 @@ using HootLib.Components;
 using HootLib.Objects;
 using Nautilus.Handlers;
 using Nautilus.Utility;
+using Story;
 using UnityEngine;
 using ILogHandler = HootLib.Interfaces.ILogHandler;
 
@@ -226,6 +227,8 @@ namespace DeathrunRemade
         {
             EscapePod.main.gameObject.AddComponent<EscapePodRecharge>();
             EscapePod.main.gameObject.AddComponent<EscapePodStatusScreen>();
+            ExplosionCountdown.Create(out GameObject go);
+            go.SetActive(true);
             // Ensure we always know about the player's current radiation immunity.
             RadiationPatcher.UpdateIsImmune(null, null);
             Inventory.main.equipment.onEquip += RadiationPatcher.UpdateIsImmune;
@@ -295,12 +298,12 @@ namespace DeathrunRemade
         private void DumpLocation()
         {
             _Log.Info($"Current location: {Player.main.transform.position}");
+            _Log.InGameMessage($"Current location: {Player.main.transform.position}");
         }
 
         private void TestMe()
         {
-            _Log.Debug($"{Time.time}, {PDA.time}, {DayNightCycle.main.timePassed}");
-            return;
+            StoryGoalManager.main.OnGoalComplete("Story_AuroraWarning3");
         }
     }
 }

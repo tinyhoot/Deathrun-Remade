@@ -91,7 +91,7 @@ namespace DeathrunRemade.Configuration
             
             WasInitialised = true;
 
-            Validate();
+            Validate(config);
         }
 
         /// <summary>
@@ -99,13 +99,16 @@ namespace DeathrunRemade.Configuration
         /// same field names with reflection.
         /// </summary>
         /// <exception cref="ConfigEntryException">Thrown if the config and this save data do not match up.</exception>
-        private void Validate()
+        private void Validate(Config config)
         {
             var configFields = AccessTools.GetDeclaredFields(typeof(Config));
             foreach (FieldInfo configField in configFields)
             {
                 // Ignore all fields that aren't actually config values.
                 if (!configField.FieldType.IsGenericType || !configField.FieldType.GetGenericTypeDefinition().IsAssignableFrom(typeof(ConfigEntryWrapper<>)))
+                    continue;
+                // Ignore all UI fields as those do not have to be serialised.
+                if (((ConfigEntryWrapperBase)configField.GetValue(config)).GetSection().Equals(Config.SectionUI))
                     continue;
                 
                 // Find the field in this struct of the same name.

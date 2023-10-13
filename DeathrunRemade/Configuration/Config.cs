@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BepInEx;
 using BepInEx.Configuration;
+using DeathrunRemade.Components;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
@@ -59,6 +60,8 @@ namespace DeathrunRemade.Configuration
         // UI
         public ConfigEntryWrapper<bool> ShowTutorials;
         public ConfigEntryWrapper<Hints> ShowWarnings;
+        public ConfigEntryWrapper<float> ExplosionWindowPosX;
+        public ConfigEntryWrapper<float> ExplosionWindowPosY;
 
         internal readonly List<StartLocation> _startLocations;
 
@@ -371,6 +374,18 @@ namespace DeathrunRemade.Configuration
                 defaultValue: Hints.Always,
                 description: "Show warnings when you are about to do something harmful, like ascending very quickly."
             ).WithDescription("Show Warnings");
+            ExplosionWindowPosX = RegisterEntry(
+                section: SectionUI,
+                key: nameof(ExplosionWindowPosX),
+                defaultValue: 1f,
+                description: "Multiplies the distance of the explosion countdown window from the left edge of the screen."
+            ).WithDescription("Explosion Window Horiz. Position");
+            ExplosionWindowPosY = RegisterEntry(
+                section: SectionUI,
+                key: nameof(ExplosionWindowPosY),
+                defaultValue: 2f,
+                description: "Multiplies the distance of the explosion countdown window from the top edge of the screen."
+            ).WithDescription("Explosion Window Vert. Position");
         }
 
         protected override void RegisterControllingOptions() { }
@@ -419,6 +434,12 @@ namespace DeathrunRemade.Configuration
                                + "run. They do not affect your score.");
             modOptions.AddItem(ShowTutorials.ToModToggleOption());
             modOptions.AddItem(ShowWarnings.ToModChoiceOption());
+            var windowPosHSlider = ExplosionWindowPosX.ToModSliderOption(0f, 50f, stepSize: 0.1f);
+            var windowPosVSlider = ExplosionWindowPosY.ToModSliderOption(0f, 15f, stepSize: 0.1f);
+            windowPosHSlider.OnChanged += ExplosionCountdown.OnUpdateSettingsX;
+            windowPosVSlider.OnChanged += ExplosionCountdown.OnUpdateSettingsY;
+            modOptions.AddItem(windowPosHSlider);
+            modOptions.AddItem(windowPosVSlider);
 
             OptionsPanelHandler.RegisterModOptions(modOptions);
         }
