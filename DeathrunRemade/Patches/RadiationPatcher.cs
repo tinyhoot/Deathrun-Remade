@@ -51,12 +51,27 @@ namespace DeathrunRemade.Patches
         private static IEnumerable<CodeInstruction> DamageDistancePatch(IEnumerable<CodeInstruction> instructions)
         {
             CodeMatcher matcher = new CodeMatcher(instructions);
-            matcher.MatchForward(true, 
+            matcher
+                // Match to where the game loads the PlayerDistanceTracker and tries to grab its value for the
+                // Aurora's distance to the player.
+                .MatchForward(true, 
                     new CodeMatch(OpCodes.Ldarg_0),
                     new CodeMatch(OpCodes.Ldfld),
                     new CodeMatch(i => i.opcode == OpCodes.Callvirt && ((MemberInfo)i.operand).Name.Contains("distanceToPlayer")))
-                // Replace the function call in this place with our own.
-                .SetInstruction(CodeInstruction.Call(typeof(RadiationPatcher), nameof(GetRadiationDistance)));
+                // Insert an extra instruction to load the damage type of this instance.
+                .InsertAndAdvance(
+                    new CodeInstruction(OpCodes.Ldarg_0),
+                    CodeInstruction.LoadField(typeof(DamagePlayerInRadius), nameof(DamagePlayerInRadius.damageType)))
+                // Replace the game's call to the distance property with our own function call.
+                .SetInstruction(
+                    Transpilers.EmitDelegate<Func<PlayerDistanceTracker, DamageType, float>>((tracker, type) =>
+                    {
+                        // For radiation trackers only, overwrite the distance calculation with our own.
+                        if (type == DamageType.Radiation)
+                            return GetRadiationDistance(tracker);
+                        // For everything else we leave the game to do its thing.
+                        return tracker.distanceToPlayer;
+                    }));
             return matcher.InstructionEnumeration();
         }
         
