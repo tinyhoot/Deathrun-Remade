@@ -48,6 +48,7 @@ namespace DeathrunRemade.Items
         public static void AddRecyclingRecipe()
         {
             RecipeData recycling = new RecipeData(new Ingredient(TechType, 3));
+            recycling.craftAmount = 2;
             CraftDataHandler.SetRecipeData(TechType.Copper, recycling);
             CraftTreeHandler.AddCraftingNode(CraftTree.Type.Fabricator, TechType.Copper,
                 CraftTreeHandler.Paths.FabricatorsElectronics);
