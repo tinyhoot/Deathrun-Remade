@@ -1,7 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
 using DeathrunRemade.Configuration;
-using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
-using DeathrunRemade.Objects.Enums;
 using UnityEngine;
 
 namespace DeathrunRemade.Handlers
@@ -10,7 +10,31 @@ namespace DeathrunRemade.Handlers
     {
         public const float InfiniteCrushDepth = 10000f;
         public const float SuitlessCrushDepth = 200f;
-        
+
+        private static readonly Dictionary<TechType, float[]> SuitCrushDepths = new Dictionary<TechType, float[]>
+        {
+            { TechType.RadiationSuit, new[] { 500f, 500f } },
+            { TechType.ReinforcedDiveSuit, new []{ InfiniteCrushDepth, 800f } },
+            { TechType.WaterFiltrationSuit, new []{ 1300f, 800f } },
+        };
+
+        /// <summary>
+        /// Add a custom suit with its own crush depth which differs depending on difficulty. The crush depth values are
+        /// associated with difficulty in ascending order.
+        /// </summary>
+        public static void AddSuitCrushDepth(TechType suit, IEnumerable<float> crushDepth)
+        {
+            SuitCrushDepths[suit] = crushDepth.ToArray();
+        }
+
+        /// <summary>
+        /// Attempt to get the existing crush depth values of a suit.
+        /// </summary>
+        public static bool TryGetSuitCrushDepth(TechType suit, out float[] crushDepths)
+        {
+            return SuitCrushDepths.TryGetValue(suit, out crushDepths);
+        }
+
         /// <summary>
         /// Do the math and check whether the player needs to take crush damage.
         ///
@@ -49,17 +73,20 @@ namespace DeathrunRemade.Handlers
         /// </summary>
         public static float GetCrushDepth(TechType suit, ConfigSave config)
         {
-            bool deathrun = config.PersonalCrushDepth == Difficulty3.Deathrun;
-            float depth = suit switch
+            // Difficulty turned into an index, ignoring NORMAL and starting with HARD.
+            int difficulty = (int)config.PersonalCrushDepth - 1;
+            // If there is no entry for this techtype always use the minimum default value.
+            float[] depths = SuitCrushDepths.GetOrDefault(suit, new[] { SuitlessCrushDepth });
+            // Ensure that no mess-up happened in adding custom suit values anywhere.
+            if (depths.Length == 0)
             {
-                TechType.RadiationSuit => 500f,
-                TechType.ReinforcedDiveSuit => deathrun ? 800f : InfiniteCrushDepth,
-                TechType.WaterFiltrationSuit => deathrun ? 800f : 1300f,
-                _ => SuitlessCrushDepth,
-            };
-            // If the player wasn't wearing any of the vanilla suits, check for custom ones.
-            depth = Mathf.Max(depth, Suit.GetCrushDepth(suit, deathrun));
-            return depth;
+                DeathrunInit._Log.Warn($"Tried to get crush depth values for '{suit}' but the custom values are"
+                                       + $"an empty array!");
+                return SuitlessCrushDepth;
+            }
+            // Attempt to find a difficulty-specific depth for this suit. If none exists, take the one for the highest
+            // defined difficulty level.
+            return depths.Length > difficulty ? depths[difficulty] : depths[depths.Length - 1];
         }
     }
 }

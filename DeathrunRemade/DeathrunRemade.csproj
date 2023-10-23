@@ -125,6 +125,7 @@
         <Compile Include="Components\SafeDepthHud.cs" />
         <Compile Include="Configuration\Config.cs" />
         <Compile Include="Configuration\ConfigSave.cs" />
+        <Compile Include="DeathrunAPI.cs" />
         <Compile Include="DeathrunInit.cs" />
         <Compile Include="DeathrunUtils.cs" />
         <Compile Include="Handlers\CrushDepthHandler.cs" />

@@ -1,4 +1,5 @@
-﻿using BepInEx;
+﻿using System;
+using BepInEx;
 using DeathrunRemade.Components;
 using DeathrunRemade.Components.RunStatsUI;
 using DeathrunRemade.Configuration;
@@ -269,10 +270,13 @@ namespace DeathrunRemade
             AcidBattery.AddRecyclingRecipe();
             new DecompressionModule().Register();
             new FilterChip().Register();
+            
             new Suit(Suit.Variant.ReinforcedFiltrationSuit).Register();
             new Suit(Suit.Variant.ReinforcedSuitMk2).Register();
             new Suit(Suit.Variant.ReinforcedSuitMk3).Register();
+            Suit.RegisterCrushDepths();
             PDAScanner.onAdd += Suit.UnlockSuitOnScanFish;
+            
             new Tank(Tank.Variant.ChemosynthesisTank).Register();
             new Tank(Tank.Variant.PhotosynthesisTank).Register();
             new Tank(Tank.Variant.PhotosynthesisTankSmall).Register();

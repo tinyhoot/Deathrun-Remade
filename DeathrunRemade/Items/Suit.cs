@@ -190,20 +190,14 @@ namespace DeathrunRemade.Items
         }
 
         /// <summary>
-        /// Get the personal crushdepth for the given techtype.
+        /// Register the crush depths of all suits to the <see cref="CrushDepthHandler"/>.
         /// </summary>
-        /// <param name="techType">The TechType of one of the suits added by this mod.</param>
-        /// <param name="hardMode">Whether to apply DEATHRUN difficulty.</param>
-        public static float GetCrushDepth(TechType techType, bool hardMode)
+        public static void RegisterCrushDepths()
         {
-            float depth = 0f;
-            if (techType.Equals(ReinforcedFiltration))
-                depth = hardMode ? 1300f : CrushDepthHandler.InfiniteCrushDepth;
-            if (techType.Equals(ReinforcedMk2))
-                depth = hardMode ? 1300f : CrushDepthHandler.InfiniteCrushDepth;
-            if (techType.Equals(ReinforcedMk3))
-                depth = CrushDepthHandler.InfiniteCrushDepth;
-            return depth;
+            // Using our own API for this rather than internal methods catches any issues with the API much earlier.
+            DeathrunAPI.AddSuitCrushDepth(ReinforcedFiltration, new[] { CrushDepthHandler.InfiniteCrushDepth, 1300f });
+            DeathrunAPI.AddSuitCrushDepth(ReinforcedMk2, new[] { CrushDepthHandler.InfiniteCrushDepth, 1300f });
+            DeathrunAPI.AddSuitCrushDepth(ReinforcedMk3, CrushDepthHandler.InfiniteCrushDepth);
         }
 
         /// <summary>
