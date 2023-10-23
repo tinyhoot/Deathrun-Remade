@@ -60,13 +60,19 @@ namespace DeathrunRemade
 
             // Register the in-game save game of the current run.
             SaveData.Main = SaveDataHandler.RegisterSaveDataCache<SaveData>();
-            
-            InitHandlers();
-            LoadFiles();
-            SetupCraftTree();
-            RegisterItems();
-            RegisterCommands();
-            RegisterGameEvents();
+
+            try {
+                InitHandlers();
+                LoadFiles();
+                SetupCraftTree();
+                RegisterItems();
+                RegisterCommands();
+                RegisterGameEvents();
+            }
+            catch (Exception ex)
+            {
+                DeathrunUtils.FatalError(ex);
+            }
             
             // Set up all the harmony patching.
             _harmony = new Harmony(GUID);
@@ -91,20 +97,27 @@ namespace DeathrunRemade
         /// </summary>
         private void HarmonyPatching(Harmony harmony)
         {
-            // Wow I really wish HarmonyX would update their fork with PatchCategories
-            harmony.PatchAll(typeof(GameEventHandler));
-            harmony.PatchAll(typeof(BatteryPatcher));
-            harmony.PatchAll(typeof(CauseOfDeathPatcher));
-            harmony.PatchAll(typeof(CompassPatcher));
-            harmony.PatchAll(typeof(EscapePodPatcher));
-            harmony.PatchAll(typeof(ExplosionPatcher));
-            harmony.PatchAll(typeof(FilterPumpPatcher));
-            harmony.PatchAll(typeof(FoodChallengePatcher));
-            harmony.PatchAll(typeof(RadiationPatcher));
-            harmony.PatchAll(typeof(RunStatsTracker));
-            harmony.PatchAll(typeof(SuitPatcher));
-            harmony.PatchAll(typeof(TooltipPatcher));
-            harmony.PatchAll(typeof(WaterMurkPatcher));
+            try
+            {
+                // Wow I really wish HarmonyX would update their fork with PatchCategories
+                harmony.PatchAll(typeof(GameEventHandler));
+                harmony.PatchAll(typeof(BatteryPatcher));
+                harmony.PatchAll(typeof(CauseOfDeathPatcher));
+                harmony.PatchAll(typeof(CompassPatcher));
+                harmony.PatchAll(typeof(EscapePodPatcher));
+                harmony.PatchAll(typeof(ExplosionPatcher));
+                harmony.PatchAll(typeof(FilterPumpPatcher));
+                harmony.PatchAll(typeof(FoodChallengePatcher));
+                harmony.PatchAll(typeof(RadiationPatcher));
+                harmony.PatchAll(typeof(RunStatsTracker));
+                harmony.PatchAll(typeof(SuitPatcher));
+                harmony.PatchAll(typeof(TooltipPatcher));
+                harmony.PatchAll(typeof(WaterMurkPatcher));
+            }
+            catch (Exception ex)
+            {
+                DeathrunUtils.FatalError(ex);
+            }
         }
         
         /// <summary>
@@ -116,19 +129,26 @@ namespace DeathrunRemade
         /// </summary>
         private void HarmonyPatchingDelayed(SaveData save)
         {
-            ConfigSave config = save.Config;
-            if (config.CreatureAggression != Difficulty4.Normal)
-                _harmony.PatchAll(typeof(AggressionPatcher));
-            if (config.DamageTaken != DamageDifficulty.Normal)
-                _harmony.PatchAll(typeof(DamageTakenPatcher));
-            if (config.SurfaceAir != Difficulty3.Normal)
-                _harmony.PatchAll(typeof(BreathingPatcher));
-            if (config.NitrogenBends != Difficulty3.Normal)
-                _harmony.PatchAll(typeof(SurvivalPatcher));
-            if (config.PowerCosts != Difficulty4.Normal)
-                _harmony.PatchAll(typeof(PowerPatcher));
-            if (config.PacifistChallenge)
-                _harmony.PatchAll(typeof(PacifistPatcher));
+            try
+            {
+                ConfigSave config = save.Config;
+                if (config.CreatureAggression != Difficulty4.Normal)
+                    _harmony.PatchAll(typeof(AggressionPatcher));
+                if (config.DamageTaken != DamageDifficulty.Normal)
+                    _harmony.PatchAll(typeof(DamageTakenPatcher));
+                if (config.SurfaceAir != Difficulty3.Normal)
+                    _harmony.PatchAll(typeof(BreathingPatcher));
+                if (config.NitrogenBends != Difficulty3.Normal)
+                    _harmony.PatchAll(typeof(SurvivalPatcher));
+                if (config.PowerCosts != Difficulty4.Normal)
+                    _harmony.PatchAll(typeof(PowerPatcher));
+                if (config.PacifistChallenge)
+                    _harmony.PatchAll(typeof(PacifistPatcher));
+            }
+            catch (Exception ex)
+            {
+                DeathrunUtils.FatalError(ex);
+            }
         }
 
         private void InitHandlers()
@@ -187,36 +207,42 @@ namespace DeathrunRemade
         {
             ConfigSave config = SaveData.Main.Config;
             
-            // Enable the tracker which updates all run statistics.
-            player.gameObject.AddComponent<RunStatsTracker>();
-            // Set up GUI components.
-            RadiationPatcher.CalculateGuiPosition();
-            // Register custom story goals relying on custom items.
-            _encyclopediaHandler.RegisterStoryGoals();
-            // Unlock all encyclopedia entries with Deathrun tutorials.
-            _encyclopediaHandler.UnlockPdaIntroEntries();
-            TooltipHandler.OverrideVanillaTooltips(config);
+            try {
+                // Enable the tracker which updates all run statistics.
+                player.gameObject.AddComponent<RunStatsTracker>();
+                // Set up GUI components.
+                RadiationPatcher.CalculateGuiPosition();
+                // Register custom story goals relying on custom items.
+                _encyclopediaHandler.RegisterStoryGoals();
+                // Unlock all encyclopedia entries with Deathrun tutorials.
+                _encyclopediaHandler.UnlockPdaIntroEntries();
+                TooltipHandler.OverrideVanillaTooltips(config);
             
-            // Enable crush depth if the player needs to breathe, i.e. is not in creative mode.
-            if (config.PersonalCrushDepth != Difficulty3.Normal && GameModeUtils.RequiresOxygen())
-                player.tookBreathEvent.AddHandler(this, CrushDepthHandler.CrushPlayer);
-            // Decrease the free health provided on respawn.
-            if (config.DamageTaken != DamageDifficulty.Normal && player.liveMixin)
-                player.playerRespawnEvent.AddHandler(this, DamageTakenPatcher.DecreaseRespawnHealth);
-            // Nitrogen and its UI if required by config and game mode settings.
-            if (config.NitrogenBends != Difficulty3.Normal && GameModeUtils.RequiresOxygen())
-            {
-                HootHudBar.Create<NitrogenBar>("NitrogenBar", -45, out GameObject _);
-                _DepthHud = SafeDepthHud.Create(out GameObject _);
-                player.gameObject.AddComponent<NitrogenHandler>();
-            }
+                // Enable crush depth if the player needs to breathe, i.e. is not in creative mode.
+                if (config.PersonalCrushDepth != Difficulty3.Normal && GameModeUtils.RequiresOxygen())
+                    player.tookBreathEvent.AddHandler(this, CrushDepthHandler.CrushPlayer);
+                // Decrease the free health provided on respawn.
+                if (config.DamageTaken != DamageDifficulty.Normal && player.liveMixin)
+                    player.playerRespawnEvent.AddHandler(this, DamageTakenPatcher.DecreaseRespawnHealth);
+                // Nitrogen and its UI if required by config and game mode settings.
+                if (config.NitrogenBends != Difficulty3.Normal && GameModeUtils.RequiresOxygen())
+                {
+                    HootHudBar.Create<NitrogenBar>("NitrogenBar", -45, out GameObject _);
+                    _DepthHud = SafeDepthHud.Create(out GameObject _);
+                    player.gameObject.AddComponent<NitrogenHandler>();
+                }
 
-            // Deal with any recipe changes.
-            _recipeChanges.RegisterFragmentChanges(config);
-            _recipeChanges.RegisterRecipeChanges(config);
-            // Add first aid kits to quick slots.
-            CraftDataHandler.SetQuickSlotType(TechType.FirstAidKit, QuickSlotType.Selectable);
-            CraftDataHandler.SetEquipmentType(TechType.FirstAidKit, EquipmentType.Hand);
+                // Deal with any recipe changes.
+                _recipeChanges.RegisterFragmentChanges(config);
+                _recipeChanges.RegisterRecipeChanges(config);
+                // Add first aid kits to quick slots.
+                CraftDataHandler.SetQuickSlotType(TechType.FirstAidKit, QuickSlotType.Selectable);
+                CraftDataHandler.SetEquipmentType(TechType.FirstAidKit, EquipmentType.Hand);
+            }
+            catch (Exception ex)
+            {
+                DeathrunUtils.FatalError(ex);
+            }
         }
 
         /// <summary>
@@ -225,14 +251,20 @@ namespace DeathrunRemade
         /// </summary>
         private void OnPlayerGainControl(Player player)
         {
-            EscapePod.main.gameObject.AddComponent<EscapePodRecharge>();
-            EscapePod.main.gameObject.AddComponent<EscapePodStatusScreen>();
-            ExplosionCountdown.Create(out GameObject go);
-            go.SetActive(true);
-            // Ensure we always know about the player's current radiation immunity.
-            RadiationPatcher.UpdateIsImmune(null, null);
-            Inventory.main.equipment.onEquip += RadiationPatcher.UpdateIsImmune;
-            Inventory.main.equipment.onUnequip += RadiationPatcher.UpdateIsImmune;
+            try {
+                EscapePod.main.gameObject.AddComponent<EscapePodRecharge>();
+                EscapePod.main.gameObject.AddComponent<EscapePodStatusScreen>();
+                ExplosionCountdown.Create(out GameObject go);
+                go.SetActive(true);
+                // Ensure we always know about the player's current radiation immunity.
+                RadiationPatcher.UpdateIsImmune(null, null);
+                Inventory.main.equipment.onEquip += RadiationPatcher.UpdateIsImmune;
+                Inventory.main.equipment.onUnequip += RadiationPatcher.UpdateIsImmune;
+            }
+            catch (Exception ex)
+            {
+                DeathrunUtils.FatalError(ex);
+            }
         }
 
         private void RegisterCommands()

@@ -1,3 +1,5 @@
+using System;
+
 namespace DeathrunRemade
 {
     /// <summary>
@@ -35,6 +37,18 @@ namespace DeathrunRemade
             }
             
             return "<unkown>";
+        }
+
+        /// <summary>
+        /// If something goes terribly during wrong e.g. during load, inform the user.
+        /// </summary>
+        public static void FatalError(Exception exception)
+        {
+            DeathrunInit._Log.InGameMessage($"{DeathrunInit.NAME} has encountered a fatal error and will not function "
+                                            + $"properly. Please report this error with your LogOutput.log on NexusMods, "
+                                            + $"GitHub, or the Subnautica Modding Discord.", true);
+            DeathrunInit._Log.Fatal($"{exception.GetType()}: {exception.Message}\n"
+                                    + $"{exception.StackTrace}");
         }
         
         /// <summary>
