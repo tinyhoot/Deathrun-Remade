@@ -36,7 +36,9 @@ namespace DeathrunRemade.Patches
             float limit = GetTemperatureLimit(suit);
             if (__instance.HasReinforcedGloves())
                 limit += 6f;
-            __instance.temperatureDamage.minDamageTemperature = limit;
+            // Do not accidentally overwrite changes on custom suits from other mods.
+            if (__instance.temperatureDamage.minDamageTemperature < limit)
+                __instance.temperatureDamage.minDamageTemperature = limit;
         }
         
         /// <summary>
