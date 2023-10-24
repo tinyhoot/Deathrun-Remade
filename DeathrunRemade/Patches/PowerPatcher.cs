@@ -43,6 +43,9 @@ namespace DeathrunRemade.Patches
         private static void ConsumeMixinEnergy(EnergyMixin __instance, ref float amount)
         {
             amount = ModifyConsumeEnergy(amount, IsInRadiation(__instance.transform));
+            // Reduce power consumption of all tools. Outside of radiation, this *almost* returns it to vanilla values.
+            if (__instance.GetComponent<Pickupable>())
+                amount /= 2f;
         }
 
         /// <summary>
