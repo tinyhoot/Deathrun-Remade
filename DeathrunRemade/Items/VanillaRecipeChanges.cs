@@ -40,10 +40,10 @@ namespace DeathrunRemade.Items
         /// Set up all changes related to batteries based on the given config values.
         /// </summary>
         /// <param name="difficulty">The config values to use.</param>
-        public List<SerialTechData> GetBatteryChanges(Difficulty4 difficulty)
+        public IEnumerable<SerialTechData> GetBatteryChanges(Difficulty4 difficulty)
         {
             if (difficulty == Difficulty4.Normal)
-                return null;
+                return Enumerable.Empty<SerialTechData>();
 
             // Remove the now-harder batteries from some early game tools.
             List<SerialTechData> changes = GetCraftData("RemoveBatteries").ToList();
