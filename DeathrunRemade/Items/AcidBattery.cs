@@ -71,9 +71,9 @@ namespace DeathrunRemade.Items
             return difficulty switch
             {
                 Difficulty4.Normal => 100,
-                Difficulty4.Hard => 75,
-                Difficulty4.Deathrun => 50,
-                Difficulty4.Kharaa => 25,
+                Difficulty4.Hard => 100,
+                Difficulty4.Deathrun => 75,
+                Difficulty4.Kharaa => 50,
                 _ => 100
             };
         }
