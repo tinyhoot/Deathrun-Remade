@@ -68,16 +68,16 @@ namespace DeathrunRemade
                 RegisterItems();
                 RegisterCommands();
                 RegisterGameEvents();
+                
+                // Set up all the harmony patching.
+                _harmony = new Harmony(GUID);
+                HarmonyPatching(_harmony);
+                SaveData.OnSaveDataLoaded += HarmonyPatchingDelayed;
             }
             catch (Exception ex)
             {
                 DeathrunUtils.FatalError(ex);
             }
-            
-            // Set up all the harmony patching.
-            _harmony = new Harmony(GUID);
-            HarmonyPatching(_harmony);
-            SaveData.OnSaveDataLoaded += HarmonyPatchingDelayed;
 
             _Log.Info("Finished loading.");
         }
@@ -97,28 +97,21 @@ namespace DeathrunRemade
         /// </summary>
         private void HarmonyPatching(Harmony harmony)
         {
-            try
-            {
-                // Wow I really wish HarmonyX would update their fork with PatchCategories
-                harmony.PatchAll(typeof(GameEventHandler));
-                harmony.PatchAll(typeof(BatteryPatcher));
-                harmony.PatchAll(typeof(CauseOfDeathPatcher));
-                harmony.PatchAll(typeof(CompassPatcher));
-                harmony.PatchAll(typeof(EscapePodPatcher));
-                harmony.PatchAll(typeof(ExplosionPatcher));
-                harmony.PatchAll(typeof(FilterPumpPatcher));
-                harmony.PatchAll(typeof(FoodChallengePatcher));
-                harmony.PatchAll(typeof(RadiationPatcher));
-                harmony.PatchAll(typeof(RunStatsTracker));
-                harmony.PatchAll(typeof(SuitPatcher));
-                harmony.PatchAll(typeof(TooltipPatcher));
-                harmony.PatchAll(typeof(WaterMurkPatcher));
+            // Wow I really wish HarmonyX would update their fork with PatchCategories
+            harmony.PatchAll(typeof(GameEventHandler));
+            harmony.PatchAll(typeof(BatteryPatcher));
+            harmony.PatchAll(typeof(CauseOfDeathPatcher));
+            harmony.PatchAll(typeof(CompassPatcher));
+            harmony.PatchAll(typeof(EscapePodPatcher));
+            harmony.PatchAll(typeof(ExplosionPatcher));
+            harmony.PatchAll(typeof(FilterPumpPatcher));
+            harmony.PatchAll(typeof(FoodChallengePatcher));
+            harmony.PatchAll(typeof(RadiationPatcher));
+            harmony.PatchAll(typeof(RunStatsTracker));
+            harmony.PatchAll(typeof(SuitPatcher));
+            harmony.PatchAll(typeof(TooltipPatcher));
+            harmony.PatchAll(typeof(WaterMurkPatcher));
             }
-            catch (Exception ex)
-            {
-                DeathrunUtils.FatalError(ex);
-            }
-        }
         
         /// <summary>
         /// Execute all harmony patches that should only be applied with the right config options enabled. For that
