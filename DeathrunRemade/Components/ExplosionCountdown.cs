@@ -20,10 +20,6 @@ namespace DeathrunRemade.Components
         public TextMeshProUGUI countdownWarning;
         // The time at which the Aurora is schedule to explode.
         private float _explosionTime;
-        // The distance between the sceen edge and the left side of the countdown window.
-        private float _xDelta;
-        // The distance between the screen edge and the top end of the countdown window.
-        private float _yDelta;
         
         /// <summary>
         /// Create the Aurora explosion countdown from components belonging to the Sunbeam Arrival countdown.
@@ -68,12 +64,6 @@ namespace DeathrunRemade.Components
             }
             
             _explosionTime = CrashedShipExploder.main.timeToStartCountdown;
-            Rect screen = gameObject.GetComponent<RectTransform>().rect;
-            var localPosition = contentHolder.transform.localPosition;
-            // Figure out the distance between the side of the screen and the countdown window.
-            _xDelta = (screen.width / 2f) - localPosition.x;
-            // Figure out the distance between the upper limit of the screen and the top of the countdown window.
-            _yDelta = (screen.height / 2f) - localPosition.y;
             
             // Add an extra depth warning if explosion depth is enabled.
             SetPosition(DeathrunInit._Config.ExplosionWindowPosX.Value, DeathrunInit._Config.ExplosionWindowPosY.Value);
@@ -143,20 +133,20 @@ namespace DeathrunRemade.Components
         }
 
         /// <summary>
-        /// Set this countdown at the height of the usual sunbeam message but on the left side of the screen.
+        /// Set the position of the countdown window.
         /// </summary>
-        /// <param name="widthDistanceMult">How far from the left edge of the screen the window should be placed,
-        /// measured as a multiplier of the original distance.</param>
-        /// <param name="heightDistanceMult">How far down from the top of the screen the window should be placed,
-        /// measured as a multiplier of the original distance.</param>
-        private void SetPosition(float widthDistanceMult, float heightDistanceMult)
+        /// <param name="xpos">How far from the left edge of the screen the window should be placed,
+        /// measured as a percentage of the total screen width.</param>
+        /// <param name="ypos">How far down from the top of the screen the window should be placed,
+        /// measured as a percentage of the total screen height.</param>
+        private void SetPosition(float xpos, float ypos)
         {
             Vector3 position = contentHolder.transform.localPosition;
             Rect screenRect = gameObject.GetComponent<RectTransform>().rect;
-            // Ensure the window always ends up on the left side of the screen.
-            float x = -(screenRect.width / 2f) + (_xDelta * widthDistanceMult);
-            // Adjust the height to the desired position.
-            float y = (screenRect.height / 2f) - (_yDelta * heightDistanceMult);
+            // Calculate the position based on the given percentages. The coordinate centre is the middle of the screen
+            // so it takes a little extra math to get the correct offset.
+            float x = -(screenRect.width / 2f) + (screenRect.width * xpos);
+            float y = (screenRect.height / 2f) - (screenRect.height * ypos);
             position = new Vector3(x, y, position.z);
             contentHolder.transform.localPosition = position;
         }
