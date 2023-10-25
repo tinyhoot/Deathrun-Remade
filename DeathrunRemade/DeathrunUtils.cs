@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace DeathrunRemade
 {
@@ -79,6 +80,32 @@ namespace DeathrunRemade
         public static bool IsPodRepaired(EscapePod pod)
         {
             return pod.liveMixin.IsFullHealth();
+        }
+
+        /// <summary>
+        /// Set the position of a countdown window.
+        /// </summary>
+        /// <param name="countdownWindow">The transform of the controlling object of the countdown window. For the
+        /// Sunbeam this is the transform with the <see cref="uGUI_SunbeamCountdown"/> component.</param>
+        /// <param name="xpos">How far from the left edge of the screen the window should be placed,
+        /// measured as a percentage of the total screen width.</param>
+        /// <param name="ypos">How far down from the top of the screen the window should be placed,
+        /// measured as a percentage of the total screen height.</param>
+        public static void SetCountdownWindowPosition(Transform countdownWindow, float xpos, float ypos)
+        {
+            // Get the transform which holds the actual visible window itself.
+            Transform contentHolder = countdownWindow.GetChild(0);
+            // Find the rectangle of the entire screen.
+            Rect screenRect = countdownWindow.GetComponent<RectTransform>().rect;
+            RectTransform contentRect = contentHolder.GetComponent<RectTransform>();
+            // Set the positional centre of the countdown window to its upper left corner.
+            contentRect.pivot = new Vector2(0f, 1f);
+            // Calculate the position based on the given percentages. The coordinate centre is the middle of the screen
+            // so it takes a little extra math to get the correct offset.
+            float x = -(screenRect.width / 2f) + ((screenRect.width - contentRect.rect.width) * xpos);
+            float y = (screenRect.height / 2f) - ((screenRect.height - contentRect.rect.height) * ypos);
+            Vector3 position = new Vector3(x, y, contentHolder.localPosition.z);
+            contentHolder.transform.localPosition = position;
         }
     }
 }

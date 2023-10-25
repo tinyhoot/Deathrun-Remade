@@ -65,9 +65,10 @@ namespace DeathrunRemade.Components
             
             _explosionTime = CrashedShipExploder.main.timeToStartCountdown;
             
-            // Add an extra depth warning if explosion depth is enabled.
-            SetPosition(DeathrunInit._Config.ExplosionWindowPosX.Value, DeathrunInit._Config.ExplosionWindowPosY.Value);
+            DeathrunUtils.SetCountdownWindowPosition(transform, DeathrunInit._Config.ExplosionWindowPosX.Value,
+                DeathrunInit._Config.ExplosionWindowPosY.Value);
             SetTitle("Drive Core Explosion In:");
+            // Add an extra depth warning if explosion depth is enabled.
             SetWarning($"Shockwave up to {ExplosionPatcher.GetExplosionDepth(SaveData.Main.Config.ExplosionDepth)}m deep!");
             countdownWarning.gameObject.SetActive(SaveData.Main.Config.ExplosionDepth != Difficulty3.Normal);
 
@@ -119,7 +120,8 @@ namespace DeathrunRemade.Components
         {
             if (_Main == null)
                 return;
-            _Main.SetPosition(args.Value, DeathrunInit._Config.ExplosionWindowPosY.Value);
+            DeathrunUtils.SetCountdownWindowPosition(_Main.transform, args.Value,
+                DeathrunInit._Config.ExplosionWindowPosY.Value);
         }
         
         /// <summary>
@@ -129,26 +131,8 @@ namespace DeathrunRemade.Components
         {
             if (_Main == null)
                 return;
-            _Main.SetPosition(DeathrunInit._Config.ExplosionWindowPosX.Value, args.Value);
-        }
-
-        /// <summary>
-        /// Set the position of the countdown window.
-        /// </summary>
-        /// <param name="xpos">How far from the left edge of the screen the window should be placed,
-        /// measured as a percentage of the total screen width.</param>
-        /// <param name="ypos">How far down from the top of the screen the window should be placed,
-        /// measured as a percentage of the total screen height.</param>
-        private void SetPosition(float xpos, float ypos)
-        {
-            Vector3 position = contentHolder.transform.localPosition;
-            Rect screenRect = gameObject.GetComponent<RectTransform>().rect;
-            // Calculate the position based on the given percentages. The coordinate centre is the middle of the screen
-            // so it takes a little extra math to get the correct offset.
-            float x = -(screenRect.width / 2f) + (screenRect.width * xpos);
-            float y = (screenRect.height / 2f) - (screenRect.height * ypos);
-            position = new Vector3(x, y, position.z);
-            contentHolder.transform.localPosition = position;
+            DeathrunUtils.SetCountdownWindowPosition(_Main.transform, DeathrunInit._Config.ExplosionWindowPosX.Value,
+                args.Value);
         }
 
         public void SetTime(float seconds)

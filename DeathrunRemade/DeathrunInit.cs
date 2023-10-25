@@ -102,6 +102,7 @@ namespace DeathrunRemade
             harmony.PatchAll(typeof(BatteryPatcher));
             harmony.PatchAll(typeof(CauseOfDeathPatcher));
             harmony.PatchAll(typeof(CompassPatcher));
+            harmony.PatchAll(typeof(CountdownPatcher));
             harmony.PatchAll(typeof(EscapePodPatcher));
             harmony.PatchAll(typeof(ExplosionPatcher));
             harmony.PatchAll(typeof(FilterPumpPatcher));

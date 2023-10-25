@@ -62,6 +62,7 @@ namespace DeathrunRemade.Configuration
         public ConfigEntryWrapper<Hints> ShowWarnings;
         public ConfigEntryWrapper<float> ExplosionWindowPosX;
         public ConfigEntryWrapper<float> ExplosionWindowPosY;
+        public ConfigEntryWrapper<bool> MoveSunbeamWindow;
 
         internal readonly List<StartLocation> _startLocations;
 
@@ -383,9 +384,16 @@ namespace DeathrunRemade.Configuration
             ExplosionWindowPosY = RegisterEntry(
                 section: SectionUI,
                 key: nameof(ExplosionWindowPosY),
-                defaultValue: 0.1f,
+                defaultValue: 0.2f,
                 description: "Sets the distance of any Deathrun countdown windows from the top edge of the screen."
             ).WithDescription("Countdown Windows Vert. Position");
+            MoveSunbeamWindow = RegisterEntry(
+                section: SectionUI,
+                key: nameof(MoveSunbeamWindow),
+                defaultValue: true,
+                description: "If enabled, sets the window of the sunbeam arrival countdown to the same position as any"
+                             + "Deathrun countdown windows. It overlaps with stickied blueprints in the default position."
+            ).WithDescription("Also move Sunbeam window?");
         }
 
         protected override void RegisterControllingOptions() { }
@@ -436,10 +444,14 @@ namespace DeathrunRemade.Configuration
             modOptions.AddItem(ShowWarnings.ToModChoiceOption());
             var windowPosHSlider = ExplosionWindowPosX.ToModSliderOption(0f, 1f, stepSize: 0.01f);
             var windowPosVSlider = ExplosionWindowPosY.ToModSliderOption(0f, 1f, stepSize: 0.01f);
+            // Update all countdown windows whenever these position settings are changed.
             windowPosHSlider.OnChanged += ExplosionCountdown.OnUpdateSettingsX;
             windowPosVSlider.OnChanged += ExplosionCountdown.OnUpdateSettingsY;
+            windowPosHSlider.OnChanged += (obj, args) => CountdownPatcher.MoveSunbeamCountdownWindow();
+            windowPosVSlider.OnChanged += (obj, args) => CountdownPatcher.MoveSunbeamCountdownWindow();
             modOptions.AddItem(windowPosHSlider);
             modOptions.AddItem(windowPosVSlider);
+            modOptions.AddItem(MoveSunbeamWindow.ToModToggleOption());
 
             OptionsPanelHandler.RegisterModOptions(modOptions);
         }
