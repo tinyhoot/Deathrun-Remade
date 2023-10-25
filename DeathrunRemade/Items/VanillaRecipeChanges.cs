@@ -68,10 +68,10 @@ namespace DeathrunRemade.Items
         /// <summary>
         /// Get all fragment scan number changes for a specific target difficulty.
         /// </summary>
-        public List<SerialScanData> GetScanData<TEnum>(TEnum targetDifficulty) where TEnum : Enum
+        public IEnumerable<SerialScanData> GetScanData<TEnum>(TEnum targetDifficulty) where TEnum : Enum
         {
             string key = $"{targetDifficulty}";
-            return _fragmentJson.TryGetValue(key, out List<SerialScanData> data) ? data : null;
+            return _fragmentJson.TryGetValue(key, out List<SerialScanData> data) ? data : Enumerable.Empty<SerialScanData>();
         }
         
         /// <summary>
@@ -94,7 +94,7 @@ namespace DeathrunRemade.Items
         /// <param name="config">The config values to use.</param>
         public void RegisterFragmentChanges(ConfigSave config)
         {
-            List<SerialScanData> changes = GetScanData(config.ScansRequired);
+            IEnumerable<SerialScanData> changes = GetScanData(config.ScansRequired);
             foreach (var scanData in changes)
             {
                 // We lose the race condition against Nautilus' PDAHandler, which only patches once on PDAScanner init.
