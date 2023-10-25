@@ -13,8 +13,8 @@ namespace DeathrunRemade.Patches
         private const float MaxDecomposedNitrogenMalus = 25f;
         private static readonly Dictionary<TechType, float> NitrogenFood = new Dictionary<TechType, float>
         {
-            { TechType.Boomerang, -100f },
-            { TechType.LavaBoomerang, -300f },
+            { TechType.Boomerang, -50f },
+            { TechType.LavaBoomerang, -200f },
         };
 
         /// <summary>
@@ -108,7 +108,9 @@ namespace DeathrunRemade.Patches
             if (!NitrogenFood.TryGetValue(techType, out float baseValue))
                 return false;
             // Adjust for how rotten the eatable is.
-            nitrogen = DecomposeNitrogenValue(eatable, baseValue);
+            // Removed for now since this does not seem to work properly for living fish and you eventually reach a
+            // point where all boomerangs are "decomposed" and have no value at all.
+            // nitrogen = DecomposeNitrogenValue(eatable, baseValue);
             return true;
         }
     }
