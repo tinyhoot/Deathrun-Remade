@@ -391,7 +391,7 @@ namespace DeathrunRemade.Configuration
                 section: SectionUI,
                 key: nameof(MoveSunbeamWindow),
                 defaultValue: true,
-                description: "If enabled, sets the window of the sunbeam arrival countdown to the same position as any"
+                description: "If enabled, sets the window of the sunbeam arrival countdown to the same position as any "
                              + "Deathrun countdown windows. It overlaps with stickied blueprints in the default position."
             ).WithDescription("Also move Sunbeam window?");
         }
