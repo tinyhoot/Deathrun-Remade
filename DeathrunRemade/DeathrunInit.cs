@@ -133,7 +133,11 @@ namespace DeathrunRemade
                 if (config.SurfaceAir != Difficulty3.Normal)
                     _harmony.PatchAll(typeof(BreathingPatcher));
                 if (config.NitrogenBends != Difficulty3.Normal)
+                {
+                    _harmony.PatchAll(typeof(NitrogenPatcher));
                     _harmony.PatchAll(typeof(SurvivalPatcher));
+                }
+
                 if (config.PowerCosts != Difficulty4.Normal)
                     _harmony.PatchAll(typeof(PowerPatcher));
                 if (config.PacifistChallenge)

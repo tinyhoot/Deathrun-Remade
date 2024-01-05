@@ -132,6 +132,16 @@ namespace DeathrunRemade.Handlers
         }
 
         /// <summary>
+        /// Reset and remove accumulated nitrogen completely.
+        /// </summary>
+        public void ResetNitrogen()
+        {
+            UpdateHud(SaveData.Main.Nitrogen.safeDepth, 0f);
+            SaveData.Main.Nitrogen.nitrogen = 0f;
+            SaveData.Main.Nitrogen.safeDepth = 0f;
+        }
+
+        /// <summary>
         /// Calculate the player's current safe depth status based on how close they're cutting it.
         /// </summary>
         public static SafeDepthStatus CalculateDepthStatus(float depth, float safeDepth)
