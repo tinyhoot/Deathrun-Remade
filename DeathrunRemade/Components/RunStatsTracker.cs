@@ -103,8 +103,7 @@ namespace DeathrunRemade.Components
         private void RegisterItemGoal(TechType techType)
         {
             StoryGoalHandler.RegisterItemGoal(GoalPrefix + techType.AsString(), Story.GoalType.Story, techType);
-            // TODO: Waiting for Nautilus fix.
-            //StoryGoalHandler.RegisterCustomEvent(GoalPrefix + techType.AsString(), OnItemGoalUnlock);
+            StoryGoalHandler.RegisterCustomEvent(OnItemGoalUnlock);
         }
 
         private void OnCure()
