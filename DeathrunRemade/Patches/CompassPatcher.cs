@@ -33,11 +33,23 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(Player), nameof(Player.GetDepthClass))]
         private static void SetDepthClass(ref Ocean.DepthClass __result)
         {
-            if (SaveData.Main is null || Inventory.main is null || Player.main.IsInsideSubOrVehicle())
+            Player player = Player.main;
+            // There is a different depth class system for vehicles, do not bother when the player is piloting one.
+            if (SaveData.Main is null || Inventory.main == null || player.GetVehicle() != null)
                 return;
+            
+            // The depth is always safe inside non-flooded bases.
+            // IsLeaking() as opposed to IsUnderwater() allows for a red compass even while the player is still in
+            // knee-deep water and not yet taking damage, which works well as a warning system.
+            if (player.IsInBase() && !player.GetCurrentSub().IsLeaking())
+            {
+                __result = Ocean.DepthClass.Safe;
+                return;
+            }
+            
             TechType suit = Inventory.main.equipment.GetTechTypeInSlot("Body");
             int crushDepth = Mathf.FloorToInt(CrushDepthHandler.GetCrushDepth(suit, SaveData.Main.Config));
-            __result = Player.main.GetDepth() >= crushDepth ? Ocean.DepthClass.Crush : Ocean.DepthClass.Safe;
+            __result = player.GetDepth() >= crushDepth ? Ocean.DepthClass.Crush : Ocean.DepthClass.Safe;
         }
 
         /// <summary>
