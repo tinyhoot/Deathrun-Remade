@@ -1,5 +1,6 @@
 using DeathrunRemade.Handlers;
 using HarmonyLib;
+using UnityEngine;
 
 namespace DeathrunRemade.Patches
 {
@@ -10,6 +11,21 @@ namespace DeathrunRemade.Patches
     [HarmonyPatch]
     internal static class NitrogenPatcher
     {
+        /// <summary>
+        /// Dissipate nitrogen while the player is within range of an active oxygen pipe.
+        /// This is an update-like function which seems to run roughly ten times per second.
+        /// </summary>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(OxygenArea), nameof(OxygenArea.OnTriggerStay))]
+        private static void DecreaseNitrogenAtPipe(OxygenArea __instance, Collider other)
+        {
+            // Ensure this does not run when a random fish swims past.
+            if (other.gameObject.FindAncestor<Player>() == null)
+                return;
+            
+            NitrogenHandler.Main.RemoveNitrogen(__instance.oxygenPerSecond * Time.deltaTime);
+        }
+        
         /// <summary>
         /// Reset safe depth and pause nitrogen functionality when an elevator is used so that the player does not
         /// get the bends.

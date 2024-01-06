@@ -120,15 +120,18 @@ namespace DeathrunRemade.Handlers
             if (save is null)
                 return;
 
-            float safeDepthPortion = save.Nitrogen.safeDepth - GraceDepth + 1;
+            // Be a bit fuzzy with safe depth so all the calculations can update properly.
+            float safeDepthPortion = save.Nitrogen.safeDepth - (GraceDepth / 2);
+            // Safe depth is not active, just remove nitrogen.
             if (safeDepthPortion <= 0)
             {
                 save.Nitrogen.nitrogen -= Mathf.Min(nitrogen, save.Nitrogen.nitrogen);
                 return;
             }
 
-            save.Nitrogen.safeDepth -= safeDepthPortion;
-            save.Nitrogen.nitrogen -= Mathf.Min(nitrogen - safeDepthPortion, save.Nitrogen.nitrogen);
+            save.Nitrogen.safeDepth -= Mathf.Min(nitrogen, safeDepthPortion);
+            if (nitrogen > safeDepthPortion)
+                save.Nitrogen.nitrogen -= Mathf.Min(nitrogen - safeDepthPortion, save.Nitrogen.nitrogen);
         }
 
         /// <summary>
