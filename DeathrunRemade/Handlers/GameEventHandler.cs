@@ -24,6 +24,12 @@ namespace DeathrunRemade.Handlers
         public static event Action OnMainMenuLoaded;
         
         /// <summary>
+        /// Invoked after the player has pressed the button to either start or load a game and the game transitions
+        /// to the loading screen.
+        /// </summary>
+        public static event Action OnMainMenuPressPlay;
+        
+        /// <summary>
         /// Invoked as a postfix to Player.Awake().
         /// </summary>
         public static event Action<Player> OnPlayerAwake;
@@ -106,6 +112,13 @@ namespace DeathrunRemade.Handlers
         private static void TriggerPlayerVictory()
         {
             OnPlayerVictory?.Invoke(Player.main);
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(MainSceneLoading), nameof(MainSceneLoading.Launch))]
+        private static void TriggerPressPlay()
+        {
+            OnMainMenuPressPlay?.Invoke();
         }
     }
 }

@@ -195,6 +195,16 @@ namespace DeathrunRemade
             int index = uGUI_MainMenu.main.primaryOptions.transform.Find("PrimaryOptions/MenuButtons/ButtonOptions").GetSiblingIndex();
             option.SetIndex(index + 1);
         }
+
+        /// <summary>
+        /// Do everything that can only be set up once the config is locked in, i.e. either a new game was started or
+        /// the save cache of an existing save was loaded during the loading process.
+        /// Happens early on in the loading process and generally precedes <see cref="OnPlayerAwake"/>.
+        /// </summary>
+        private void OnConfigLockedIn(SaveData save)
+        {
+            _recipeChanges.LockBatteryBlueprint(save.Config);
+        }
         
         /// <summary>
         /// Do all the necessary work to get the mod going which can only be done when the game has set up most of its
@@ -282,6 +292,7 @@ namespace DeathrunRemade
             GameEventHandler.OnPlayerAwake += OnPlayerAwake;
             GameEventHandler.OnPlayerGainControl += OnPlayerGainControl;
             GameEventHandler.OnSavedGameLoaded += EscapePodSinker.OnSavedGameLoaded;
+            SaveData.OnSaveDataLoaded += OnConfigLockedIn;
         }
 
         /// <summary>

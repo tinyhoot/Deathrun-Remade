@@ -87,6 +87,19 @@ namespace DeathrunRemade.Items
             string fragmentJson = await fragmentReader.ReadToEndAsync();
             _fragmentJson = JsonConvert.DeserializeObject<Dictionary<string, List<SerialScanData>>>(fragmentJson);
         }
+
+        /// <summary>
+        /// Lock the battery blueprint to turn it into a mid-game item.
+        /// </summary>
+        public void LockBatteryBlueprint(ConfigSave config)
+        {
+            // No changes on normal difficulty.
+            if (config.BatteryCapacity == Difficulty4.Normal)
+                return;
+            
+            KnownTechHandler.RemoveDefaultUnlock(TechType.Battery);
+            KnownTechHandler.SetAnalysisTechEntry(TechType.Lithium, new [] { TechType.Battery });
+        }
         
         /// <summary>
         /// Set up fragment scan changes based on the given config values.
