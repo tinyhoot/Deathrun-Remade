@@ -91,10 +91,10 @@ namespace DeathrunRemade.Items
         /// <summary>
         /// Lock the battery blueprint to turn it into a mid-game item.
         /// </summary>
-        public void LockBatteryBlueprint(ConfigSave config)
+        public void LockBatteryBlueprint(Difficulty4 difficulty)
         {
             // No changes on normal difficulty.
-            if (config.BatteryCapacity == Difficulty4.Normal)
+            if (difficulty == Difficulty4.Normal)
                 return;
             
             KnownTechHandler.RemoveDefaultUnlock(TechType.Battery);
@@ -136,6 +136,7 @@ namespace DeathrunRemade.Items
             changes.AddRange(GetBatteryChanges(config.BatteryCapacity));
             foreach (var craftData in changes.Where(techData => techData != null))
             {
+                DeathrunInit._Log.Debug($"Setting recipe for {craftData.techType}: {craftData.ingredients.ElementsToString()}");
                 CraftDataHandler.SetRecipeData(craftData.techType, craftData.ToTechData());
             }
         }

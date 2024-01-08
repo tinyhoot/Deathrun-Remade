@@ -52,6 +52,11 @@ namespace DeathrunRemade.Objects
         {
             return new CraftData.Ingredient(techType, amount);
         }
+
+        public override string ToString()
+        {
+            return $"({amount} {techType})";
+        }
     }
 
     [Serializable]

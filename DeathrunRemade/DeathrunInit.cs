@@ -203,7 +203,7 @@ namespace DeathrunRemade
         /// </summary>
         private void OnConfigLockedIn(SaveData save)
         {
-            _recipeChanges.LockBatteryBlueprint(save.Config);
+            _recipeChanges.LockBatteryBlueprint(save.Config.BatteryCapacity);
         }
         
         /// <summary>

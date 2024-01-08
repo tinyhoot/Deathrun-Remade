@@ -285,20 +285,6 @@
           "amount": 1
         }
       ]
-    },
-    {
-      "techType": "Battery",
-      "craftAmount": 1,
-      "ingredients": [
-        {
-          "techType": "Lithium",
-          "amount": 1
-        },
-        {
-          "techType": "Salt",
-          "amount": 1
-        }
-      ]
     }
   ],
   "Difficulty3.Deathrun": [
@@ -503,28 +489,6 @@
         {
           "techType": "Aerogel",
           "amount": 2
-        }
-      ]
-    },
-    {
-      "techType": "Battery",
-      "craftAmount": 1,
-      "ingredients": [
-        {
-          "techType": "Lithium",
-          "amount": 1
-        },
-        {
-          "techType": "Diamond",
-          "amount": 1
-        },
-        {
-          "techType": "Salt",
-          "amount": 1
-        },
-        {
-          "techType": "Silicone",
-          "amount": 1
         }
       ]
     }
