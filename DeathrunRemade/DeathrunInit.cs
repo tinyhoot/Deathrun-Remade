@@ -97,7 +97,7 @@ namespace DeathrunRemade
         /// </summary>
         private void HarmonyPatching(Harmony harmony)
         {
-            // Wow I really wish HarmonyX would update their fork with PatchCategories
+            // Waiting for HarmonyX to update their fork with PatchCategories
             harmony.PatchAll(typeof(GameEventHandler));
             harmony.PatchAll(typeof(BatteryPatcher));
             harmony.PatchAll(typeof(CauseOfDeathPatcher));
@@ -112,7 +112,7 @@ namespace DeathrunRemade
             harmony.PatchAll(typeof(SuitPatcher));
             harmony.PatchAll(typeof(TooltipPatcher));
             harmony.PatchAll(typeof(WaterMurkPatcher));
-            }
+        }
         
         /// <summary>
         /// Execute all harmony patches that should only be applied with the right config options enabled. For that
@@ -203,7 +203,14 @@ namespace DeathrunRemade
         /// </summary>
         private void OnConfigLockedIn(SaveData save)
         {
-            _recipeChanges.LockBatteryBlueprint(save.Config.BatteryCapacity);
+            var config = save.Config;
+            _recipeChanges.LockBatteryBlueprint(config.BatteryCapacity);
+            // Deal with any recipe changes.
+            _recipeChanges.RegisterFragmentChanges(config);
+            _recipeChanges.RegisterRecipeChanges(config);
+            // Add first aid kits to quick slots.
+            CraftDataHandler.SetQuickSlotType(TechType.FirstAidKit, QuickSlotType.Selectable);
+            CraftDataHandler.SetEquipmentType(TechType.FirstAidKit, EquipmentType.Hand);
         }
         
         /// <summary>
@@ -239,13 +246,6 @@ namespace DeathrunRemade
                     _DepthHud = SafeDepthHud.Create(out GameObject _);
                     player.gameObject.AddComponent<NitrogenHandler>();
                 }
-
-                // Deal with any recipe changes.
-                _recipeChanges.RegisterFragmentChanges(config);
-                _recipeChanges.RegisterRecipeChanges(config);
-                // Add first aid kits to quick slots.
-                CraftDataHandler.SetQuickSlotType(TechType.FirstAidKit, QuickSlotType.Selectable);
-                CraftDataHandler.SetEquipmentType(TechType.FirstAidKit, EquipmentType.Hand);
             }
             catch (Exception ex)
             {
