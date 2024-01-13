@@ -65,6 +65,7 @@ namespace DeathrunRemade.Configuration
         public ConfigEntryWrapper<bool> MoveSunbeamWindow;
 
         internal readonly List<StartLocation> _startLocations;
+        private Color _disabledOptionTint = new Color(1f, 0.4f, 0.4f, 0.15f);
 
         public Config(string path, BepInPlugin metadata) : base(path, metadata)
         {
@@ -401,6 +402,7 @@ namespace DeathrunRemade.Configuration
         public override void RegisterModOptions(string name, Transform separatorParent = null)
         {
             HootModOptions modOptions = new HootModOptions(name, this);
+            modOptions.OnAddOptionToMenu += OnAddOptionToModMenu;
             
             modOptions.AddText("Choose carefully. Any options you set here lock in and <color=#FF0000FF>cannot</color>"
                                + " be changed during an ongoing game.");
@@ -454,6 +456,15 @@ namespace DeathrunRemade.Configuration
             modOptions.AddItem(MoveSunbeamWindow.ToModToggleOption());
 
             OptionsPanelHandler.RegisterModOptions(modOptions);
+        }
+
+        private void OnAddOptionToModMenu(AddOptionToMenuEventArgs args)
+        {
+            // If the mod options menu is brought up in-game let the user look at, but not modify, the settings.
+            // Exception made for any settings in the UI section, which are always editable.
+            if (!args.IsMainMenu && GetEntryById(args.ID).GetSection() != SectionUI)
+                HootModOptions.DisableOption(args.GameObject, _disabledOptionTint);
+            
         }
     }
 }
