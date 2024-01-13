@@ -97,6 +97,7 @@ namespace DeathrunRemade.Items
             if (difficulty == Difficulty4.Normal)
                 return;
             
+            DeathrunInit._Log.Debug("Locking lithium battery recipe.");
             KnownTechHandler.RemoveDefaultUnlock(TechType.Battery);
             KnownTechHandler.SetAnalysisTechEntry(TechType.Lithium, new [] { TechType.Battery });
         }
@@ -110,18 +111,8 @@ namespace DeathrunRemade.Items
             IEnumerable<SerialScanData> changes = GetScanData(config.ScansRequired);
             foreach (var scanData in changes)
             {
-                // We lose the race condition against Nautilus' PDAHandler, which only patches once on PDAScanner init.
-                // Therefore, we need to patch things ourselves. This comes with an unfortunate side effect: Items
-                // which are not unlocked but have their number of scans visible from the start (seaglide, constructor)
-                // will appear to require their vanilla number of scans until the first fragment is scanned, at which
-                // point it will update to the proper value.
-                // I tried to get the label to update properly, but it just won't. Luckily this is not too bad.
-                
-                // PDAHandler.EditFragmentsToScan(scanData.techType, scanData.amount);
-                if (PDAScanner.mapping.TryGetValue(scanData.techType, out PDAScanner.EntryData data))
-                    data.totalFragments = scanData.amount;
-                else
-                    DeathrunInit._Log.Warn($"Failed to patch number of fragments for {scanData.techType}!");
+                DeathrunInit._Log.Debug($"Setting fragments required for {scanData.techType}: {scanData.amount}");
+                PDAHandler.EditFragmentsToScan(scanData.techType, scanData.amount);
             }
         }
 
