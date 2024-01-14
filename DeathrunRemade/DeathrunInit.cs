@@ -108,6 +108,7 @@ namespace DeathrunRemade
             harmony.PatchAll(typeof(FoodChallengePatcher));
             harmony.PatchAll(typeof(RadiationPatcher));
             harmony.PatchAll(typeof(RunStatsTracker));
+            harmony.PatchAll(typeof(SaveFileMenuPatcher));
             harmony.PatchAll(typeof(SuitPatcher));
             harmony.PatchAll(typeof(TooltipPatcher));
             harmony.PatchAll(typeof(WaterMurkPatcher));

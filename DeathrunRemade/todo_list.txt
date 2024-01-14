@@ -15,7 +15,6 @@ New Ideas
 - Explicit compatibility with some popular/well fitting mods. Like C2C, Unknown Name, Enhanced Sleep, Custom Batteries, ...
 - Add game quit/reload warning on loading screen to hootils
 - Introduce QoL way to get stalker teeth because YOU NEED SO MANY
-- Change nuget packages.config to csproj PackageReference?
 - Probably difficult. Partial base flooding on entry? Stoppable with bulkhead? Apparently they already do that in
   vanilla, so it could be doable.
 - Draining water costs power
@@ -24,12 +23,11 @@ New Ideas
 - Vehicles move more slowly when damaged
 - Increase oxygen use with depth
 - Grey out non-deathrun saves in the save load menu and add current score to deathrun saves.
+- Replace current graphics with something else. Particularly fish samples. Add graphics to items missing them.
 
 Checks at the very end
-- All items craft properly and fit into their slots
-- Breathing works as it should in bases, alien bases, vehicles, open water
-- No bends from precursor base elevator
 - Do one huge sweep through all the Patcher classes and ensure nothing was forgotten
+- Do bases really get damaged by the explosion?
 
 Substantial changes from the original
 - Photosynthetic tanks always work in sunlight, including the surface
@@ -46,5 +44,4 @@ Substantial changes from the original
 - The scanner room does not passively drain power.
 
 Known Issues
-- Number of fragment scans not properly reflected by seaglide and constructor until first scan.
 - Nitrogen bar starts off with the wrong value on game start.
