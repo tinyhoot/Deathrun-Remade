@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using HootLib.Objects;
-using Newtonsoft.Json.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -48,10 +46,10 @@ namespace DeathrunRemade.Handlers
 
         private static readonly Dictionary<TechType, float[]> SuitNitrogenModifiers = new Dictionary<TechType, float[]>
         {
-            { TechType.RadiationSuit, new[] { 0.05f } },
-            { TechType.ReinforcedDiveSuit, new []{ 0.05f } },
-            { TechType.WaterFiltrationSuit, new []{ 0.15f } },
-            { TechType.Rebreather, new[] { 0.05f } },
+            { TechType.RadiationSuit, new[] { 0.05f, 0.05f } },
+            { TechType.ReinforcedDiveSuit, new []{ 0.05f, 0.05f } },
+            { TechType.WaterFiltrationSuit, new []{ 0.15f, 0.1f } },
+            { TechType.Rebreather, new[] { 0.05f, 0f } },
         };
 
         /// <summary>

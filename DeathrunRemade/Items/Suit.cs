@@ -206,10 +206,9 @@ namespace DeathrunRemade.Items
         public static void RegisterNitrogenModifiers()
         {
             // Using our own API for this rather than internal methods catches any issues with the API much earlier.
-            // TODO: add more values for the other difficulties.
-            DeathrunAPI.AddNitrogenModifier(ReinforcedFiltration, new[] { 0.25f });
-            DeathrunAPI.AddNitrogenModifier(ReinforcedMk2, new[] { 0.25f });
-            DeathrunAPI.AddNitrogenModifier(ReinforcedMk3, new[] { 0.45f });
+            DeathrunAPI.AddNitrogenModifier(ReinforcedFiltration, new[] { 0.25f, 0.2f });
+            DeathrunAPI.AddNitrogenModifier(ReinforcedMk2, new[] { 0.25f, 0.2f });
+            DeathrunAPI.AddNitrogenModifier(ReinforcedMk3, new[] { 0.45f, 0.3f });
         }
 
         /// <summary>
