@@ -66,9 +66,9 @@ namespace DeathrunRemade
         }
 
         /// <inheritdoc cref="AddNitrogenModifier(TechType,IEnumerable{float})"/>
-        public static void AddNitrogenModifier(TechType suit, float modifier)
+        public static void AddNitrogenModifier(TechType equipment, float modifier)
         {
-            AddNitrogenModifier(suit, new[] { modifier });
+            AddNitrogenModifier(equipment, new[] { modifier });
         }
 
         /// <summary>
@@ -78,25 +78,26 @@ namespace DeathrunRemade
         /// the next with DEATHRUN, and so on. If you pass only one value or the difficulty is higher than the number of
         /// values you passed, the <em>last</em> value you passed will be used (i.e. the one associated with the highest
         /// difficulty).
-        /// Note: These values are <em>multipliers</em> for the nitrogen accumulation rate. A value of 0.5 will halve the
-        /// accumulation rate, 1.0 will completely negate it, and -1.0 will double it.
+        /// <br /><br />
+        /// Note: These values are <em>subtracted</em> from the overall nitrogen accumulation multiplier. A value of
+        /// 0.5 will halve the accumulation rate, 1.0 will completely negate it, and -1.0 will double it.
         /// </summary>
-        public static void AddNitrogenModifier(TechType suit, IEnumerable<float> modifier)
+        public static void AddNitrogenModifier(TechType equipment, IEnumerable<float> modifier)
         {
-            NitrogenHandler.AddNitrogenModifier(suit, modifier);
+            NitrogenHandler.AddNitrogenModifier(equipment, modifier);
         }
 
         /// <summary>
         /// Try to get the existing nitrogen modifier values for a <see cref="TechType"/>. This is useful if you want to
         /// add a custom equipment item with values that match e.g. the vanilla reinforced suit.
         /// </summary>
-        /// <param name="suit">The <see cref="TechType"/> of the equipment item you want to find values of.</param>
+        /// <param name="equipment">The <see cref="TechType"/> of the equipment item you want to find values of.</param>
         /// <param name="modifier"> The custom nitrogen modifier values of the equipment item in ascending order. The
         /// first element will be for HARD difficulty, the next for DEATHRUN, and so on.</param>
         /// <returns> True if the equipment item has a nitrogen modifier entry, false if it does not.</returns>
-        public static bool TryGetNitrogenModifier(TechType suit, out float[] modifier)
+        public static bool TryGetNitrogenModifier(TechType equipment, out float[] modifier)
         {
-            return NitrogenHandler.TryGetNitrogenModifier(suit, out modifier);
+            return NitrogenHandler.TryGetNitrogenModifier(equipment, out modifier);
         }
 
         /// <summary>

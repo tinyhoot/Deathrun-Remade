@@ -29,6 +29,15 @@ Checks at the very end
 - Do one huge sweep through all the Patcher classes and ensure nothing was forgotten
 - Do bases really get damaged by the explosion?
 
+Reworks before release
+- Recipe changes and its JSON is awful. The JSON file is meant to be both user editable and easily usable in code
+  and it fails at both.
+- Properly adjust all in-game messaging to the Warnings system.
+- Have more than one tutorial message.
+- Highscores window not rudimentary, with removable runs.
+- Rework the filterchip into something that actually makes sense.
+- Be consistent with which places accumulate nitrogen and which do not. Add config option for e.g. bases.
+
 Substantial changes from the original
 - Photosynthetic tanks always work in sunlight, including the surface
 - Completely custom implementation of nitrogen without relying on the game. Some of the math and speeds is different

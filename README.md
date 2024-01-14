@@ -1,33 +1,17 @@
 # Deathrun Remade
 
-A complete rewrite of the original [DeathRun by Cattlesquat](https://github.com/Cattlesquat/subnautica) for Nautilus
+A complete rewrite of the original [DeathRun by Cattlesquat](https://github.com/Cattlesquat/subnautica) for [Nautilus](https://github.com/SubnauticaModding/Nautilus)
 and the latest version of Subnautica.
 
 ## Progress
 
-Items that are ticked off are complete. Yellow circles mark work in progress.
+The rewrite is in its playtesting stage and nearing completion.
 
-The rewrite is nearing completion. A lot of things still need ironing out,
-but a release can be expected by Halloween. Hope that doesn't stingray!
+## Building the Project
 
-- [x] Config
-- [x] Custom Items
-- [x] Harmony Patches
-  - [x] Additional Item Behaviour
-  - [x] Aurora and Explosion
-  - [x] Challenges and misc. config options
-  - [x] Creature Aggression
-  - [x] Main Menu and High Scores
-  - [x] Nitrogen
-  - [x] Power Changes
-  - [x] Radiation
-  - [x] Random Start and Lifepod
-  - [x] UI
-- [x] MonoBehaviours
-- [ ] QoL Improvements
-- [x] PDA Entries, Item Descriptions, Tutorials
-- [x] Plugin loading and organisation
-- [x] Recipe Changes
-- [x] Save System
-- [ ] New Ideas
-- [ ] Big Bugfix Playtest
+- Clone this repository including the submodule using `git clone --recurse-submodules`
+- NuGet should automatically download all dependencies for you. If it does not, perform a NuGet restore.
+- Create a `GameDirectory.targets` file in the same folder as the freshly cloned `DeathrunRemade.csproj` and add the path to your 
+  local Subnautica install directory to it. An example file can be found [here](https://github.com/tinyhoot/HootLib-Subnautica/blob/main/HootLib/Example_GameDirectory.targets).
+- Building the project will leave you with a `DeathrunRemade.dll` in the default build directory and automatically 
+  copy all necessary mod files to your `Subnautica/BepInEx/plugins` directory for quick testing.
