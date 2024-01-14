@@ -316,6 +316,7 @@ namespace DeathrunRemade
             new Suit(Suit.Variant.ReinforcedSuitMk2).Register();
             new Suit(Suit.Variant.ReinforcedSuitMk3).Register();
             Suit.RegisterCrushDepths();
+            Suit.RegisterNitrogenModifiers();
             PDAScanner.onAdd += Suit.UnlockSuitOnScanFish;
             
             new Tank(Tank.Variant.ChemosynthesisTank).Register();

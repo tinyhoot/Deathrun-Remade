@@ -64,5 +64,48 @@ namespace DeathrunRemade
         {
             return Enum.GetValues(DeathrunInit._Config.PersonalCrushDepth.Value.GetType()).Length - 1;
         }
+
+        /// <inheritdoc cref="AddNitrogenModifier(TechType,IEnumerable{float})"/>
+        public static void AddNitrogenModifier(TechType suit, float modifier)
+        {
+            AddNitrogenModifier(suit, new[] { modifier });
+        }
+
+        /// <summary>
+        /// Register a custom equipment item with its associated nitrogen modifier values.<br />
+        /// Nitrogen modifier values of items may need to change depending on difficulty. If you pass more than one
+        /// value they are associated with the difficulty in ascending order. The first value is associated with HARD,
+        /// the next with DEATHRUN, and so on. If you pass only one value or the difficulty is higher than the number of
+        /// values you passed, the <em>last</em> value you passed will be used (i.e. the one associated with the highest
+        /// difficulty).
+        /// Note: These values are <em>multipliers</em> for the nitrogen accumulation rate. A value of 0.5 will halve the
+        /// accumulation rate, 1.0 will completely negate it, and -1.0 will double it.
+        /// </summary>
+        public static void AddNitrogenModifier(TechType suit, IEnumerable<float> modifier)
+        {
+            NitrogenHandler.AddNitrogenModifier(suit, modifier);
+        }
+
+        /// <summary>
+        /// Try to get the existing nitrogen modifier values for a <see cref="TechType"/>. This is useful if you want to
+        /// add a custom equipment item with values that match e.g. the vanilla reinforced suit.
+        /// </summary>
+        /// <param name="suit">The <see cref="TechType"/> of the equipment item you want to find values of.</param>
+        /// <param name="modifier"> The custom nitrogen modifier values of the equipment item in ascending order. The
+        /// first element will be for HARD difficulty, the next for DEATHRUN, and so on.</param>
+        /// <returns> True if the equipment item has a nitrogen modifier entry, false if it does not.</returns>
+        public static bool TryGetNitrogenModifier(TechType suit, out float[] modifier)
+        {
+            return NitrogenHandler.TryGetNitrogenModifier(suit, out modifier);
+        }
+
+        /// <summary>
+        /// Get the number of distinct difficulty levels for nitrogen modifier. This value determines how many
+        /// different modifiers can be added to <see cref="AddNitrogenModifier(TechType,IEnumerable{float})"/>.
+        /// </summary>
+        public static int GetNumNitrogenDifficulties()
+        {
+            return Enum.GetValues(DeathrunInit._Config.NitrogenBends.Value.GetType()).Length - 1;
+        }
     }
 }

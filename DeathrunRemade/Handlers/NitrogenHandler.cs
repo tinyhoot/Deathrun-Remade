@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using HootLib.Objects;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -42,6 +45,39 @@ namespace DeathrunRemade.Handlers
         private float _lastAscentPunishTime;
         private int _damageTicks;
         private Hootimer _timer;
+
+        private static readonly Dictionary<TechType, float[]> SuitNitrogenModifiers = new Dictionary<TechType, float[]>
+        {
+            { TechType.RadiationSuit, new[] { 0.05f } },
+            { TechType.ReinforcedDiveSuit, new []{ 0.05f } },
+            { TechType.WaterFiltrationSuit, new []{ 0.15f } },
+            { TechType.Rebreather, new[] { 0.05f } },
+        };
+
+        /// <summary>
+        /// Add a new suit to the dictionary of TechTypes and their Nitrogen Modifiers.
+        /// </summary>
+        /// <param name="techType"></param>
+        /// <param name="crushDepth"></param>
+        public static void AddNitrogenModifier(TechType techType, IEnumerable<float> crushDepth)
+        {
+            SuitNitrogenModifiers[techType] = crushDepth.ToArray();
+        }
+
+        /// <summary>
+        /// Get the Nitrogen modifier for the given TechType. Returns false if the suit is not in the dictionary.
+        /// </summary>
+        /// <param name="techType"></param>
+        /// <param name="nitrogenModifier"></param>
+        /// <returns></returns>
+        public static bool TryGetNitrogenModifier(TechType techType, out float[] nitrogenModifiers)
+        {
+            bool found = SuitNitrogenModifiers.TryGetValue(techType, out nitrogenModifiers);
+            if (!found)
+                return false;
+
+            return found;
+        }
 
         private void Awake()
         {
@@ -228,31 +264,43 @@ namespace DeathrunRemade.Handlers
         }
 
         /// <summary>
-        /// Calculate the modifier for how quickly the player accumulates nitrogen. Better suits accumulate nitrogen
-        /// more slowly.
+        /// Calculate the modifier for how quickly the player accumulates nitrogen. 
+        /// Better suits accumulate nitrogen more slowly. 
+        /// Wearing the rebreather will also slow down accumulation.
+        /// Mods can add modifiers to items by calling AddNitrogenModifier.
         /// </summary>
         private float GetAccumulationModifier(Inventory inventory)
         {
-            TechType mask = inventory.equipment.GetTechTypeInSlot("Head");
-            TechType suit = inventory.equipment.GetTechTypeInSlot("Body");
 
-            // For vanilla suits. Can't have modded ones in here sadly.
-            float modifier = suit switch
+            SaveData save = SaveData.Main;
+
+            if (save == null)
+                return 1f;
+
+            Difficulty3 difficulty = save.Config.NitrogenBends;
+
+            float modifier = 1f;
+            foreach (var pair in inventory.equipment.equippedCount)
             {
-                TechType.RadiationSuit => 0.95f,
-                TechType.WaterFiltrationSuit => 0.95f,
-                TechType.ReinforcedDiveSuit => 0.85f,
-                _ => 1f
-            };
-            if (suit == Suit.ReinforcedMk2 || suit == Suit.ReinforcedFiltration)
-                modifier = 0.75f;
-            if (suit == Suit.ReinforcedMk3)
-                modifier = 0.55f;
-            // Slightly lowered if wearing the rebreather.
-            if (mask == TechType.Rebreather)
-                modifier -= 0.05f;
+                // Ignore items that are not equipped.
+                if (pair.Value <= 0)
+                    continue;
 
-            return modifier;
+                TechType techType = pair.Key;
+                if (techType == TechType.None)
+                    continue;
+
+                // Ignore items that do not have a modifier.
+                if (!TryGetNitrogenModifier(techType, out var itemModifiers))
+                    continue;
+
+                float itemModifier = itemModifiers.Length > (int)difficulty ? itemModifiers[(int)difficulty] : itemModifiers[itemModifiers.Length - 1];
+
+                // multiplying by count incase some day someone makes a nitrogen processing chip that stacks. :P
+                modifier -= itemModifier * pair.Value;
+            }
+
+            return Mathf.Max(modifier, 0f);
         }
         
         /// <summary>
