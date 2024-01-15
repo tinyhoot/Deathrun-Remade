@@ -31,7 +31,6 @@ namespace DeathrunRemade
         internal static ILogHandler _Log;
         internal static NotificationHandler _Notifications;
         internal static RunHandler _RunHandler;
-        internal static TutorialHandler _Tutorials;
         internal static SafeDepthHud _DepthHud;
         private EncyclopediaHandler _encyclopediaHandler;
         private VanillaRecipeChanges _recipeChanges;
@@ -154,7 +153,6 @@ namespace DeathrunRemade
             _Notifications = new NotificationHandler(_Log);
             // Load statistics of all runs ever played.
             _RunHandler = new RunHandler(_Log);
-            _Tutorials = new TutorialHandler(_Notifications, SaveData.Main);
             _ = new WarningHandler(_Config, _Log, _Notifications, SaveData.Main);
             _encyclopediaHandler = new EncyclopediaHandler();
             _encyclopediaHandler.RegisterPdaEntries();

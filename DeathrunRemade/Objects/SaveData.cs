@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DeathrunRemade.Configuration;
 using Nautilus.Json;
 
@@ -61,8 +62,7 @@ namespace DeathrunRemade.Objects
     [Serializable]
     internal struct TutorialSave
     {
-        public bool seamothVehicleExitCosts;
-        public bool exosuitVehicleExitCosts;
+        public HashSet<string> completedTutorials;
     }
 
     [Serializable]

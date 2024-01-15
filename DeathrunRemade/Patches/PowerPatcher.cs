@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
-using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
@@ -154,9 +153,9 @@ namespace DeathrunRemade.Patches
 
             // Ensure the player understands what just happened.
             if (_ejectedVehicle is SeaMoth)
-                TutorialHandler.TriggerTutorial(Tutorial.SeamothVehicleExitPowerLoss);
+                Tutorial.SeamothVehicleExitPowerLoss.Trigger();
             else
-                TutorialHandler.TriggerTutorial(Tutorial.ExosuitVehicleExitPowerLoss);
+                Tutorial.ExosuitVehicleExitPowerLoss.Trigger();
         }
 
         /// <summary>
