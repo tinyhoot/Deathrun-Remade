@@ -111,11 +111,27 @@ namespace DeathrunRemade.Patches
                 return true;
             if (Inventory.main.equipment.GetCount(FilterChip.TechType) > 0)
                 return true;
+            
+            // Special case: Aurora is breathable after fixing the generator.
+            if (IsInBreathableAurora())
+                return true;
 
             // Surface air without a filter is always unbreathable on high difficulties.
             if (config.SurfaceAir == Difficulty3.Deathrun)
                 return false;
             return !RadiationPatcher.IsSurfaceIrradiated();
+        }
+
+        /// <summary>
+        /// Checks whether the player is in a section of the Aurora with breathable air.
+        /// </summary>
+        private static bool IsInBreathableAurora()
+        {
+            if (CrashedShipAmbientSound.main == null || CrashedShipExploder.main == null || !CrashedShipExploder.main.IsExploded())
+                return false;
+            
+            // Could split this up room by room but for now assume the entire ship is breathable after fixing the core.
+            return CrashedShipAmbientSound.main.isPlayerInside && RadiationPatcher.IsRadiationFixed();
         }
     }
 }

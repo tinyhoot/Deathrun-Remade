@@ -22,7 +22,7 @@ New Ideas
 - Add additional window to run stats to view all the details about a run and make the scoring more transparent.
 - Vehicles move more slowly when damaged
 - Increase oxygen use with depth
-- Grey out non-deathrun saves in the save load menu and add current score to deathrun saves.
+- Add current score to deathrun saves?
 - Replace current graphics with something else. Particularly fish samples. Add graphics to items missing them.
 
 Checks at the very end
@@ -37,6 +37,7 @@ Reworks before release
 - Highscores window not rudimentary, with removable runs.
 - Rework the filterchip into something that actually makes sense.
 - Be consistent with which places accumulate nitrogen and which do not. Add config option for e.g. bases.
+- Respect cheats everywhere. Pay special attention to damage, oxygen, and power.
 
 Substantial changes from the original
 - Photosynthetic tanks always work in sunlight, including the surface
