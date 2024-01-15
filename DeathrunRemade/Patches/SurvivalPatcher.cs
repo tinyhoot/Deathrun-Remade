@@ -24,10 +24,10 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(Survival), nameof(Survival.Eat))]
         private static void RemoveNitrogenWithFood(GameObject useObj)
         {
-            if (useObj is null)
+            if (useObj == null)
                 return;
             Eatable eatable = useObj.GetComponent<Eatable>();
-            if (eatable is null)
+            if (eatable == null)
                 return;
 
             // Don't consider any food which doesn't even interact with nitrogen.
@@ -102,7 +102,7 @@ namespace DeathrunRemade.Patches
         public static bool TryGetNitrogenValue(Eatable eatable, out float nitrogen)
         {
             nitrogen = 0f;
-            if (eatable is null)
+            if (eatable == null)
                 return false;
             TechType techType = CraftData.GetTechType(eatable.gameObject);
             if (!NitrogenFood.TryGetValue(techType, out float baseValue))

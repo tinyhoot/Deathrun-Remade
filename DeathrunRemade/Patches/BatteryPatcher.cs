@@ -17,7 +17,7 @@ namespace DeathrunRemade.Patches
         private static void EnsureVisiblePowerCell(ref EnergyMixin __instance, InventoryItem item)
         {
             // Additional null check because unity lifetime check shenanigans.
-            if (item?.item is null)
+            if (item?.item == null)
                 return;
             if (item.item.GetTechType().Equals(AcidPowerCell.TechType))
                 __instance.batteryModels[0].model.SetActive(true);

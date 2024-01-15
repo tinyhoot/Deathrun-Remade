@@ -48,7 +48,7 @@ namespace DeathrunRemade.Components
         private void UpdateChemosynthesisTank()
         {
             // Just for safety.
-            if (_waterTemperature is null)
+            if (_waterTemperature == null)
             {
                 _waterTemperature = WaterTemperatureSimulation.main;
                 return;
@@ -68,7 +68,7 @@ namespace DeathrunRemade.Components
         private void UpdatePhotoSynthesisTank()
         {
             // Just for safety.
-            if (_dayNightCycle is null)
+            if (_dayNightCycle == null)
             {
                 _dayNightCycle = DayNightCycle.main;
                 return;

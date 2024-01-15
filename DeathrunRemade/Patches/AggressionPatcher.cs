@@ -64,7 +64,7 @@ namespace DeathrunRemade.Patches
             // Only change results for players and vehicles.
             Player player = Player.main;
             Vehicle vehicle = target.GetComponent<Vehicle>();
-            if (vehicle is null && target != player.gameObject)
+            if (vehicle == null && target != player.gameObject)
                 return;
             
             // If the target is the player, don't attack them on land.
@@ -186,7 +186,7 @@ namespace DeathrunRemade.Patches
             Player player = Player.main;
             Vehicle vehicle = target.GetGameObject().GetComponent<Vehicle>();
             // Don't do anything if the target is not the player or the player's vehicle.
-            if (vehicle is null && target.GetGameObject() != player.gameObject)
+            if (vehicle == null && target.GetGameObject() != player.gameObject)
                 return sqrMagnitude;
 
             // If the target is the player, ensure they're a good target right now.

@@ -33,7 +33,7 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(MeleeAttack), nameof(MeleeAttack.OnTouch))]
         private static void PatchMeleeAttack(MeleeAttack __instance, Collider collider)
         {
-            if (collider is null || collider.GetComponent<Player>() is null)
+            if (collider == null || collider.GetComponent<Player>() == null)
                 return;
             DeathrunInit._RunHandler.SetCauseOfDeathOverride(__instance.gameObject);
         }
@@ -45,7 +45,7 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(JuvenileEmperorMeleeAttack), nameof(JuvenileEmperorMeleeAttack.OnClawTouch))]
         private static void PatchJuvenileMeleeAttack(JuvenileEmperorMeleeAttack __instance, Collider collider)
         {
-            if (collider is null || collider.GetComponent<Player>() is null)
+            if (collider == null || collider.GetComponent<Player>() == null)
                 return;
             DeathrunInit._RunHandler.SetCauseOfDeathOverride(__instance.gameObject);
         }
@@ -57,7 +57,7 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(SeaTreaderMeleeAttack), nameof(SeaTreaderMeleeAttack.OnLegTouch))]
         private static void PatchSeaTreaderMeleeAttack(SeaTreaderMeleeAttack __instance, Collider collider)
         {
-            if (collider is null || collider.GetComponent<Player>() is null)
+            if (collider == null || collider.GetComponent<Player>() == null)
                 return;
             DeathrunInit._RunHandler.SetCauseOfDeathOverride(__instance.gameObject);
         }
@@ -69,7 +69,7 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(SeaDragonMeleeAttack), nameof(SeaDragonMeleeAttack.OnTouchFront))]
         private static void PatchSeaDragonMeleeAttackBite(SeaDragonMeleeAttack __instance, Collider collider)
         {
-            if (collider is null || collider.GetComponent<Player>() is null)
+            if (collider == null || collider.GetComponent<Player>() == null)
                 return;
             DeathrunInit._RunHandler.SetCauseOfDeathOverride(__instance.gameObject);
         }
@@ -78,7 +78,7 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(SeaDragonMeleeAttack), nameof(SeaDragonMeleeAttack.SwatAttack))]
         private static void PatchSeaDragonMeleeAttackGrab(SeaDragonMeleeAttack __instance, GameObject target)
         {
-            if (target is null || target.GetComponent<Player>() is null)
+            if (target == null || target.GetComponent<Player>() == null)
                 return;
             DeathrunInit._RunHandler.SetCauseOfDeathOverride(__instance.gameObject);
         }
@@ -90,7 +90,7 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(Projectile), nameof(Projectile.OnCollisionEnter))]
         private static void PatchProjectile(Projectile __instance, Collision collision)
         {
-            if (collision?.gameObject is null || collision.gameObject.GetComponent<Player>() is null)
+            if (collision?.gameObject == null || collision.gameObject.GetComponent<Player>() == null)
                 return;
             DeathrunInit._RunHandler.SetCauseOfDeathOverride(__instance.gameObject);
         }
@@ -103,7 +103,7 @@ namespace DeathrunRemade.Patches
         private static void PatchBloodSucker(AttachAndSuck __instance)
         {
             var target = __instance.targetLiveMixin.gameObject;
-            if (target.GetComponent<Player>() is null)
+            if (target.GetComponent<Player>() == null)
                 return;
             DeathrunInit._RunHandler.SetCauseOfDeathOverride(target);
         }
@@ -136,7 +136,7 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(DamageOverTime), nameof(DamageOverTime.DoDamage))]
         private static void PatchDamageOverTime(DamageOverTime __instance)
         {
-            if (__instance.GetComponent<Player>() is null)
+            if (__instance.GetComponent<Player>() == null)
                 return;
             DeathrunInit._RunHandler.SetCauseOfDeathOverride(__instance.doer);
         }
@@ -174,7 +174,7 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(DamageSphere), nameof(DamageSphere.ApplyDamageEffects))]
         private static void PatchDamageSphere(DamageSphere __instance)
         {
-            if (__instance.tracker.Get().All(go => go is null || go.GetComponent<Player>() is null))
+            if (__instance.tracker.Get().All(go => go == null || go.GetComponent<Player>() == null))
                 return;
             DeathrunInit._RunHandler.SetCauseOfDeathOverride(__instance.gameObject);
         }
@@ -202,7 +202,7 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(Lava), nameof(Lava.OnTriggerStay))]
         private static void PatchLava(Collider collider)
         {
-            if (collider is null || collider.GetComponent<Player>() is null)
+            if (collider == null || collider.GetComponent<Player>() == null)
                 return;
             DeathrunInit._RunHandler.SetCauseOfDeathOverride("Lava");
         }
@@ -214,7 +214,7 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(MagmaBlob), nameof(MagmaBlob.OnTriggerStay))]
         private static void PatchMagma(Collider other)
         {
-            if (other is null || other.GetComponent<Player>() is null)
+            if (other == null || other.GetComponent<Player>() == null)
                 return;
             DeathrunInit._RunHandler.SetCauseOfDeathOverride("Chunk of Magma");
         }
@@ -227,7 +227,7 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(WarpBall), nameof(WarpBall.Warp))]
         private static void PatchWarpBall(GameObject target)
         {
-            if (target is null || target.GetComponent<Player>() is null)
+            if (target == null || target.GetComponent<Player>() == null)
                 return;
             DeathrunInit._RunHandler.SetCauseOfDeathOverride(TechType.Warper);
         }

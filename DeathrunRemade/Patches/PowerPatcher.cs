@@ -118,7 +118,7 @@ namespace DeathrunRemade.Patches
         {
             Difficulty4 difficulty = SaveData.Main.Config.VehicleExitPowerLoss;
             // If the vehicle is a Cyclops or the config says no, stop.
-            if (_ejectedVehicle is null || difficulty == Difficulty4.Normal)
+            if (_ejectedVehicle == null || difficulty == Difficulty4.Normal)
                 return;
             // No penalty for exiting in a moonpool.
             if (PrecursorMoonPoolTrigger.inMoonpool || __instance.precursorOutOfWater)
@@ -207,7 +207,7 @@ namespace DeathrunRemade.Patches
         /// </summary>
         private static bool IsInRadiation(Transform transform)
         {
-            if (transform is null)
+            if (transform == null)
                 return false;
             return RadiationPatcher.IsInRadiation(transform, SaveData.Main.Config.RadiationDepth);
         }

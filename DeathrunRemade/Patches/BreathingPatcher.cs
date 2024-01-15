@@ -107,7 +107,7 @@ namespace DeathrunRemade.Patches
                 return true;
 
             // If this doesn't pass the game is not yet done loading.
-            if (Inventory.main is null || Inventory.main.equipment is null)
+            if (Inventory.main == null || Inventory.main.equipment == null)
                 return true;
             if (Inventory.main.equipment.GetCount(FilterChip.TechType) > 0)
                 return true;

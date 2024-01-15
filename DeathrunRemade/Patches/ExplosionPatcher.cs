@@ -40,7 +40,7 @@ namespace DeathrunRemade.Patches
         public static float GetPlayerExplosionDamageMult(Difficulty3 difficulty, Player player)
         {
             LiveMixin health = player.GetComponent<LiveMixin>();
-            if (difficulty == Difficulty3.Normal || health is null)
+            if (difficulty == Difficulty3.Normal || health == null)
                 return 0f;
 
             float multiplier = 1f;
@@ -153,7 +153,7 @@ namespace DeathrunRemade.Patches
         {
             LiveMixin health = wf.GetComponent<LiveMixin>();
             // Player is handled separately.
-            if (health is null || wf.gameObject == Player.main.gameObject)
+            if (health == null || wf.gameObject == Player.main.gameObject)
                 return;
             float damage = GetExplosionDamage(SaveData.Main.Config.ExplosionDepth, wf.gameObject);
             // The player can hide in bases and vehicles and therefore needs some extra handling.
@@ -171,7 +171,7 @@ namespace DeathrunRemade.Patches
         public static void PlayerTakeExplosionDamage(Difficulty3 difficulty, Player player)
         {
             LiveMixin health = player.liveMixin;
-            if (health is null)
+            if (health == null)
                 return;
 
             float damage = GetExplosionDamage(difficulty, player.gameObject);

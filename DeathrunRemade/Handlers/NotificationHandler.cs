@@ -110,7 +110,7 @@ namespace DeathrunRemade.Handlers
         {
             var slot = GetSlot(message.SlotId);
             var fade = slot.GetTextFade();
-            if (fade is null || !fade.sequence.active)
+            if (fade == null || !fade.sequence.active)
                 slot.ShowMessage(message.Text, message.FadeOutDuration);
         }
 
@@ -183,7 +183,7 @@ namespace DeathrunRemade.Handlers
             var slot = GetSlot(slotId);
             uGUI_TextFade fade = slot.GetTextFade();
             GameObject text = slot.GetTextObject();
-            if (fade is null || text is null)
+            if (fade == null || text == null)
                 return false;
             return slot.GetTextFade().enabled && slot.GetTextObject().activeSelf;
         }

@@ -72,7 +72,7 @@ namespace DeathrunRemade.Components
             // Make the pod move smoothly if the player is inside it. Something else keeps resetting this so it has to
             // be done every update.
             Player player = Player.main;
-            _rigidbody.interpolation = player.currentEscapePod is null ? RigidbodyInterpolation.Interpolate : RigidbodyInterpolation.None;
+            _rigidbody.interpolation = player.currentEscapePod == null ? RigidbodyInterpolation.Interpolate : RigidbodyInterpolation.None;
             // If the pod stopped moving, assume it hit the ground and anchor it.
             if (IsSinking && HasHitBottom())
             {

@@ -16,7 +16,7 @@ namespace DeathrunRemade.Patches
         private static void IncreaseDamageTaken(DamageType type, GameObject target, ref float __result)
         {
             // Only increase damage for the player and vehicles.
-            if (target != Player.main.gameObject && target.GetComponent<Vehicle>() is null)
+            if (target != Player.main.gameObject && target.GetComponent<Vehicle>() == null)
                 return;
             
             // Two possible multipliers for damage, both are applied for different damage types.
@@ -34,7 +34,7 @@ namespace DeathrunRemade.Patches
                     
                     // Reduce the multiplier for each armor plating module on the vehicle.
                     Vehicle vehicle = target.GetComponent<Vehicle>();
-                    int modules = (vehicle is null) ? -1 : vehicle.modules.GetCount(TechType.VehicleArmorPlating);
+                    int modules = (vehicle == null) ? -1 : vehicle.modules.GetCount(TechType.VehicleArmorPlating);
                     if (modules > 0)
                     {
                         // Every module reduces the damage multiplier by 30%, diminishing multiplicatively.

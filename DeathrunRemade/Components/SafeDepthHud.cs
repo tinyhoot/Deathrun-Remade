@@ -152,7 +152,7 @@ namespace DeathrunRemade.Components
         private void OnLanguageChanged()
         {
             Language language = Language.main;
-            if (language is null)
+            if (language == null)
                 return;
             _meterSuffix = language.Get("MeterSuffix");
             _depthText.text = _meterSuffix;

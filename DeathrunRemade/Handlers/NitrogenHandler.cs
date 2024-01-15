@@ -87,7 +87,7 @@ namespace DeathrunRemade.Handlers
         private void FixedUpdate()
         {
             Player player = Player.main;
-            if (player is null)
+            if (player == null)
                 return;
             
             UpdateAscentRate(player);
@@ -102,7 +102,7 @@ namespace DeathrunRemade.Handlers
             Player player = Player.main;
             SaveData save = SaveData.Main;
             // Safety check.
-            if (player is null || save is null)
+            if (player == null || save is null)
                 return;
 
             float currentDepth = player.GetDepth();

@@ -18,7 +18,7 @@ namespace DeathrunRemade.Patches
         private static void CancelKnifeDamage(LiveMixin liveMixin, ref bool __result)
         {
             // No changes necessary.
-            if (!__result || !SaveData.Main.Config.PacifistChallenge || liveMixin is null)
+            if (!__result || !SaveData.Main.Config.PacifistChallenge || liveMixin == null)
                 return;
             // If the target is a creature, deny.
             Creature creature = liveMixin.GetComponent<Creature>();
@@ -33,7 +33,7 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(RepulsionCannon), nameof(RepulsionCannon.ShootObject))]
         private static bool CancelRepulsionShoot(Rigidbody rb)
         {
-            return rb.GetComponent<Creature>() is null;
+            return rb.GetComponent<Creature>() == null;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace DeathrunRemade.Patches
             // Insert an extra check for making this LiveMixin take damage - no creatures.
             matcher.Insert(
                 new CodeInstruction(OpCodes.Ldloc_1),
-                Transpilers.EmitDelegate<Func<LiveMixin, bool>>(live => live.GetComponent<Creature>() is null),
+                Transpilers.EmitDelegate<Func<LiveMixin, bool>>(live => live.GetComponent<Creature>() == null),
                 new CodeInstruction(OpCodes.Brfalse, label));
             return matcher.InstructionEnumeration();
         }
@@ -117,7 +117,7 @@ namespace DeathrunRemade.Patches
             // Insert an extra check for making this LiveMixin take damage - no creatures.
             matcher.Insert(
                 new CodeInstruction(OpCodes.Ldloc_S, localBuilder),
-                Transpilers.EmitDelegate<Func<LiveMixin, bool>>(live => live.gameObject.FindAncestor<Creature>() is null),
+                Transpilers.EmitDelegate<Func<LiveMixin, bool>>(live => live.gameObject.FindAncestor<Creature>() == null),
                 new CodeInstruction(OpCodes.Brfalse, label));
             return matcher.InstructionEnumeration();
         }
@@ -146,7 +146,7 @@ namespace DeathrunRemade.Patches
             // Insert an extra check for making this LiveMixin take damage - no creatures.
             matcher.Insert(
                 new CodeInstruction(OpCodes.Ldloc_S, localBuilder),
-                Transpilers.EmitDelegate<Func<LiveMixin, bool>>(live => live.gameObject.FindAncestor<Creature>() is null),
+                Transpilers.EmitDelegate<Func<LiveMixin, bool>>(live => live.gameObject.FindAncestor<Creature>() == null),
                 new CodeInstruction(OpCodes.Brfalse, label));
             return matcher.InstructionEnumeration();
         }
