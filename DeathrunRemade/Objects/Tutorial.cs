@@ -1,4 +1,5 @@
 using DeathrunRemade.Handlers;
+using Nautilus.Handlers;
 
 namespace DeathrunRemade.Objects
 {
@@ -38,6 +39,22 @@ namespace DeathrunRemade.Objects
             saveData.Tutorials.completedTutorials.Add(Key);
             return true;
         }
+
+        /// <summary>
+        /// Register events for tutorials which do not need to be triggered under overly complex conditions.
+        /// </summary>
+        public static void RegisterEvents()
+        {
+            StoryGoalHandler.RegisterCustomEvent(LeakingRadiation.main.leaksFixedGoal.key,
+                () => AuroraRepairedBreathable.Trigger());
+        }
+
+        public static Tutorial AuroraRepairedBreathable => new Tutorial
+        {
+            Key = "AuroraRepairedBreathable",
+            SlotId = NotificationHandler.Centre,
+            Text = "The air filtration system roars to life!"
+        };
 
         public static Tutorial ExosuitVehicleExitPowerLoss => new Tutorial
         {

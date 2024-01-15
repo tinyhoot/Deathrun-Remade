@@ -266,6 +266,7 @@ namespace DeathrunRemade
                 RadiationPatcher.UpdateIsImmune(null, null);
                 Inventory.main.equipment.onEquip += RadiationPatcher.UpdateIsImmune;
                 Inventory.main.equipment.onUnequip += RadiationPatcher.UpdateIsImmune;
+                Tutorial.RegisterEvents();
             }
             catch (Exception ex)
             {
