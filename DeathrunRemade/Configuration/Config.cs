@@ -412,14 +412,19 @@ namespace DeathrunRemade.Configuration
 
         protected override void RegisterControllingOptions() { }
 
-        public override void RegisterModOptions(string name, Transform separatorParent = null)
+        public override void RegisterModOptions(string name, Transform persistentParent = null)
         {
             HootModOptions modOptions = new HootModOptions(name, this);
             modOptions.OnAddOptionToMenu += OnAddOptionToModMenu;
             
             modOptions.AddText("Choose carefully. Any options you set here lock in and <color=#FF0000FF>cannot</color>"
                                + " be changed during an ongoing game.");
+            // Add a preview of the score multiplier, which updates whenever the user changes an option.
+            var scorePreview = new ScoreMultPreviewText(this, "Your current settings grant you a score multiplier "
+                                                              + "of <b>{0}</b>");
+            modOptions.AddDecorator(scorePreview);
             
+            modOptions.AddSeparator(persistentParent);
             modOptions.AddItem(PersonalCrushDepth.ToModChoiceOption());
             modOptions.AddItem(DamageTaken.ToModChoiceOption());
             modOptions.AddItem(NitrogenBends.ToModChoiceOption());
@@ -429,7 +434,7 @@ namespace DeathrunRemade.Configuration
             modOptions.AddItem(SinkLifepod.ToModToggleOption());
             modOptions.AddItem(ToppleLifepod.ToModToggleOption());
             
-            modOptions.AddSeparator(separatorParent);
+            modOptions.AddSeparator(persistentParent);
             modOptions.AddItem(CreatureAggression.ToModChoiceOption());
             modOptions.AddItem(WaterMurkiness.ToModChoiceOption());
             modOptions.AddItem(ExplosionDepth.ToModChoiceOption());
@@ -437,7 +442,7 @@ namespace DeathrunRemade.Configuration
             modOptions.AddItem(RadiationDepth.ToModChoiceOption());
             modOptions.AddItem(RadiationFX.ToModChoiceOption());
             
-            modOptions.AddSeparator(separatorParent);
+            modOptions.AddSeparator(persistentParent);
             modOptions.AddItem(ToolCosts.ToModChoiceOption());
             modOptions.AddItem(VehicleCosts.ToModChoiceOption());
             modOptions.AddItem(ScansRequired.ToModChoiceOption());
@@ -446,7 +451,7 @@ namespace DeathrunRemade.Configuration
             modOptions.AddItem(PowerCosts.ToModChoiceOption());
             modOptions.AddItem(VehicleExitPowerLoss.ToModChoiceOption());
             
-            modOptions.AddSeparator(separatorParent);
+            modOptions.AddSeparator(persistentParent);
             modOptions.AddItem(FoodChallenge.ToModChoiceOption());
             modOptions.AddItem(FarmingChallenge.ToModChoiceOption());
             modOptions.AddItem(IslandFoodChallenge.ToModChoiceOption());
@@ -454,7 +459,7 @@ namespace DeathrunRemade.Configuration
             modOptions.AddItem(NoVehicleChallenge.ToModToggleOption());
             modOptions.AddItem(PacifistChallenge.ToModToggleOption());
             
-            modOptions.AddSeparator(separatorParent);
+            modOptions.AddSeparator(persistentParent);
             modOptions.AddText("These options can always be changed and will take effect immediately, even during a "
                                + "run. They do not affect your score.");
             modOptions.AddItem(ShowTutorials.ToModToggleOption());

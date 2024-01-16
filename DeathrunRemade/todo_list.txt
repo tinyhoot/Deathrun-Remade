@@ -1,8 +1,5 @@
 Things that still need doing because if I don't write them down right now I'll forget
 
-Items
-- Expand on Kharaa vehicle recipe costs. Only seamoth actually got any changes?
-
 Monos
 - Complete functionality of deco module and filterchip
 - Nitrogen ascent is not punishing enough
@@ -10,7 +7,6 @@ Monos
 
 New Ideas
 - Make tanks not refill by themselves. Refill at special point?
-- Self-updating score multiplier in the options menu, to show you what you'll get
 - Progressively worse Kharaa infection to counteract difficulty being too frontloaded
 - Explicit compatibility with some popular/well fitting mods. Like C2C, Unknown Name, Enhanced Sleep, Custom Batteries, ...
 - Add game quit/reload warning on loading screen to hootils
@@ -29,10 +25,9 @@ Checks at the very end
 - Do one huge sweep through all the Patcher classes and ensure nothing was forgotten
 - Do bases really get damaged by the explosion?
 - Are all relevant config settings contributing to the score?
+- Are all the encyclopedia tutorials accurate and up to date?
 
 Reworks before release
-- Recipe changes and its JSON is awful. The JSON file is meant to be both user editable and easily usable in code
-  and it fails at both.
 - Properly adjust all in-game messaging to the Warnings system.
 - Have more than one tutorial message.
 - Highscores window not rudimentary, with removable runs.

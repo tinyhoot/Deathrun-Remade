@@ -46,7 +46,7 @@ namespace DeathrunRemade.Handlers
         private const float DeathMultFloor = 0.3f;
         // The extra score given for obtaining or managing certain things.
         // Points are reduced compared to legacy, but they do get multiplied later. Adds up to ~30000 points.
-        private readonly Dictionary<RunAchievements, float> _achievementRewards = new Dictionary<RunAchievements, float>
+        private static readonly Dictionary<RunAchievements, float> _achievementRewards = new Dictionary<RunAchievements, float>
         {
             { RunAchievements.Seaglide, 500f },
             { RunAchievements.Seamoth, 1000f },
@@ -135,20 +135,20 @@ namespace DeathrunRemade.Handlers
         /// <summary>
         /// Get the baseline score earned by the player on the given run.
         /// </summary>
-        public float CalculateScoreBase(RunStats stats)
+        public static float CalculateScoreBase(RunStats stats)
         {
             // Time score. Diminishes greatly as time goes on. Points for every log-base 2 of hours lived.
             // E.g. 1 hour = 1, 2 hours = 2, 4 hours = 3, 8 hours = 4, etc.
             float hours = (float)(stats.time / 3600);
             float adjustedHours = Mathf.Log(hours + 1, 2f);
             float timeScore = adjustedHours * TimeScoreBase;
-            _log.Debug($"--Time lived: {timeScore}");
+            // _log.Debug($"--Time lived: {timeScore}");
             float achievements = CalculateAchievementScore(stats.achievements);
-            _log.Debug($"--Achievements: {achievements}");
+            // _log.Debug($"--Achievements: {achievements}");
             // Depth score is linear function of how deep the player managed to get out of the total possible.
             float depthMult = Mathf.Clamp(stats.depthReached, 0f, 1600f) / 1600f;
             float depthScore = depthMult * MaxDepthBonus;
-            _log.Debug($"--Depth: {depthScore}");
+            // _log.Debug($"--Depth: {depthScore}");
             
             return timeScore + achievements + depthScore;
         }
@@ -156,7 +156,7 @@ namespace DeathrunRemade.Handlers
         /// <summary>
         /// Get the flat bonus the player earns for their config settings.
         /// </summary>
-        public float CalculateScoreBonus(ConfigSave config)
+        public static float CalculateScoreBonus(ConfigSave config)
         {
             float bonus = 0f;
 
@@ -203,7 +203,7 @@ namespace DeathrunRemade.Handlers
         /// <item>All UI options</item>
         /// </list>
         /// </summary>
-        public float CalculateScoreMultiplier(ConfigSave config)
+        public static float CalculateScoreMultiplier(ConfigSave config)
         {
             // The absolute worst the player can get is 1. No sticks, only carrots.
             float total = 1f;
@@ -258,7 +258,7 @@ namespace DeathrunRemade.Handlers
         /// This is not accurate at all and will tend to give legacy runs lower scores than modern ones, but that's
         /// okay so long as it feels fair/believable. Beating your old runs should be the goal.
         /// </summary>
-        private float CalculateLegacyScoreMult(int deathRunSettingCount)
+        private static float CalculateLegacyScoreMult(int deathRunSettingCount)
         {
             return 1 + (deathRunSettingCount * HardMult);
         }
@@ -266,7 +266,7 @@ namespace DeathrunRemade.Handlers
         /// <summary>
         /// Calculate the score awarded for all the things the player has achieved in this run.
         /// </summary>
-        private float CalculateAchievementScore(RunAchievements achievements)
+        private static float CalculateAchievementScore(RunAchievements achievements)
         {
             return _achievementRewards
                 .Where(kvpair => achievements.IsUnlocked(kvpair.Key))
@@ -276,7 +276,7 @@ namespace DeathrunRemade.Handlers
         /// <summary>
         /// Calculate the victory score awarded based on how long it took to achieve. Shorter runs are worth more.
         /// </summary>
-        private float CalculateVictoryScore(bool victory, float time)
+        private static float CalculateVictoryScore(bool victory, float time)
         {
             if (!victory)
                 return 0f;
@@ -294,14 +294,14 @@ namespace DeathrunRemade.Handlers
         /// Get the (score-reducing) multiplier for the number of times the player died. Punishing at first but
         /// increases more slowly with more and more deaths. The first death is free!
         /// </summary>
-        private float GetDeathMultiplier(int deaths)
+        private static float GetDeathMultiplier(int deaths)
         {
             // Reaches 0 after $constant number of deaths.
             float malus = 1 - Mathf.Log(deaths, DeathsForMaxMalus);
             return Mathf.Clamp(malus, DeathMultFloor, 1f);
         }
 
-        private float GetStandardMult<TEnum>(TEnum setting) where TEnum : Enum
+        private static float GetStandardMult<TEnum>(TEnum setting) where TEnum : Enum
         {
             return setting.ToString() switch
             {
@@ -315,7 +315,7 @@ namespace DeathrunRemade.Handlers
         /// <summary>
         /// Convenience method to get the score needed for the no vehicle challenge to offset vehicle achievements.
         /// </summary>
-        private float GetNoVehicleChallengeBonus()
+        private static float GetNoVehicleChallengeBonus()
         {
             float score = _achievementRewards[RunAchievements.Seamoth];
             score += _achievementRewards[RunAchievements.Exosuit];
