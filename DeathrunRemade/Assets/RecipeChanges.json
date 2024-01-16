@@ -1461,6 +1461,36 @@
           "amount": 1
         }
       ]
+    },
+    {
+      "techType": "RocketStage3",
+      "craftAmount": 1,
+      "ingredients": [
+        {
+          "techType": "AdvancedWiringKit",
+          "amount": 1
+        },
+        {
+          "techType": "PowerCell",
+          "amount": 1
+        },
+        {
+          "techType": "Polyaniline",
+          "amount": 1
+        },
+        {
+          "techType": "PlasteelIngot",
+          "amount": 1
+        },
+        {
+          "techType": "EnameledGlass",
+          "amount": 1
+        },
+        {
+          "techType": "ComputerChip",
+          "amount": 1
+        }
+      ]
     }
   ]
 }
