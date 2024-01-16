@@ -37,6 +37,10 @@ namespace DeathrunRemade.Objects
                 Config = new ConfigSave(DeathrunInit._Config);
                 DeathrunInit._RunHandler.StartNewRun(this);
             }
+            else
+            {
+                DeathrunInit._Log.Info($"Loading existing run with id {Stats.id}");
+            }
 
             // Once the file has completed loading/creation, notify everything waiting on it.
             Ready = true;

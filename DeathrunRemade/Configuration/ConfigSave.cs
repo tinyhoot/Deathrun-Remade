@@ -4,6 +4,7 @@ using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using HootLib.Configuration;
 using HootLib.Objects.Exceptions;
+using Newtonsoft.Json;
 
 namespace DeathrunRemade.Configuration
 {
@@ -14,48 +15,45 @@ namespace DeathrunRemade.Configuration
     [Serializable]
     internal readonly struct ConfigSave
     {
+        // JsonProperty everywhere is necessary to allow deserialising to read-only fields.
         // Survival
-        public readonly Difficulty3 PersonalCrushDepth;
-        public readonly DamageDifficulty DamageTaken;
-        public readonly Difficulty3 NitrogenBends;
-        public readonly bool SpecialAirTanks;
-        public readonly Difficulty3 SurfaceAir;
-        public readonly string StartLocation;
-        public readonly bool SinkLifepod;
-        public readonly bool ToppleLifepod;
+        [JsonProperty] public readonly Difficulty3 PersonalCrushDepth;
+        [JsonProperty] public readonly DamageDifficulty DamageTaken;
+        [JsonProperty] public readonly Difficulty3 NitrogenBends;
+        [JsonProperty] public readonly bool SpecialAirTanks;
+        [JsonProperty] public readonly Difficulty3 SurfaceAir;
+        [JsonProperty] public readonly string StartLocation;
+        [JsonProperty] public readonly bool SinkLifepod;
+        [JsonProperty] public readonly bool ToppleLifepod;
         
         // Environment
-        public readonly Difficulty4 CreatureAggression;
-        public readonly Murkiness WaterMurkiness;
-        public readonly Difficulty3 ExplosionDepth;
-        public readonly Timer ExplosionTime;
-        public readonly Difficulty4 RadiationDepth;
-        public readonly RadiationVisuals RadiationFX;
+        [JsonProperty] public readonly Difficulty4 CreatureAggression;
+        [JsonProperty] public readonly Murkiness WaterMurkiness;
+        [JsonProperty] public readonly Difficulty3 ExplosionDepth;
+        [JsonProperty] public readonly Timer ExplosionTime;
+        [JsonProperty] public readonly Difficulty4 RadiationDepth;
+        [JsonProperty] public readonly RadiationVisuals RadiationFX;
         
         // Costs
-        public readonly Difficulty4 BatteryCapacity;
-        public readonly Difficulty4 BatteryCosts;
-        public readonly Difficulty4 ToolCosts;
-        public readonly Difficulty4 PowerCosts;
-        public readonly Difficulty4 ScansRequired;
-        public readonly Difficulty4 VehicleCosts;
-        public readonly Difficulty4 VehicleExitPowerLoss;
+        [JsonProperty] public readonly Difficulty4 BatteryCapacity;
+        [JsonProperty] public readonly Difficulty4 BatteryCosts;
+        [JsonProperty] public readonly Difficulty4 ToolCosts;
+        [JsonProperty] public readonly Difficulty4 PowerCosts;
+        [JsonProperty] public readonly Difficulty4 ScansRequired;
+        [JsonProperty] public readonly Difficulty4 VehicleCosts;
+        [JsonProperty] public readonly Difficulty4 VehicleExitPowerLoss;
         
         // Challenges
-        public readonly Difficulty3 FarmingChallenge;
-        public readonly Difficulty3 FilterPumpChallenge;
-        public readonly DietPreference FoodChallenge;
-        public readonly RelativeToExplosion IslandFoodChallenge;
-        public readonly bool NoVehicleChallenge;
-        public readonly bool PacifistChallenge;
-        
-        // UI
-        public readonly bool ShowTutorials;
-        public readonly Hints ShowWarnings;
+        [JsonProperty] public readonly Difficulty3 FarmingChallenge;
+        [JsonProperty] public readonly Difficulty3 FilterPumpChallenge;
+        [JsonProperty] public readonly DietPreference FoodChallenge;
+        [JsonProperty] public readonly RelativeToExplosion IslandFoodChallenge;
+        [JsonProperty] public readonly bool NoVehicleChallenge;
+        [JsonProperty] public readonly bool PacifistChallenge;
         
         // This field defaults to false in any instance that was made using the default constructor rather than
         // serialisation from a config file.
-        public readonly bool WasInitialised;
+        [JsonProperty] public readonly bool WasInitialised;
 
         public ConfigSave(Config config)
         {
@@ -90,9 +88,6 @@ namespace DeathrunRemade.Configuration
             NoVehicleChallenge = config.NoVehicleChallenge.Value;
             PacifistChallenge = config.PacifistChallenge.Value;
             
-            ShowTutorials = config.ShowTutorials.Value;
-            ShowWarnings = config.ShowWarnings.Value;
-            
             WasInitialised = true;
 
             Validate(config);
@@ -111,8 +106,8 @@ namespace DeathrunRemade.Configuration
                 // Ignore all fields that aren't actually config values.
                 if (!configField.FieldType.IsGenericType || !configField.FieldType.GetGenericTypeDefinition().IsAssignableFrom(typeof(ConfigEntryWrapper<>)))
                     continue;
-                // Ignore all UI fields as those do not have to be serialised.
-                if (((ConfigEntryWrapperBase)configField.GetValue(config)).GetSection().Equals(Config.SectionUI))
+                // Ignore all UI fields as those are meant to be editable at runtime and thus do not have to be serialised.
+                if (((ConfigEntryWrapperBase)configField.GetValue(config)).GetSection() == Config.SectionUI)
                     continue;
                 
                 // Find the field in this struct of the same name.

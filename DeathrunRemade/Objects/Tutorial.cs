@@ -30,7 +30,7 @@ namespace DeathrunRemade.Objects
         public bool Trigger(NotificationHandler notifications, SaveData saveData)
         {
             // Don't do anything if tutorials are disabled.
-            if (saveData.Config.ShowTutorials)
+            if (DeathrunInit._Config.ShowTutorials.Value)
                 return false;
             // Do not trigger tutorials twice.
             if (saveData.Tutorials.completedTutorials.Contains(Key))
