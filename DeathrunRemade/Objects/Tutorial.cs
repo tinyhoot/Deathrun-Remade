@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using DeathrunRemade.Handlers;
 using Nautilus.Handlers;
 
@@ -36,6 +37,7 @@ namespace DeathrunRemade.Objects
                 return false;
 
             notifications.AddMessage(SlotId, Text);
+            saveData.Tutorials.completedTutorials ??= new HashSet<string>();
             saveData.Tutorials.completedTutorials.Add(Key);
             return true;
         }
