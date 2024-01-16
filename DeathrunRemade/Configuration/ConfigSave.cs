@@ -38,7 +38,7 @@ namespace DeathrunRemade.Configuration
         public readonly Difficulty3 ToolCosts;
         public readonly Difficulty4 PowerCosts;
         public readonly Difficulty4 ScansRequired;
-        public readonly VehicleDifficulty VehicleCosts;
+        public readonly Difficulty4 VehicleCosts;
         public readonly Difficulty4 VehicleExitPowerLoss;
         
         // Challenges
@@ -46,6 +46,7 @@ namespace DeathrunRemade.Configuration
         public readonly Difficulty3 FilterPumpChallenge;
         public readonly DietPreference FoodChallenge;
         public readonly RelativeToExplosion IslandFoodChallenge;
+        public readonly bool NoVehicleChallenge;
         public readonly bool PacifistChallenge;
         
         // UI
@@ -86,6 +87,7 @@ namespace DeathrunRemade.Configuration
             FilterPumpChallenge = config.FilterPumpChallenge.Value;
             FoodChallenge = config.FoodChallenge.Value;
             IslandFoodChallenge = config.IslandFoodChallenge.Value;
+            NoVehicleChallenge = config.NoVehicleChallenge.Value;
             PacifistChallenge = config.PacifistChallenge.Value;
             
             ShowTutorials = config.ShowTutorials.Value;

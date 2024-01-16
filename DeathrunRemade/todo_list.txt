@@ -28,6 +28,7 @@ New Ideas
 Checks at the very end
 - Do one huge sweep through all the Patcher classes and ensure nothing was forgotten
 - Do bases really get damaged by the explosion?
+- Are all relevant config settings contributing to the score?
 
 Reworks before release
 - Recipe changes and its JSON is awful. The JSON file is meant to be both user editable and easily usable in code
@@ -38,6 +39,7 @@ Reworks before release
 - Rework the filterchip into something that actually makes sense.
 - Be consistent with which places accumulate nitrogen and which do not. Add config option for e.g. bases.
 - Respect cheats everywhere. Pay special attention to damage, oxygen, and power.
+- Replace the names of starts with more inventive ones. Add new ones.
 
 Substantial changes from the original
 - Photosynthetic tanks always work in sunlight, including the surface

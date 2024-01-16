@@ -160,7 +160,7 @@ namespace DeathrunRemade.Handlers
         {
             float bonus = 0f;
 
-            bonus += config.VehicleCosts == VehicleDifficulty.NoVehicles ? BigBonus : 0f;
+            bonus += config.NoVehicleChallenge ? BigBonus : 0f;
             bonus += config.FarmingChallenge switch
             {
                 Difficulty3.Hard => SmallBonus,
@@ -245,7 +245,7 @@ namespace DeathrunRemade.Handlers
             total += GetStandardMult(config.ScansRequired);
             total += GetStandardMult(config.VehicleCosts);
             // Super difficult, so extra score.
-            if (config.VehicleCosts == VehicleDifficulty.NoVehicles)
+            if (config.NoVehicleChallenge)
                 total += DeathrunMult * 2f;
             total += GetStandardMult(config.VehicleExitPowerLoss);
 

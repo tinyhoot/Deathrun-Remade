@@ -71,13 +71,4 @@ namespace DeathrunRemade.Objects.Enums
         Medium,
         Long,
     }
-
-    public enum VehicleDifficulty
-    {
-        Normal,
-        Hard,
-        Deathrun,
-        Kharaa,
-        NoVehicles,
-    }
 }

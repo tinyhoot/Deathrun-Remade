@@ -44,7 +44,7 @@ namespace DeathrunRemade.Configuration
 
         // Costs
         public ConfigEntryWrapper<Difficulty3> ToolCosts;
-        public ConfigEntryWrapper<VehicleDifficulty> VehicleCosts;
+        public ConfigEntryWrapper<Difficulty4> VehicleCosts;
         public ConfigEntryWrapper<Difficulty4> ScansRequired;
         public ConfigEntryWrapper<Difficulty4> BatteryCosts;
         public ConfigEntryWrapper<Difficulty4> BatteryCapacity;
@@ -56,6 +56,7 @@ namespace DeathrunRemade.Configuration
         public ConfigEntryWrapper<DietPreference> FoodChallenge;
         public ConfigEntryWrapper<RelativeToExplosion> IslandFoodChallenge;
         public ConfigEntryWrapper<Difficulty3> FilterPumpChallenge;
+        public ConfigEntryWrapper<bool> NoVehicleChallenge;
         public ConfigEntryWrapper<bool> PacifistChallenge;
 
         // UI
@@ -253,14 +254,13 @@ namespace DeathrunRemade.Configuration
             VehicleCosts = RegisterEntry(
                 section: SectionCosts,
                 key: nameof(VehicleCosts),
-                defaultValue: VehicleDifficulty.Deathrun,
+                defaultValue: Difficulty4.Deathrun,
                 description: "Harder recipes for vehicles and vehicle modules."
             ).WithChoiceOptionStringsOverride(
                 "Normal (No changes)",
                 "Hard (No changes to modules)",
                 "Deathrun",
-                "Kharaa",
-                "No Vehicle Challenge"
+                "Kharaa"
             ).WithDescription("Vehicle Costs");
             ScansRequired = RegisterEntry(
                 section: SectionCosts,
@@ -272,14 +272,14 @@ namespace DeathrunRemade.Configuration
                 section: SectionCosts,
                 key: nameof(BatteryCosts),
                 defaultValue: Difficulty4.Deathrun,
-                description: "Batteries cost more with higher difficulties. Adds non-rechargeable acid batteries. "
+                description: "Batteries cost more with higher difficulties. Adds non-rechargeable copper batteries. "
                              + "Tools do not automatically contain batteries."
             ).WithDescription("Battery Costs");
             BatteryCapacity = RegisterEntry(
                 section: SectionCosts,
                 key: nameof(BatteryCapacity),
                 defaultValue: Difficulty4.Deathrun,
-                description: "Acid batteries hold less power with higher difficulties."
+                description: "Copper batteries hold less power with higher difficulties."
             ).WithChoiceOptionStringsOverride(
                 $"Normal ({AcidBattery.GetCapacityForDifficulty(Difficulty4.Normal)} power)",
                 $"Hard ({AcidBattery.GetCapacityForDifficulty(Difficulty4.Hard)} power)",
@@ -361,6 +361,12 @@ namespace DeathrunRemade.Configuration
                 "Hard (Not inside Aurora)",
                 "Deathrun (Not near Aurora)"
             ).WithDescription("Challenge: Filter Pump");
+            NoVehicleChallenge = RegisterEntry(
+                section: SectionChallenges,
+                key: nameof(NoVehicleChallenge),
+                defaultValue: false,
+                description: "You cannot build vehicles until you've acquired Hatching Enzymes."
+            ).WithDescription("Challenge: No Vehicles");
             PacifistChallenge = RegisterEntry(
                 section: SectionChallenges,
                 key: nameof(PacifistChallenge),
@@ -445,6 +451,7 @@ namespace DeathrunRemade.Configuration
             modOptions.AddItem(FarmingChallenge.ToModChoiceOption());
             modOptions.AddItem(IslandFoodChallenge.ToModChoiceOption());
             modOptions.AddItem(FilterPumpChallenge.ToModChoiceOption());
+            modOptions.AddItem(NoVehicleChallenge.ToModToggleOption());
             modOptions.AddItem(PacifistChallenge.ToModToggleOption());
             
             modOptions.AddSeparator(separatorParent);
