@@ -107,7 +107,7 @@ namespace DeathrunRemade.Handlers
             _log.Debug($"Updating score for run with id {stats.id}");
             stats.scoreBase = CalculateScoreBase(stats);
             // Offset vehicle achievements for no vehicle runs.
-            if (stats.victory && stats.achievements.IsUnlocked(RunAchievements.AllVehicles))
+            if (stats.victory && !stats.achievements.IsUnlocked(RunAchievements.AllVehicles))
                 stats.scoreBase += GetNoVehicleChallengeBonus();
             _log.Debug($"Base score: {stats.scoreBase}");
             
