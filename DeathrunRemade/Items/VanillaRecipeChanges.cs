@@ -20,11 +20,11 @@ namespace DeathrunRemade.Items
         private Dictionary<string, List<SerialTechData>> _recipeJson;
 
         /// <summary>
-        /// Get all recipe changes for a specific target difficulty.
+        /// Get all recipe changes for a specific value of a setting.
         /// </summary>
-        public IEnumerable<SerialTechData> GetCraftData<TEnum>(TEnum targetDifficulty) where TEnum : Enum
+        public IEnumerable<SerialTechData> GetCraftData(string configKey, string configValue)
         {
-            string key = $"{targetDifficulty.GetType().Name}.{targetDifficulty}";
+            string key = $"{configKey}.{configValue}";
             return _recipeJson.TryGetValue(key, out List<SerialTechData> data) ? data : Enumerable.Empty<SerialTechData>();
         }
         
@@ -39,29 +39,15 @@ namespace DeathrunRemade.Items
         /// <summary>
         /// Set up all changes related to batteries based on the given config values.
         /// </summary>
-        /// <param name="difficulty">The config values to use.</param>
-        public IEnumerable<SerialTechData> GetBatteryChanges(Difficulty4 difficulty)
+        public IEnumerable<SerialTechData> GetBatteryChanges(ConfigSave config)
         {
-            if (difficulty == Difficulty4.Normal)
+            if (config.BatteryCosts == Difficulty4.Normal)
                 return Enumerable.Empty<SerialTechData>();
 
             // Remove the now-harder batteries from some early game tools.
             List<SerialTechData> changes = GetCraftData("RemoveBatteries").ToList();
-            // Regular batteries are a bit more involved.
-            SerialTechData batteryRecipe = new SerialTechData
-            {
-                techType = TechType.Battery,
-                craftAmount = 1,
-                ingredients = new List<SerialIngredient>
-                {
-                    new SerialIngredient(TechType.Lithium), new SerialIngredient(TechType.Salt)
-                }
-            };
-            // On higher difficulties, make the battery recipe harder.
-            if (difficulty != Difficulty4.Hard)
-                batteryRecipe.ingredients.AddRange(new[]
-                    { new SerialIngredient(TechType.Diamond), new SerialIngredient(TechType.Silicone) });
-            changes.Add(batteryRecipe);
+            // Increase regular battery costs.
+            changes.AddRange(GetCraftData(nameof(config.BatteryCosts), config.BatteryCosts.ToString()));
             return changes;
         }
 
@@ -122,9 +108,13 @@ namespace DeathrunRemade.Items
         /// <param name="config">The config values to use.</param>
         public void RegisterRecipeChanges(ConfigSave config)
         {
-            List<SerialTechData> changes = GetCraftData(config.ToolCosts).ToList();
-            changes.AddRange(GetCraftData(config.VehicleCosts));
-            changes.AddRange(GetBatteryChanges(config.BatteryCosts));
+            // The sequence of these changes is set up so that the later ones can overwrite changes made by earlier ones.
+            // E.g. NoVehicleChallenge overwrites any cost settings for vehicles.
+            List<SerialTechData> changes = GetBatteryChanges(config).ToList();
+            changes.AddRange(GetCraftData(nameof(config.ToolCosts), config.ToolCosts.ToString()));
+            changes.AddRange(GetCraftData(nameof(config.VehicleCosts), config.VehicleCosts.ToString()));
+            changes.AddRange(GetCraftData(nameof(config.NoVehicleChallenge)));
+            
             foreach (var craftData in changes.Where(techData => techData != null))
             {
                 DeathrunInit._Log.Debug($"Setting recipe for {craftData.techType}: {craftData.ingredients.ElementsToString()}");

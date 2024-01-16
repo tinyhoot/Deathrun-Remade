@@ -43,7 +43,7 @@ namespace DeathrunRemade.Configuration
         public ConfigEntryWrapper<RadiationVisuals> RadiationFX;
 
         // Costs
-        public ConfigEntryWrapper<Difficulty3> ToolCosts;
+        public ConfigEntryWrapper<Difficulty4> ToolCosts;
         public ConfigEntryWrapper<Difficulty4> VehicleCosts;
         public ConfigEntryWrapper<Difficulty4> ScansRequired;
         public ConfigEntryWrapper<Difficulty4> BatteryCosts;
@@ -248,7 +248,7 @@ namespace DeathrunRemade.Configuration
             ToolCosts = RegisterEntry(
                 section: SectionCosts,
                 key: nameof(ToolCosts),
-                defaultValue: Difficulty3.Deathrun,
+                defaultValue: Difficulty4.Deathrun,
                 description: "Harder recipes for important tools and buildings like habitat builder and reactors."
             ).WithDescription("Tool and Building Costs");
             VehicleCosts = RegisterEntry(

@@ -35,7 +35,7 @@ namespace DeathrunRemade.Configuration
         // Costs
         public readonly Difficulty4 BatteryCapacity;
         public readonly Difficulty4 BatteryCosts;
-        public readonly Difficulty3 ToolCosts;
+        public readonly Difficulty4 ToolCosts;
         public readonly Difficulty4 PowerCosts;
         public readonly Difficulty4 ScansRequired;
         public readonly Difficulty4 VehicleCosts;
