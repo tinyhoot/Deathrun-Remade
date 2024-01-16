@@ -238,7 +238,8 @@ namespace DeathrunRemade.Handlers
                 RadiationVisuals.Chernobyl => DeathrunMult,
                 _ => 0f
             };
-            total += GetStandardMult(config.BatteryCapacity);
+            total += GetStandardMult(config.BatteryCapacity) / 2f;
+            total += GetStandardMult(config.BatteryCosts) / 2f;
             total += GetStandardMult(config.ToolCosts);
             total += GetStandardMult(config.PowerCosts);
             total += GetStandardMult(config.ScansRequired);

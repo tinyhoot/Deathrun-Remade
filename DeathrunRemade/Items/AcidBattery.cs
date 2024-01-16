@@ -70,7 +70,7 @@ namespace DeathrunRemade.Items
         {
             return difficulty switch
             {
-                Difficulty4.Normal => 100,
+                Difficulty4.Normal => 125,
                 Difficulty4.Hard => 100,
                 Difficulty4.Deathrun => 75,
                 Difficulty4.Kharaa => 50,

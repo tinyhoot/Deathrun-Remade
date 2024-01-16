@@ -46,6 +46,7 @@ namespace DeathrunRemade.Configuration
         public ConfigEntryWrapper<Difficulty3> ToolCosts;
         public ConfigEntryWrapper<VehicleDifficulty> VehicleCosts;
         public ConfigEntryWrapper<Difficulty4> ScansRequired;
+        public ConfigEntryWrapper<Difficulty4> BatteryCosts;
         public ConfigEntryWrapper<Difficulty4> BatteryCapacity;
         public ConfigEntryWrapper<Difficulty4> PowerCosts;
         public ConfigEntryWrapper<Difficulty4> VehicleExitPowerLoss;
@@ -267,18 +268,24 @@ namespace DeathrunRemade.Configuration
                 defaultValue: Difficulty4.Deathrun,
                 description: "Increase the number of fragment scans required for almost all fragments in the game."
             ).WithDescription("Required Fragment Scans");
+            BatteryCosts = RegisterEntry(
+                section: SectionCosts,
+                key: nameof(BatteryCosts),
+                defaultValue: Difficulty4.Deathrun,
+                description: "Batteries cost more with higher difficulties. Adds non-rechargeable acid batteries. "
+                             + "Tools do not automatically contain batteries."
+            ).WithDescription("Battery Costs");
             BatteryCapacity = RegisterEntry(
                 section: SectionCosts,
                 key: nameof(BatteryCapacity),
                 defaultValue: Difficulty4.Deathrun,
-                description: "Batteries cost more and hold less power with higher difficulties. Copper batteries are "
-                             + "not rechargeable, but can be recycled. Tools do not automatically contain batteries."
+                description: "Acid batteries hold less power with higher difficulties."
             ).WithChoiceOptionStringsOverride(
-                "Normal (No changes)",
+                $"Normal ({AcidBattery.GetCapacityForDifficulty(Difficulty4.Normal)} power)",
                 $"Hard ({AcidBattery.GetCapacityForDifficulty(Difficulty4.Hard)} power)",
                 $"Deathrun ({AcidBattery.GetCapacityForDifficulty(Difficulty4.Deathrun)} power)",
                 $"Kharaa ({AcidBattery.GetCapacityForDifficulty(Difficulty4.Kharaa)} power)"
-            ).WithDescription("Battery Costs");
+            ).WithDescription("Battery Capacity");
             PowerCosts = RegisterEntry(
                 section: SectionCosts,
                 key: nameof(PowerCosts),
@@ -428,6 +435,7 @@ namespace DeathrunRemade.Configuration
             modOptions.AddItem(ToolCosts.ToModChoiceOption());
             modOptions.AddItem(VehicleCosts.ToModChoiceOption());
             modOptions.AddItem(ScansRequired.ToModChoiceOption());
+            modOptions.AddItem(BatteryCosts.ToModChoiceOption());
             modOptions.AddItem(BatteryCapacity.ToModChoiceOption());
             modOptions.AddItem(PowerCosts.ToModChoiceOption());
             modOptions.AddItem(VehicleExitPowerLoss.ToModChoiceOption());

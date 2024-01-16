@@ -34,6 +34,7 @@ namespace DeathrunRemade.Configuration
         
         // Costs
         public readonly Difficulty4 BatteryCapacity;
+        public readonly Difficulty4 BatteryCosts;
         public readonly Difficulty3 ToolCosts;
         public readonly Difficulty4 PowerCosts;
         public readonly Difficulty4 ScansRequired;
@@ -74,6 +75,7 @@ namespace DeathrunRemade.Configuration
             RadiationFX = config.RadiationFX.Value;
 
             BatteryCapacity = config.BatteryCapacity.Value;
+            BatteryCosts = config.BatteryCosts.Value;
             ToolCosts = config.ToolCosts.Value;
             PowerCosts = config.PowerCosts.Value;
             ScansRequired = config.ScansRequired.Value;

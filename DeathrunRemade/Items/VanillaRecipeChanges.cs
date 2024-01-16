@@ -124,7 +124,7 @@ namespace DeathrunRemade.Items
         {
             List<SerialTechData> changes = GetCraftData(config.ToolCosts).ToList();
             changes.AddRange(GetCraftData(config.VehicleCosts));
-            changes.AddRange(GetBatteryChanges(config.BatteryCapacity));
+            changes.AddRange(GetBatteryChanges(config.BatteryCosts));
             foreach (var craftData in changes.Where(techData => techData != null))
             {
                 DeathrunInit._Log.Debug($"Setting recipe for {craftData.techType}: {craftData.ingredients.ElementsToString()}");
