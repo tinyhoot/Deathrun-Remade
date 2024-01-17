@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx;
@@ -12,6 +13,7 @@ using HootLib;
 using HootLib.Configuration;
 using Nautilus.Handlers;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace DeathrunRemade.Configuration
 {
@@ -480,11 +482,69 @@ namespace DeathrunRemade.Configuration
 
         private void OnAddOptionToModMenu(AddOptionToMenuEventArgs args)
         {
-            // If the mod options menu is brought up in-game let the user look at, but not modify, the settings.
-            // Exception made for any settings in the UI section, which are always editable.
-            if (!args.IsMainMenu && GetEntryById(args.ID).GetSection() != SectionUI)
-                HootModOptions.DisableOption(args.GameObject, _disabledOptionTint);
+            if (args.IsMainMenu)
+                return;
             
+            ConfigEntryWrapperBase entry = GetEntryById(args.ID);
+            // Don't do anything to UI options, those are always editable.
+            if (entry.GetSection() == SectionUI)
+                return;
+            
+            DeathrunInit._Log.Debug($"Locking down menu option '{args.ID}'.");
+            // If the mod options menu is brought up in-game let the user look at, but not modify, the settings.
+            HootModOptions.DisableOption(args.GameObject, _disabledOptionTint);
+            // Additionally, change the value to the one that has been locked in for the current save.
+            if (!SaveData.Main.Config.TryGetSavedValue(entry.GetKey(), out object value, out Type type))
+            {
+                DeathrunInit._Log.Warn($"Tried to adjust displayed value of in-game option '{args.ID}', but "
+                                       + $"failed to find saved value!");
+                return;
+            }
+            
+            ChangeDisplayedOptionValue(args.GameObject, value, type);
+        }
+
+        private void ChangeDisplayedOptionValue(GameObject option, object value, Type type)
+        {
+            // Check for each of the different types of option this mod uses. Only one of these exists for each option.
+            Toggle toggle = option.GetComponentInChildren<Toggle>();
+            if (toggle != null)
+            {
+                toggle.SetIsOnWithoutNotify((bool)value);
+                return;
+            }
+            
+            uGUI_Choice choice = option.GetComponentInChildren<uGUI_Choice>();
+            if (choice != null)
+            {
+                // Stop these changes from reaching the config file. Has no impact beyond this menu since all objects
+                // are destroyed once it closes and the next rebuild will have the listeners on it again.
+                choice.onValueChanged.RemoveAllListeners();
+                
+                // Try to set the value for enum-based choices.
+                if (type.IsEnum || typeof(int).IsAssignableFrom(type))
+                {
+                    choice.value = (int)value;
+                }
+                else
+                {
+                    // Handle string-based choices.
+                    DeathrunInit._Log.Debug("Using fallback choice override.");
+                    choice.SetOptions(new[] { value.ToString() });
+                    choice.value = 0;
+                }
+
+                return;
+            }
+
+            uGUI_SnappingSlider slider = option.GetComponentInChildren<uGUI_SnappingSlider>();
+            if (slider != null)
+            {
+                slider.SetValueWithoutNotify((float)value);
+                return;
+            }
+            DeathrunInit._Log.Warn($"Tried to adjust displayed value of in-game option {option.name} but failed "
+                                   + $"to find option type.");
         }
     }
 }

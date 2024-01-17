@@ -117,5 +117,27 @@ namespace DeathrunRemade.Configuration
                                                    + $"Types were '{configField.FieldType.GetGenericArguments()[0]}' and '{saveField?.FieldType}'");
             }
         }
+
+        /// <summary>
+        /// Try to get a value from this saved config.
+        /// </summary>
+        /// <param name="key">The option's key, corresponding to the field name in this class.</param>
+        /// <param name="value">The value of the requested option.</param>
+        /// <param name="type">The typing of the requested option.</param>
+        /// <returns>True if an option with the given key exists, false if it does not.</returns>
+        public bool TryGetSavedValue(string key, out object value, out Type type)
+        {
+            FieldInfo entry = AccessTools.GetDeclaredFields(typeof(ConfigSave)).Find(info => info.Name == key);
+            if (entry is null)
+            {
+                value = null;
+                type = null;
+                return false;
+            }
+
+            value = entry.GetValue(this);
+            type = entry.FieldType;
+            return true;
+        }
     }
 }
