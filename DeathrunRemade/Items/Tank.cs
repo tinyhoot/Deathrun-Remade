@@ -45,7 +45,7 @@ namespace DeathrunRemade.Items
             _prefab.SetRecipe(GetRecipe(variant))
                 .WithFabricatorType(CraftTree.Type.Workbench)
                 .WithStepsToFabricatorTab(WorkbenchTankTab);
-            _prefab.SetPdaGroupCategory(TechGroup.Personal, TechCategory.Equipment);
+            _prefab.SetPdaGroupCategory(TechGroup.Personal, TechCategory.Workbench);
             _prefab.SetEquipment(EquipmentType.Tank);
             _prefabInfo.WithSizeInInventory(new Vector2int(2, 3));
             // The small tank is unlocked earlier and easier to acquire than the two bigger ones.

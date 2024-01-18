@@ -45,7 +45,7 @@ namespace DeathrunRemade.Items
             _prefab.SetRecipe(GetRecipe(variant))
                 .WithFabricatorType(CraftTree.Type.Workbench)
                 .WithStepsToFabricatorTab(WorkbenchSuitTab);
-            _prefab.SetPdaGroupCategory(TechGroup.Personal, TechCategory.Equipment);
+            _prefab.SetPdaGroupCategory(TechGroup.Personal, TechCategory.Workbench);
             _prefab.SetEquipment(EquipmentType.Body);
             _prefabInfo.WithSizeInInventory(new Vector2int(2, 2));
             _prefab.SetUnlock(GetUnlock(variant))
