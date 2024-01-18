@@ -11,7 +11,7 @@
         <AssemblyName>DeathrunRemade</AssemblyName>
         <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
-        <LangVersion>8</LangVersion>
+        <LangVersion>9</LangVersion>
         <Nullable>warnings</Nullable>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
@@ -39,6 +39,7 @@
         <Compile Include="Components\EscapePodSinker.cs" />
         <Compile Include="Components\EscapePodStatusScreen.cs" />
         <Compile Include="Components\ExplosionCountdown.cs" />
+        <Compile Include="Components\FastAscent.cs" />
         <Compile Include="Components\RunStatsTracker.cs" />
         <Compile Include="Components\RunStatsUI\ButtonEventTrigger.cs" />
         <Compile Include="Components\RunStatsUI\RunStatsWindow.cs" />

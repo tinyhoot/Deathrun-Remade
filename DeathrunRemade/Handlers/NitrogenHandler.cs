@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,11 +14,7 @@ namespace DeathrunRemade.Handlers
     /// </summary>
     internal class NitrogenHandler : MonoBehaviour
     {
-        public static NitrogenHandler Main;
-
         private const float AccumulationScalar = 10f * UpdateInterval;
-        private const float AscentGraceTime = 1.5f; // Number of seconds at fast speeds before consequences set in.
-        private const float AscentNitrogenPerSec = 10f;
         private const float GraceDepth = 10f; // Consider this value and below as completely safe, no bends.
         private const int TicksBeforeDamage = (int)(2f / UpdateInterval); // Number of seconds relative to ups.
         private const float UpdateInterval = 0.25f;
@@ -38,9 +33,6 @@ namespace DeathrunRemade.Handlers
             new Keyframe(1f, 10f) // Maximum speed at 2000 depth.
         });
         
-        private float _ascentRate;
-        private float _ascentTransgressionTime;
-        private float _lastAscentPunishTime;
         private int _damageTicks;
         private Hootimer _timer;
 
@@ -65,32 +57,15 @@ namespace DeathrunRemade.Handlers
         /// <summary>
         /// Get the Nitrogen modifier for the given TechType. Returns false if the suit is not in the dictionary.
         /// </summary>
-        /// <param name="techType"></param>
-        /// <param name="nitrogenModifier"></param>
-        /// <returns></returns>
         public static bool TryGetNitrogenModifier(TechType techType, out float[] nitrogenModifiers)
         {
-            bool found = SuitNitrogenModifiers.TryGetValue(techType, out nitrogenModifiers);
-            if (!found)
-                return false;
-
-            return found;
+            return SuitNitrogenModifiers.TryGetValue(techType, out nitrogenModifiers);
         }
 
         private void Awake()
         {
-            Main = this;
             _timer = new Hootimer(() => Time.deltaTime, UpdateInterval);
             GameEventHandler.OnPlayerDeath += OnPlayerDeath;
-        }
-
-        private void FixedUpdate()
-        {
-            Player player = Player.main;
-            if (player == null)
-                return;
-            
-            UpdateAscentRate(player);
         }
 
         private void Update()
@@ -110,7 +85,6 @@ namespace DeathrunRemade.Handlers
             save.Nitrogen.nitrogen = UpdateNitrogen(currentDepth, save.Nitrogen.safeDepth, save.Nitrogen.nitrogen);
             float oldSafeDepth = save.Nitrogen.safeDepth;
             save.Nitrogen.safeDepth = UpdateSafeDepth(currentDepth, save.Nitrogen.safeDepth, intensity, save.Nitrogen.nitrogen);
-            CheckForFastAscent(save);
             CheckForBendsDamage(player, save, currentDepth, save.Nitrogen.safeDepth, save.Nitrogen.nitrogen);
             UpdateHud(oldSafeDepth, save.Nitrogen.safeDepth);
         }
@@ -200,44 +174,6 @@ namespace DeathrunRemade.Handlers
             if (depth < GraceDepth * 2)
                 safeDepth -= 2;
             return safeDepth;
-        }
-
-        /// <summary>
-        /// Check whether the player is ascending too quickly and needs to be punished for it.
-        /// </summary>
-        private void CheckForFastAscent(SaveData save)
-        {
-            // Reset punishments if we're moving at comfortable speeds.
-            if (_ascentRate <= 1.5f)
-            {
-                _ascentTransgressionTime = Math.Max(_ascentTransgressionTime - Time.deltaTime, 0f);
-                _lastAscentPunishTime = 0f;
-                return;
-            }
-
-            // Do nothing at medium speeds.
-            if (_ascentRate <= 4f)
-                return;
-            
-            // Starting to get too fast. Start accruing "bad behaviour time".
-            // *Technically* this assumes that the update runs every frame but the math works out so long as adding
-            // and removing time both run at the same update rates.
-            _ascentTransgressionTime += Time.deltaTime;
-            WarningHandler.ShowWarning(Warning.AscentSpeed);
-
-            // Increase nitrogen only after longer than the grace time at high speeds.
-            if (_ascentRate <= 4.5 || (_ascentTransgressionTime / UpdateInterval) <= AscentGraceTime)
-                return;
-            if (_lastAscentPunishTime == 0)
-                _lastAscentPunishTime = Time.time;
-
-            if (Time.time > _lastAscentPunishTime)
-            {
-                // Punishes with a constant value plus a percentage of your current nitrogen. Automatically
-                // adjusts for lower frame rates / update rates.
-                AddNitrogen((Time.time - _lastAscentPunishTime) * (AscentNitrogenPerSec + save.Nitrogen.safeDepth / 10f));
-                _lastAscentPunishTime = Time.time;
-            }
         }
 
         /// <summary>
@@ -363,16 +299,6 @@ namespace DeathrunRemade.Handlers
             // After damage, adjust the safe depth upwards a bit.
             save.Nitrogen.safeDepth = Mathf.Max(Mathf.Min(currentDepth, GraceDepth),
                 CalculateSafeDepth(save.Nitrogen.safeDepth));
-        }
-
-        /// <summary>
-        /// Average the player's vertical speed over the past second.
-        /// </summary>
-        private void UpdateAscentRate(Player player)
-        {
-            float speed = player.GetComponent<Rigidbody>().velocity.y;
-            float ups = (1 / Time.fixedDeltaTime);
-            _ascentRate = (_ascentRate * (ups - 1) + speed) / ups;
         }
 
         /// <summary>

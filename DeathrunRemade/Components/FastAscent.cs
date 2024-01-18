@@ -1,0 +1,112 @@
+using DeathrunRemade.Handlers;
+using DeathrunRemade.Objects;
+using HootLib.Objects;
+using UnityEngine;
+
+namespace DeathrunRemade.Components
+{
+    [RequireComponent(typeof(NitrogenHandler))]
+    internal class FastAscent : MonoBehaviour
+    {
+        private const float GraceTime = 2f; // Number of seconds at fast speeds before consequences set in.
+        private const float PunishInterval = 0.25f; // Number of seconds between bad effects from too much speed.
+        private const float PunishRampUp = 2f; // Number of seconds to pass until bad effects are at full force.
+        private const float FlatNitrogenPerSec = 5f;
+        private const float SafeDepthBufferLoss = 0.25f;
+        private const float SafeDepthLoss = 0.05f;
+        private readonly AnimationCurve _punishMultCurve = new AnimationCurve(new[]
+        {
+            new Keyframe(0f, 0.5f), // Bad effects will start at half their full strength.
+            new Keyframe(1f, 1f)
+        });
+        
+        private float _ascentRate;
+        private float _dangerTime;
+        private NitrogenHandler _nitrogenHandler;
+        private Rigidbody _rigidbody;
+        private SaveData _saveData;
+        private Hootimer _timer;
+
+        private void Awake()
+        {
+            _nitrogenHandler = GetComponent<NitrogenHandler>();
+            _rigidbody = GetComponent<Rigidbody>();
+            _saveData = SaveData.Main;
+            _timer = new Hootimer(() => Time.deltaTime, PunishInterval);
+        }
+
+        private void Update()
+        {
+            if (_saveData is null)
+                return;
+            
+            switch (_ascentRate)
+            {
+                case <= 1.5f:
+                    // Reset punishments if we're moving at comfortable speeds.
+                    DecreaseDangerTime();
+                    break;
+                case > 4f and <= 4.5f:
+                    // Increase danger time without direct consequences, for now.
+                    IncreaseDangerTime();
+                    break;
+                case > 4.5f:
+                    // Increase danger time and cause issues for the player.
+                    IncreaseDangerTime();
+                    DoConsequences();
+                    break;
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (_rigidbody == null)
+                return;
+            
+            // Average the player's vertical speed over the past second.
+            float speed = _rigidbody.velocity.y;
+            float ups = (1 / Time.fixedDeltaTime);
+            _ascentRate = (_ascentRate * (ups - 1) + speed) / ups;
+        }
+        
+        private void DecreaseDangerTime()
+        {
+            _dangerTime = Mathf.Max(_dangerTime - Time.deltaTime, 0f);
+        }
+
+        private void IncreaseDangerTime()
+        {
+            // Starting to get too fast. Start accruing "danger time".
+            _dangerTime += Time.deltaTime;
+            WarningHandler.ShowWarning(Warning.AscentSpeed);
+        }
+
+        private void DoConsequences()
+        {
+            // Only do consequences after danger time exceeds the grace period.
+            if (_dangerTime <= GraceTime)
+                return;
+            // Don't inflict effects every frame, wait for a small cooldown period before doing this again.
+            if (!_timer.Tick())
+                return;
+            
+            // Idea of the maths:
+            // - Every second, lose 25% of your buffer between current depth and safe depth.
+            // - Additionally, lose 5% of your current safe depth.
+            // - Additionally, lose a flat amount.
+            // At 1000 depth, you lose 60+40+5 = 105/s.
+            // At 50 depth, you lose 5+1+5 = 11/s.
+            float safetyDiff = Player.main.GetDepth() - _saveData.Nitrogen.safeDepth;
+            float nitrogenPerSec = (safetyDiff * SafeDepthBufferLoss)
+                                   + (_saveData.Nitrogen.safeDepth * SafeDepthLoss)
+                                   + FlatNitrogenPerSec;
+            
+            // Ramp up the strength of the effect over time.
+            float totalDanger = _dangerTime - GraceTime;
+            float dangerMult = _punishMultCurve.Evaluate(PunishRampUp / Mathf.Min(totalDanger, PunishRampUp));
+            
+            float nitrogen = dangerMult * PunishInterval * nitrogenPerSec;
+            _nitrogenHandler.AddNitrogen(nitrogen);
+        }
+    }
+}

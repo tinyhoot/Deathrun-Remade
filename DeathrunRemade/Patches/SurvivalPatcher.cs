@@ -35,9 +35,9 @@ namespace DeathrunRemade.Patches
                 return;
             
             if (nitrogen >= 0)
-                NitrogenHandler.Main.AddNitrogen(nitrogen);
+                Player.main.GetComponent<NitrogenHandler>().AddNitrogen(nitrogen);
             else
-                NitrogenHandler.Main.RemoveNitrogen(-nitrogen);
+                Player.main.GetComponent<NitrogenHandler>().RemoveNitrogen(-nitrogen);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace DeathrunRemade.Patches
 
             // Purge around half of the current nitrogen level.
             float reduction = (SaveData.Main.Nitrogen.safeDepth + SaveData.Main.Nitrogen.nitrogen) / 2f;
-            NitrogenHandler.Main.RemoveNitrogen(reduction);
+            Player.main.GetComponent<NitrogenHandler>().RemoveNitrogen(reduction);
         }
 
         /// <summary>

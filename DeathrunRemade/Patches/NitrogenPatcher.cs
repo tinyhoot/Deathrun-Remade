@@ -1,3 +1,4 @@
+using DeathrunRemade.Components;
 using DeathrunRemade.Handlers;
 using HarmonyLib;
 using UnityEngine;
@@ -23,7 +24,7 @@ namespace DeathrunRemade.Patches
             if (other.gameObject.FindAncestor<Player>() == null)
                 return;
             
-            NitrogenHandler.Main.RemoveNitrogen(__instance.oxygenPerSecond * Time.deltaTime);
+            Player.main.GetComponent<NitrogenHandler>().RemoveNitrogen(__instance.oxygenPerSecond * Time.deltaTime);
         }
         
         /// <summary>
@@ -35,8 +36,11 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(VFXPrecursorGunElevator), nameof(VFXPrecursorGunElevator.OnGunElevatorDecendStart))]
         private static void PauseNitrogenOnElevatorUse()
         {
-            NitrogenHandler.Main.ResetNitrogen();
-            NitrogenHandler.Main.enabled = false;
+            Player player = Player.main;
+            player.GetComponent<FastAscent>().enabled = false;
+            var nitrogen = player.GetComponent<NitrogenHandler>();
+            nitrogen.ResetNitrogen();
+            nitrogen.enabled = false;
         }
         
         /// <summary>
@@ -46,7 +50,9 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(VFXPrecursorGunElevator), nameof(VFXPrecursorGunElevator.OnPlayerCinematicModeEnd))]
         private static void RestoreNitrogenAfterElevatorUse()
         {
-            NitrogenHandler.Main.enabled = true;
+            Player player = Player.main;
+            player.GetComponent<FastAscent>().enabled = true;
+            player.GetComponent<NitrogenHandler>().enabled = true;
         }
         
         /// <summary>
@@ -56,7 +62,7 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(PrecursorTeleporter), nameof(PrecursorTeleporter.OnActivateTeleporter))]
         private static void ResetNitrogenOnTeleporterUse()
         {
-            NitrogenHandler.Main.ResetNitrogen();
+            Player.main.GetComponent<NitrogenHandler>().ResetNitrogen();
         }
     }
 }

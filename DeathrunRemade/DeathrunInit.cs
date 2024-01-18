@@ -243,6 +243,7 @@ namespace DeathrunRemade
                     HootHudBar.Create<NitrogenBar>("NitrogenBar", -45, out GameObject _);
                     _DepthHud = SafeDepthHud.Create(out GameObject _);
                     player.gameObject.AddComponent<NitrogenHandler>();
+                    player.gameObject.AddComponent<FastAscent>();
                 }
             }
             catch (Exception ex)
