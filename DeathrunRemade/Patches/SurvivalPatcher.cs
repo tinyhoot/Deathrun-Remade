@@ -105,7 +105,7 @@ namespace DeathrunRemade.Patches
             if (eatable == null)
                 return false;
             TechType techType = CraftData.GetTechType(eatable.gameObject);
-            if (!NitrogenFood.TryGetValue(techType, out float baseValue))
+            if (!NitrogenFood.TryGetValue(techType, out nitrogen))
                 return false;
             // Adjust for how rotten the eatable is.
             // Removed for now since this does not seem to work properly for living fish and you eventually reach a
