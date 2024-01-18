@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -43,6 +44,10 @@ namespace DeathrunRemade.Handlers
             { TechType.WaterFiltrationSuit, new []{ 0.15f, 0.1f } },
             { TechType.Rebreather, new[] { 0.05f, 0f } },
         };
+
+        public static event Action OnDepthHudFadeIn;
+        
+        public static event Action OnDepthHudFadeOut;
 
         /// <summary>
         /// Add a new suit to the dictionary of TechTypes and their Nitrogen Modifiers.
@@ -308,11 +313,11 @@ namespace DeathrunRemade.Handlers
         {
             if (oldSafeDepth < GraceDepth && newSafeDepth >= GraceDepth)
             {
-                DeathrunInit._DepthHud.FadeIn();
+                OnDepthHudFadeIn?.Invoke();
                 return;
             }
             if (newSafeDepth < 3f)
-                DeathrunInit._DepthHud.FadeOut();
+                OnDepthHudFadeOut?.Invoke();
         }
 
         /// <summary>

@@ -27,9 +27,7 @@ namespace DeathrunRemade
 
         internal static Config _Config;
         internal static ILogHandler _Log;
-        internal static NotificationHandler _Notifications;
         internal static RunHandler _RunHandler;
-        internal static SafeDepthHud _DepthHud;
         private EncyclopediaHandler _encyclopediaHandler;
         private VanillaRecipeChanges _recipeChanges;
 
@@ -138,10 +136,11 @@ namespace DeathrunRemade
 
         private void InitHandlers()
         {
-            _Notifications = _persistentObject.AddComponent<NotificationHandler>();
             // Load statistics of all runs ever played.
             _RunHandler = new RunHandler(_Log);
-            _ = new WarningHandler(_Config, _Log, _Notifications, SaveData.Main);
+            // Prepare in-game messaging.
+            var notifications = _persistentObject.AddComponent<NotificationHandler>();
+            _ = new WarningHandler(_Config, _Log, notifications, SaveData.Main);
             _encyclopediaHandler = new EncyclopediaHandler();
             _encyclopediaHandler.RegisterPdaEntries();
         }
@@ -229,7 +228,7 @@ namespace DeathrunRemade
                 if (config.NitrogenBends != Difficulty3.Normal && GameModeUtils.RequiresOxygen())
                 {
                     HootHudBar.Create<NitrogenBar>("NitrogenBar", -45, out GameObject _);
-                    _DepthHud = SafeDepthHud.Create(out GameObject _);
+                    SafeDepthHud.Create(out GameObject _);
                     player.gameObject.AddComponent<NitrogenHandler>();
                     player.gameObject.AddComponent<FastAscent>();
                 }

@@ -73,6 +73,8 @@ namespace DeathrunRemade.Components
         {
             // Register these events here just to be sure those components had the chance to start up.
             GameEventHandler.OnHudUpdate += OnHudUpdate;
+            NitrogenHandler.OnDepthHudFadeIn += FadeIn;
+            NitrogenHandler.OnDepthHudFadeOut += FadeOut;
         }
 
         private void Update()
