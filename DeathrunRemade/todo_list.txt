@@ -2,14 +2,12 @@ Things that still need doing because if I don't write them down right now I'll f
 
 Monos
 - Complete functionality of deco module and filterchip
-- Nitrogen ascent is not punishing enough
-- Safe depth adjusts at constant rate? Too slowly.
 
 New Ideas
 - Make tanks not refill by themselves. Refill at special point?
 - Progressively worse Kharaa infection to counteract difficulty being too frontloaded
 - Explicit compatibility with some popular/well fitting mods. Like C2C, Unknown Name, Enhanced Sleep, Custom Batteries, ...
-- Add game quit/reload warning on loading screen to hootils
+- Add game quit/reload warning on loading screen to hootils -> should probably be done by Nautilus
 - Introduce QoL way to get stalker teeth because YOU NEED SO MANY
 - Probably difficult. Partial base flooding on entry? Stoppable with bulkhead? Apparently they already do that in
   vanilla, so it could be doable.
