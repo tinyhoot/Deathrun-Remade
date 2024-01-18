@@ -13,7 +13,7 @@ namespace DeathrunRemade.Handlers
     /// <summary>
     /// Everything that communicates directly with the player goes here.
     /// </summary>
-    internal class NotificationHandler
+    internal class NotificationHandler : MonoBehaviour
     {
         public const string TopMiddle = "top_middle";
         public const string LeftMiddle = "left_middle";
@@ -23,21 +23,32 @@ namespace DeathrunRemade.Handlers
         public static bool Ready { get; private set; }
         
         private ILogHandler _log;
-        private Dictionary<string, BasicText> _textSlots;
-        private List<Message> _messages;
+        private Dictionary<string, BasicText> _textSlots = new();
+        private List<Message> _messages = new();
 
-        public NotificationHandler(ILogHandler logger)
+        private void Awake()
         {
             Main = this;
-            _log = logger;
-            _textSlots = new Dictionary<string, BasicText>();
-            _messages = new List<Message>();
+            _log = DeathrunInit._Log;
+            GameEventHandler.OnMainMenuLoaded += OnMainMenuLoaded;
+            
+            // Run the update method once per second.
+            InvokeRepeating(nameof(UpdateMessages), 0f, 1f);
+        }
+        
+        /// <summary>
+        /// Register this on main menu load to set up all slots as soon as possible.
+        /// </summary>
+        public void OnMainMenuLoaded()
+        {
+            GameEventHandler.OnMainMenuLoaded -= OnMainMenuLoaded;
+            SetupSlots();
         }
 
         /// <summary>
         /// Prepare all default slots for the rest of the mod to use.
         /// </summary>
-        public void SetupSlots()
+        private void SetupSlots()
         {
             RectTransform rect = (RectTransform)uGUI.main.intro.transform;
             CreateSlot(TopMiddle, 0, (int)(rect.rect.height / 2) - 150);
@@ -50,7 +61,7 @@ namespace DeathrunRemade.Handlers
         /// <summary>
         /// Perform one update tick on all current messages.
         /// </summary>
-        public void Update()
+        private void UpdateMessages()
         {
             // Nothing to do.
             if (_textSlots.Count == 0 || _messages.Count == 0)
@@ -186,15 +197,6 @@ namespace DeathrunRemade.Handlers
             if (fade == null || text == null)
                 return false;
             return slot.GetTextFade().enabled && slot.GetTextObject().activeSelf;
-        }
-
-        /// <summary>
-        /// Register this on main menu load to set up all slots as soon as possible.
-        /// </summary>
-        public void OnMainMenuLoaded()
-        {
-            GameEventHandler.OnMainMenuLoaded -= OnMainMenuLoaded;
-            SetupSlots();
         }
     }
 }

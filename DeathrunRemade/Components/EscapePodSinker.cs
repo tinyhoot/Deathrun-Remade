@@ -1,4 +1,5 @@
 using System.Collections;
+using DeathrunRemade.Handlers;
 using DeathrunRemade.Objects;
 using HootLib;
 using Nautilus.Utility;
@@ -25,6 +26,7 @@ namespace DeathrunRemade.Components
             _pod = GetComponent<EscapePod>();
             _rigidbody = _pod.rigidbodyComponent;
             _wf = GetComponent<WorldForces>();
+            GameEventHandler.OnSavedGameLoaded += OnSavedGameLoaded;
         }
 
         private void Update()

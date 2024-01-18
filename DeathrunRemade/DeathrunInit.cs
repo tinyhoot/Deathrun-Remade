@@ -1,7 +1,6 @@
 ﻿using System;
 using BepInEx;
 using DeathrunRemade.Components;
-using DeathrunRemade.Components.RunStatsUI;
 using DeathrunRemade.Configuration;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
@@ -11,7 +10,6 @@ using DeathrunRemade.Patches;
 using HarmonyLib;
 using HootLib;
 using HootLib.Components;
-using HootLib.Objects;
 using Nautilus.Handlers;
 using Nautilus.Utility;
 using UnityEngine;
@@ -34,15 +32,11 @@ namespace DeathrunRemade
         internal static SafeDepthHud _DepthHud;
         private EncyclopediaHandler _encyclopediaHandler;
         private VanillaRecipeChanges _recipeChanges;
-        
+
+        // Persists across scenes, holds vital components.
+        private GameObject _persistentObject;
         // The base object from which the main menu highscores window is instantiated.
         private GameObject _baseStatsWindow;
-        // The object that is actually active.
-        internal static RunStatsWindow _RunStatsWindow;
-
-        // Run Update() once per second.
-        private const float UpdateInterval = 1f;
-        private Hootimer _updateTimer;
         private Harmony _harmony;
 
         private void Awake()
@@ -50,11 +44,15 @@ namespace DeathrunRemade
             _Log = new HootLogger(NAME);
             _Log.Info($"{NAME} v{VERSION} starting up.");
 
-            _updateTimer = new Hootimer(() => Time.deltaTime, UpdateInterval);
+            // Create a holding GameObject under BepInEx's for data which should persist in both main menu and ingame.
+            // Will not actually persist if the BepInEx object is not tagged with SceneCleanerPreserve. But at that
+            // point you have other problems.
+            _persistentObject = new GameObject("Deathrun Components");
+            _persistentObject.transform.SetParent(transform, false);
             
             // Registering config.
             _Config = new Config(Hootils.GetConfigFilePath(NAME), Info.Metadata);
-            _Config.RegisterModOptions(NAME, transform);
+            _Config.RegisterModOptions(NAME, _persistentObject.transform);
 
             // Register the in-game save game of the current run.
             SaveData.Main = SaveDataHandler.RegisterSaveDataCache<SaveData>();
@@ -78,16 +76,6 @@ namespace DeathrunRemade
             }
 
             _Log.Info("Finished loading.");
-        }
-
-        private void Update()
-        {
-            // Only run this method every so often.
-            if (!_updateTimer.Tick())
-                return;
-            
-            // Putting these things here prevents having to run them as MonoBehaviours too.
-            _Notifications.Update();
         }
 
         /// <summary>
@@ -150,7 +138,7 @@ namespace DeathrunRemade
 
         private void InitHandlers()
         {
-            _Notifications = new NotificationHandler(_Log);
+            _Notifications = _persistentObject.AddComponent<NotificationHandler>();
             // Load statistics of all runs ever played.
             _RunHandler = new RunHandler(_Log);
             _ = new WarningHandler(_Config, _Log, _Notifications, SaveData.Main);
@@ -172,6 +160,7 @@ namespace DeathrunRemade
             _Log.Debug("Loading assets...");
             AssetBundle bundle = AssetBundleLoadingUtils.LoadFromAssetsFolder(Hootils.GetAssembly(), "highscores");
             _baseStatsWindow = bundle.LoadAsset<GameObject>("Highscores");
+            _baseStatsWindow.transform.SetParent(_persistentObject.transform);
             _baseStatsWindow.SetActive(false);
 
             _Log.Debug("Assets loaded.");
@@ -185,7 +174,6 @@ namespace DeathrunRemade
         {
             // Ensure the highscore window is always ready to go.
             var window = Instantiate(_baseStatsWindow, uGUI_MainMenu.main.transform, false);
-            _RunStatsWindow = window.GetComponent<RunStatsWindow>();
             var option = uGUI_MainMenu.main.primaryOptions.gameObject.AddComponent<MainMenuCustomPrimaryOption>();
             option.onClick.AddListener(window.GetComponent<MainMenuCustomWindow>().Open);
             option.SetText("Deathrun Stats");
@@ -286,12 +274,9 @@ namespace DeathrunRemade
         private void RegisterGameEvents()
         {
             GameEventHandler.RegisterEvents();
-            // Initialise deathrun messaging as soon as uGUI_Main is ready, i.e. the main menu loads.
-            GameEventHandler.OnMainMenuLoaded += _Notifications.OnMainMenuLoaded;
             GameEventHandler.OnMainMenuLoaded += OnMainMenuLoaded;
             GameEventHandler.OnPlayerAwake += OnPlayerAwake;
             GameEventHandler.OnPlayerGainControl += OnPlayerGainControl;
-            GameEventHandler.OnSavedGameLoaded += EscapePodSinker.OnSavedGameLoaded;
             SaveData.OnSaveDataLoaded += OnConfigLockedIn;
         }
 
