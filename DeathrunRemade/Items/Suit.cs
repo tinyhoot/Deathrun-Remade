@@ -1,5 +1,4 @@
 using DeathrunRemade.Handlers;
-using DeathrunRemade.Patches;
 using HootLib;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
@@ -212,18 +211,22 @@ namespace DeathrunRemade.Items
         }
 
         /// <summary>
-        /// Get the temperature limit of the given suit.
+        /// Try to get the custom temperature limit of the given suit. Returns false if the techType is not a suit
+        /// registered by this mod.
         /// </summary>
-        public static float GetTemperatureLimit(TechType techType)
+        public static bool TryGetTemperatureLimit(TechType techType, out float limit)
         {
-            float tempLimit = SuitPatcher.MinTemperatureLimit;
+            // Vanilla limit without any suit at all is 49°C. Reinforced suit is 64°C.
+            limit = 0f;
+            
             if (techType.Equals(ReinforcedFiltration))
-                tempLimit += 15f;
+                limit = 64f;
             if (techType.Equals(ReinforcedMk2))
-                tempLimit += 20f;
+                limit = 69f;
             if (techType.Equals(ReinforcedMk3))
-                tempLimit += 30f;
-            return tempLimit;
+                limit = 79f;
+            
+            return limit != 0f;
         }
     }
 }

@@ -1,6 +1,5 @@
 using DeathrunRemade.Items;
 using HarmonyLib;
-using UnityEngine;
 
 namespace DeathrunRemade.Patches
 {
@@ -33,28 +32,17 @@ namespace DeathrunRemade.Patches
         private static void UpdateSuitValues(ref Player __instance)
         {
             TechType suit = Inventory.main.equipment.GetTechTypeInSlot("Body");
-            float limit = GetTemperatureLimit(suit);
+
+            // Only change things if this is a suit added by our mod.
+            if (!Suit.TryGetTemperatureLimit(suit, out float limit))
+                return;
             if (__instance.HasReinforcedGloves())
                 limit += 6f;
-            // Do not accidentally overwrite changes on custom suits from other mods.
+            
+            // Other mods might add extra equipment that raises the limit even higher. Do not overwrite that,
+            // but ensure a floor.
             if (__instance.temperatureDamage.minDamageTemperature < limit)
                 __instance.temperatureDamage.minDamageTemperature = limit;
-        }
-        
-        /// <summary>
-        /// Get the temperature limit of a suit.
-        /// </summary>
-        public static float GetTemperatureLimit(TechType suit)
-        {
-            if (suit == TechType.None)
-                return MinTemperatureLimit;
-            
-            float tempLimit = MinTemperatureLimit;
-            if (suit.Equals(TechType.ReinforcedDiveSuit))
-                tempLimit += 15f;
-            // Also check for temperature from custom suits.
-            tempLimit = Mathf.Max(tempLimit, Suit.GetTemperatureLimit(suit));
-            return tempLimit;
         }
     }
 }
