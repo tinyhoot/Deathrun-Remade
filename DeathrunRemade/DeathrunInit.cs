@@ -159,7 +159,8 @@ namespace DeathrunRemade
             _Log.Debug("Loading assets...");
             AssetBundle bundle = AssetBundleLoadingUtils.LoadFromAssetsFolder(Hootils.GetAssembly(), "highscores");
             _baseStatsWindow = bundle.LoadAsset<GameObject>("Highscores");
-            _baseStatsWindow.transform.SetParent(_persistentObject.transform);
+            // For some reason doing this causes the game to take a full minute to quit.
+            // _baseStatsWindow.transform.SetParent(_persistentObject.transform);
             _baseStatsWindow.SetActive(false);
 
             _Log.Debug("Assets loaded.");
