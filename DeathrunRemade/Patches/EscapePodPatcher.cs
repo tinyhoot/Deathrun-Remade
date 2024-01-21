@@ -22,6 +22,16 @@ namespace DeathrunRemade.Patches
         }
 
         /// <summary>
+        /// If this is a new game start sinking the pod once the intro is either over or it has been skipped.
+        /// </summary>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(EscapePod), nameof(EscapePod.StopIntroCinematic))]
+        private static void SinkNewbornPod(EscapePod __instance)
+        {
+            __instance.gameObject.GetComponent<EscapePodSinker>().SinkPod();
+        }
+
+        /// <summary>
         /// Override the spawn location of the lifepod at the start of the game.
         /// </summary>
         /// <param name="__result">The spawnpoint chosen by the game.</param>

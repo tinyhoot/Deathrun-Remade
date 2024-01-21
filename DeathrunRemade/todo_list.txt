@@ -10,7 +10,7 @@ New Ideas
 - Add game quit/reload warning on loading screen to hootils -> should probably be done by Nautilus
 - Introduce QoL way to get stalker teeth because YOU NEED SO MANY
 - Probably difficult. Partial base flooding on entry? Stoppable with bulkhead? Apparently they already do that in
-  vanilla, so it could be doable.
+  vanilla, so it could be doable. Vanilla seems kinda buggy though.
 - Draining water costs power
 - Some extra stuff from RadiationChallenge? Lifepod no longer safe, that kind of thing?
 - Add additional window to run stats to view all the details about a run and make the scoring more transparent.
@@ -24,6 +24,7 @@ Checks at the very end
 - Do bases really get damaged by the explosion?
 - Are all relevant config settings contributing to the score?
 - Are all the encyclopedia tutorials accurate and up to date?
+- Oxygen below 100m works as it should?
 
 Reworks before release
 - Properly adjust all in-game messaging to the Warnings system.

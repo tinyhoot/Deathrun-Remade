@@ -13,11 +13,9 @@ namespace DeathrunRemade.Components
         private EscapePod _pod;
         private Rigidbody _rigidbody;
         private WorldForces _wf;
-        private float _avgDistance;
-        private Vector3 _previousPos;
-        private SaveData _saveData => SaveData.Main;
+        private SaveData _saveData;
         
-        public float freezeDistance = 120f;
+        public float freezeDistance = 100f;
         public bool IsAnchored { get; private set; }
         public bool IsSinking { get; private set; }
 
@@ -26,91 +24,64 @@ namespace DeathrunRemade.Components
             _pod = GetComponent<EscapePod>();
             _rigidbody = _pod.rigidbodyComponent;
             _wf = GetComponent<WorldForces>();
+            _saveData = SaveData.Main;
+            
+            // Ensure the lifepod does not move anywhere until the game has loaded in far enough for us to decide what to do.
+            SetKinematic(true);
+            // Only handles existing save games. A harmony patch initiates sinking for new games.
             GameEventHandler.OnSavedGameLoaded += OnSavedGameLoaded;
         }
-
-        private void Update()
-        {
-            // Don't do anything if we're still in the loading screen.
-            if (WaitScreen.IsWaiting || uGUI.main.intro.showing || _pod.IsPlayingIntroCinematic())
-                return;
-            
-            // If this is a first time startup, sink!
-            if (_saveData.Config.SinkLifepod && !_saveData.EscapePod.isAnchored && !IsSinking)
-                SinkPod();
-            
-            // Ensure no other component (like the Stabiliser!) interferes with the rotation.
-            if (_saveData.EscapePod.isToppled)
-                _rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-            
-            // Check whether this component has finished its job.
-            if (IsAnchored)
-            {
-                // If we have just repaired the pod, make it stand back upright.
-                if (_saveData.EscapePod.isToppled && DeathrunUtils.IsPodRepaired(_pod))
-                {
-                    SetKinematic(false);
-                    // Undoing the rotation lock allows the stabiliser component to do the work for us.
-                    _rigidbody.constraints = RigidbodyConstraints.None;
-                    _saveData.EscapePod.isToppled = false;
-                }
-                // We have done everything we needed to. There's no reason to keep this component running.
-                if (!_saveData.Config.ToppleLifepod || (_saveData.Config.ToppleLifepod && !_saveData.EscapePod.isToppled))
-                    Destroy(this);
-            }
-        }
-
+        
         private void FixedUpdate()
         {
-            // Don't do anything if we're still in the loading screen.
-            if (WaitScreen.IsWaiting || uGUI.main.intro.showing || _pod.IsPlayingIntroCinematic())
-                return;
-            // All of the logic below only applies to a sinking pod.
-            if (IsAnchored || !IsSinking)
-                return;
+            // Make the pod sink smoothly if the player is inside it. Something else keeps resetting this and I can't
+            // figure out what so this has to be done every frame.
+            if (IsSinking)
+                _rigidbody.interpolation = Player.main.currentEscapePod == null ? RigidbodyInterpolation.Interpolate : RigidbodyInterpolation.None;
+        }
 
-            // Ensure the pod does not sink through terrain.
-            FreezeIfTooFar();
-            // Make the pod move smoothly if the player is inside it. Something else keeps resetting this so it has to
-            // be done every update.
-            Player player = Player.main;
-            _rigidbody.interpolation = player.currentEscapePod == null ? RigidbodyInterpolation.Interpolate : RigidbodyInterpolation.None;
-            // If the pod stopped moving, assume it hit the ground and anchor it.
-            if (IsSinking && HasHitBottom())
+        /// <summary>
+        /// Start sinking the lifepod.
+        /// </summary>
+        public void SinkPod()
+        {
+            DeathrunInit._Log.Debug("Sinking lifepod.");
+            SetKinematic(false);
+            // Sinking works by setting the gravity values super high.
+            _wf.aboveWaterGravity = 50f;
+            _wf.underwaterGravity = 30f;
+            // Temporarily disable interpolation to enable precision movement and prevent jitter while sinking.
+            _rigidbody.interpolation = RigidbodyInterpolation.None;
+            IsSinking = true;
+
+            StartCoroutine(CheckForGround());
+        }
+
+        private IEnumerator CheckForGround()
+        {
+            // Get a layer mask so we can check exclusively for proximity to terrain.
+            LayerMask terrain = LayerMask.GetMask("TerrainCollider");
+            while (IsSinking)
             {
-                if (_saveData.Config.ToppleLifepod)
-                    TopplePod();
+                yield return new WaitForSeconds(0.25f);
+                // Ensure the pod does not fall through the ground.
+                FreezeIfTooFar();
+                
+                // Check for terrain underneath the pod while leaving enough space for the pod to fall over.
+                if (!Physics.Raycast(_pod.transform.position, Vector3.down, 4.5f, terrain))
+                    continue;
+                // DeathrunInit._Log.InGameMessage($"Hit '{hitInfo.collider.name}' in {hitInfo.distance:F1}m");
+                
                 AnchorPod();
-                // Only shake the camera if the player is inside the pod.
-                if (player.currentEscapePod != null)
-                    MainCameraControl.main.ShakeCamera(3f, 1f, MainCameraControl.ShakeMode.Cos);
-                // Play an impact sound centred on the pod to really sell it.
-                var asset = AudioUtils.GetFmodAsset("event:/sub/cyclops/impact_solid_hard");
-                FMODUWE.PlayOneShot(asset, transform.position);
-
-                DeathrunInit._Log.InGameMessage("The lifepod has hit bottom!");
+                SimulateImpact();
+                yield break;
             }
         }
         
         /// <summary>
-        /// Re-apply physics changes to the pod when a saved game is loaded.
+        /// Anchor the pod in place. Works for after the pod sunk and hit the ground <em>and</em> for re-anchoring after
+        /// loading an existing save.
         /// </summary>
-        public static void OnSavedGameLoaded()
-        {
-            EscapePod.main.GetComponent<EscapePodSinker>().SetupSavedGame();
-        }
-
-        private void SetupSavedGame()
-        {
-            // If the pod is still sinking for some reason, don't re-anchor just yet.
-            if (_saveData.Config.SinkLifepod && !_saveData.EscapePod.isAnchored)
-                return;
-            
-            DeathrunInit._Log.Debug("Re-anchoring life pod.");
-            AnchorPod();
-            Destroy(this);
-        }
-
         public void AnchorPod()
         {
             // Reset gravity and movement precision.
@@ -123,74 +94,40 @@ namespace DeathrunRemade.Components
             IsAnchored = true;
             IsSinking = false;
             _saveData.EscapePod.isAnchored = true;
+            
+            if (_saveData.Config.ToppleLifepod)
+            {
+                if (!_saveData.EscapePod.isToppled)
+                    TopplePod();
+                StartCoroutine(WaitForRepair());
+            }
+            else
+            {
+                // With no toppling to do, we're done.
+                Destroy(this);
+            }
         }
 
         /// <summary>
-        /// Check whether the lifepod has reached the bottom.
+        /// Make it <em>feel</em> like the pod just hit the ground.
         /// </summary>
-        private bool HasHitBottom()
+        private void SimulateImpact()
         {
-            // If the pod is currently frozen (e.g. by the player moving too far away) hold off on any calculations.
-            if (_rigidbody.isKinematic)
-                return false;
-
-            // Average the distance moved over the past second. Use sqrMagnitude to avoid slow sqrRoot calculations.
-            float distance = Vector3.SqrMagnitude(transform.position - _previousPos);
-            _avgDistance = Hootils.AverageOverTime(_avgDistance, distance, Time.fixedDeltaTime, 0.5f);
-            _previousPos = transform.position;
-            // If the average distance is very low and we're too low to have just started sinking we probably hit bottom.
-            return _avgDistance < Mathf.Pow(0.2f, 2f) && Ocean.GetDepthOf(gameObject) > 10f;
+            // Only shake the camera if the player is inside the pod.
+            if (Player.main.currentEscapePod != null)
+                MainCameraControl.main.ShakeCamera(3f, 1f, MainCameraControl.ShakeMode.Cos);
+            // Play an impact sound centred on the pod to really sell it.
+            var asset = AudioUtils.GetFmodAsset("event:/sub/cyclops/impact_solid_hard");
+            FMODUWE.PlayOneShot(asset, transform.position);
+            
+            DeathrunInit._Log.InGameMessage("The lifepod has hit bottom!");
         }
 
         /// <summary>
-        /// If the player goes too far away from the pod there is a danger of it clipping through the floor.
-        /// Freeze it temporarily to prevent this.
-        ///
-        /// There is a <see cref="FreezeRigidbodyWhenFar"/> component that does a similar thing but it also updates the
-        /// interpolation mode which causes serious stuttering when inside the pod.
+        /// Simulate an impact which makes the pod roll over.
         /// </summary>
-        private void FreezeIfTooFar()
+        private void TopplePod()
         {
-            float sqrDistance = (MainCamera.camera.transform.position - transform.position).sqrMagnitude;
-            // Don't update any kinematics when the player is very close, i.e. practically inside the pod.
-            if (sqrDistance < freezeDistance)
-                return;
-            bool kinematic = sqrDistance > Mathf.Pow(freezeDistance, 2f);
-            SetKinematic(kinematic);
-        }
-
-        private void SetKinematic(bool kinematic)
-        {
-            // DeathrunInit._Log.Debug($"Setting lifepod kinematic: {kinematic}");
-            _rigidbody.isKinematic = kinematic;
-            _rigidbody.collisionDetectionMode = kinematic
-                ? CollisionDetectionMode.ContinuousSpeculative
-                : CollisionDetectionMode.ContinuousDynamic;
-        }
-
-        /// <summary>
-        /// Start sinking the lifepod.
-        /// </summary>
-        public void SinkPod()
-        {
-            DeathrunInit._Log.Debug("Sinking lifepod.");
-            // Sinking works by setting the gravity values super high.
-            _wf.aboveWaterGravity = 50f;
-            _wf.underwaterGravity = 30f;
-            // Temporarily disable interpolation to enable precision movement and prevent jitter while sinking.
-            _rigidbody.interpolation = RigidbodyInterpolation.None;
-            IsSinking = true;
-        }
-
-        /// <summary>
-        /// Simulate a pushing force which makes the pod roll over.
-        /// </summary>
-        public void TopplePod()
-        {
-            // Move the pod back up a bit to give it some space to fall over.
-            transform.Translate(0f, 3f, 0f);
-            // This doesn't seem to move the player with it so do it manually.
-            Player.main.transform.Translate(0f, 3f, 0f);
             // Figure out a random rotation to topple to such that the lifepod is sideways or upside down.
             float angle = Random.Range(0.35f, 1f) * 180f;
             float tiltX = Random.Range(0f, 1f);
@@ -201,7 +138,7 @@ namespace DeathrunRemade.Components
             StartCoroutine(RotatePod(targetRotation));
             _saveData.EscapePod.isToppled = true;
         }
-
+        
         /// <summary>
         /// Rotate the pod towards the target angle over several frames.
         /// </summary>
@@ -220,6 +157,67 @@ namespace DeathrunRemade.Components
                 yield return null;
             }
             DeathrunInit._Log.Debug("Lifepod topple has finished rotating.");
+        }
+
+        private IEnumerator WaitForRepair()
+        {
+            // Do not try to listen to repair events, just in case a save with a repaired but flipped pod is loaded.
+            // Instead, check for fully repaired lifepod health.
+            while (!_pod.liveMixin.IsFullHealth())
+                yield return new WaitForSeconds(1f);
+            
+            DeathrunInit._Log.Debug("Lifepod has been repaired, undoing rotation lock.");
+            SetKinematic(false);
+            // Undoing the rotation lock allows the stabiliser component to do the work for us.
+            _rigidbody.constraints = RigidbodyConstraints.FreezePosition;
+            // Wait a reasonable amount of time for the pod to get into an upright position.
+            yield return new WaitForSeconds(10f);
+            DeathrunInit._Log.Debug("Lifepod expected to be upright. Setting kinematic.");
+            SetKinematic(true);
+            Destroy(this);
+        }
+
+        /// <summary>
+        /// Do the setup for an escape pod that isn't newborn but rather loaded from an existing save.
+        /// </summary>
+        private void OnSavedGameLoaded()
+        {
+            if (!_saveData.EscapePod.isAnchored)
+            {
+                DeathrunInit._Log.Debug("Re-sinking life pod.");
+                SinkPod();
+            }
+            else
+            {
+                DeathrunInit._Log.Debug("Re-anchoring life pod.");
+                AnchorPod();
+            }
+        }
+        
+        /// <summary>
+        /// If the player goes too far away from the pod there is a danger of it clipping through the floor.
+        /// Freeze it temporarily to prevent this.
+        ///
+        /// There is a <see cref="FreezeRigidbodyWhenFar"/> component that does a similar thing but it also updates the
+        /// interpolation mode which causes serious stuttering when inside the pod.
+        /// </summary>
+        private void FreezeIfTooFar()
+        {
+            float sqrDistance = (MainCamera.camera.transform.position - transform.position).sqrMagnitude;
+            // Don't update any kinematics when the player is very close, i.e. practically inside the pod.
+            if (sqrDistance < freezeDistance)
+                return;
+            bool kinematic = sqrDistance > Mathf.Pow(freezeDistance, 2f);
+            SetKinematic(kinematic);
+        }
+        
+        private void SetKinematic(bool kinematic)
+        {
+            // DeathrunInit._Log.Debug($"Setting lifepod kinematic: {kinematic}");
+            _rigidbody.isKinematic = kinematic;
+            _rigidbody.collisionDetectionMode = kinematic
+                ? CollisionDetectionMode.ContinuousSpeculative
+                : CollisionDetectionMode.ContinuousDynamic;
         }
     }
 }

@@ -333,14 +333,18 @@ namespace DeathrunRemade
 
         private void TestMe()
         {
-            foreach (var bundle in AssetBundle.GetAllLoadedAssetBundles())
+            // foreach (var bundle in AssetBundle.GetAllLoadedAssetBundles())
+            // {
+            //     _Log.Debug($"Bundle: {bundle.name}");
+            //     
+            //     foreach (var path in bundle.GetAllAssetNames())
+            //     {
+            //         _Log.Debug($"> {path}");
+            //     }
+            // }
+            for (int i = 0; i < 32; i++)
             {
-                _Log.Debug($"Bundle: {bundle.name}");
-                
-                foreach (var path in bundle.GetAllAssetNames())
-                {
-                    _Log.Debug($"> {path}");
-                }
+                _Log.Debug($"Layer {i} - '{LayerMask.LayerToName(i)}'");
             }
         }
     }
