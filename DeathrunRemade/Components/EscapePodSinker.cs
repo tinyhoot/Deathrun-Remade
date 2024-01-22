@@ -68,7 +68,8 @@ namespace DeathrunRemade.Components
                 FreezeIfTooFar();
                 
                 // Check for terrain underneath the pod while leaving enough space for the pod to fall over.
-                if (!Physics.Raycast(_pod.transform.position, Vector3.down, 4.5f, terrain))
+                float distance = _saveData.Config.ToppleLifepod ? 6.5f : 4f;
+                if (!Physics.Raycast(_pod.transform.position, Vector3.down, distance, terrain))
                     continue;
                 // DeathrunInit._Log.InGameMessage($"Hit '{hitInfo.collider.name}' in {hitInfo.distance:F1}m");
                 
