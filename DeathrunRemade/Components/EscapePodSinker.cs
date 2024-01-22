@@ -217,10 +217,10 @@ namespace DeathrunRemade.Components
         private void SetKinematic(bool kinematic)
         {
             // DeathrunInit._Log.Debug($"Setting lifepod kinematic: {kinematic}");
-            _rigidbody.isKinematic = kinematic;
             _rigidbody.collisionDetectionMode = kinematic
                 ? CollisionDetectionMode.ContinuousSpeculative
                 : CollisionDetectionMode.ContinuousDynamic;
+            _rigidbody.isKinematic = kinematic;
         }
     }
 }
