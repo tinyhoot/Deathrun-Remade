@@ -18,6 +18,32 @@ namespace DeathrunRemade.Handlers
             { TechType.WaterFiltrationSuit, new []{ 1300f, 800f } },
         };
 
+        public static readonly Utils.MonitoredValue<int> CompassDepthClassOverride = new Utils.MonitoredValue<int>();
+
+        /// <summary>
+        /// Update the depth class to be displayed by the compass (regular vs danger).
+        /// </summary>
+        public static void UpdateCompassDepthClass(Player player)
+        {
+            // There is a different depth class system for vehicles, do not bother when the player is piloting one.
+            if (SaveData.Main is null || Inventory.main == null || player.GetVehicle() != null)
+                return;
+            
+            // The depth is always safe inside non-flooded bases.
+            // IsLeaking() as opposed to IsUnderwater() allows for a red compass even while the player is still in
+            // knee-deep water and not yet taking damage, which works well as a warning system.
+            if (player.IsInBase() && !player.GetCurrentSub().IsLeaking())
+            {
+                CompassDepthClassOverride.Update((int)Ocean.DepthClass.Safe);
+                return;
+            }
+            
+            TechType suit = Inventory.main.equipment.GetTechTypeInSlot("Body");
+            int crushDepth = Mathf.FloorToInt(GetCrushDepth(suit, SaveData.Main.Config));
+            Ocean.DepthClass depthClass = player.GetDepth() >= crushDepth ? Ocean.DepthClass.Crush : Ocean.DepthClass.Safe;
+            CompassDepthClassOverride.Update((int)depthClass);
+        }
+
         /// <summary>
         /// Add a custom suit with its own crush depth which differs depending on difficulty. The crush depth values are
         /// associated with difficulty in ascending order.
@@ -80,7 +106,7 @@ namespace DeathrunRemade.Handlers
             // Ensure that no mess-up happened in adding custom suit values anywhere.
             if (depths.Length == 0)
             {
-                DeathrunInit._Log.Warn($"Tried to get crush depth values for '{suit}' but the custom values are"
+                DeathrunInit._Log.Warn($"Tried to get crush depth values for '{suit}' but the custom values are "
                                        + $"an empty array!");
                 return SuitlessCrushDepth;
             }

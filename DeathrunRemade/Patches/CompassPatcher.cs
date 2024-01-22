@@ -2,15 +2,15 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
-using DeathrunRemade.Objects;
 using HarmonyLib;
-using UnityEngine;
 
 namespace DeathrunRemade.Patches
 {
     [HarmonyPatch]
     internal class CompassPatcher
     {
+        private static bool _compassHasInitialised;
+        
         /// <summary>
         /// Ensure that FilterChip is also counted as a compass.
         /// </summary>
@@ -23,50 +23,48 @@ namespace DeathrunRemade.Patches
             
             __result = __instance.equippedCount.GetOrDefault(FilterChip.TechType, 0);
         }
-        
+
         /// <summary>
-        /// The compass is meant to change to red when the player exceeds their crush depth. This is vanilla, but needs
-        /// to be re-enabled with two patches.
-        /// For the compass to properly show the depth, the player's depth class needs to be set correctly.
+        /// Replace the compass' depth class with our custom solution.
         /// </summary>
         [HarmonyPostfix]
-        [HarmonyPatch(typeof(Player), nameof(Player.GetDepthClass))]
-        private static void SetDepthClass(ref Ocean.DepthClass __result)
+        [HarmonyPatch(typeof(uGUI_DepthCompass), nameof(uGUI_DepthCompass.Initialize))]
+        private static void SwapCrushDepthUpdate(ref uGUI_DepthCompass __instance)
         {
-            Player player = Player.main;
-            // There is a different depth class system for vehicles, do not bother when the player is piloting one.
-            if (SaveData.Main is null || Inventory.main == null || player.GetVehicle() != null)
+            // Do not do this before the compass has set itself up or after we have already done it once.
+            if (!__instance._initialized || _compassHasInitialised)
                 return;
             
-            // The depth is always safe inside non-flooded bases.
-            // IsLeaking() as opposed to IsUnderwater() allows for a red compass even while the player is still in
-            // knee-deep water and not yet taking damage, which works well as a warning system.
-            if (player.IsInBase() && !player.GetCurrentSub().IsLeaking())
-            {
-                __result = Ocean.DepthClass.Safe;
-                return;
-            }
-            
-            TechType suit = Inventory.main.equipment.GetTechTypeInSlot("Body");
-            int crushDepth = Mathf.FloorToInt(CrushDepthHandler.GetCrushDepth(suit, SaveData.Main.Config));
-            __result = player.GetDepth() >= crushDepth ? Ocean.DepthClass.Crush : Ocean.DepthClass.Safe;
+            // Disconnect the compass from vanilla depth class.
+            Player.main.depthClass.changedEvent.RemoveHandler(__instance.gameObject);
+            // Instead, connect it to our custom implementation.
+            CrushDepthHandler.CompassDepthClassOverride.changedEvent.AddHandler(__instance, __instance.OnDepthClassChanged);
+            _compassHasInitialised = true;
         }
 
         /// <summary>
-        /// The game overrides all player depth classes with DepthClass.Safe. Stop it from doing that.
+        /// The compass overrides all player depth classes with DepthClass.Safe. Stop it from doing that.
         /// </summary>
         [HarmonyTranspiler]
         [HarmonyPatch(typeof(uGUI_DepthCompass), nameof(uGUI_DepthCompass.OnDepthClassChanged))]
         private static IEnumerable<CodeInstruction> RemoveDepthClassOverride(IEnumerable<CodeInstruction> instructions)
         {
             CodeMatcher matcher = new CodeMatcher(instructions);
-            matcher.MatchForward(false, 
+            matcher.MatchForward(false,
+                // Advance to where the constant for DepthClass.Safe is loaded and saved to the variable.
                 new CodeMatch(OpCodes.Ldc_I4_1),
                 new CodeMatch(OpCodes.Stloc_0))
                 // Remove the overriding code.
                 .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop))
                 .SetInstruction(new CodeInstruction(OpCodes.Nop));
             return matcher.InstructionEnumeration();
+        }
+        
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(Player), nameof(Player.Update))]
+        private static void UpdateCompass(Player __instance)
+        {
+            CrushDepthHandler.UpdateCompassDepthClass(__instance);
         }
     }
 }
