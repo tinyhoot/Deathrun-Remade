@@ -149,13 +149,15 @@ namespace DeathrunRemade.Components
             float timePassed = 0f;
             while (!Hootils.RotationsApproximately(transform.rotation, targetRotation, 1e-6f))
             {
-                timePassed += Time.deltaTime;
+                timePassed += Time.fixedDeltaTime;
                 // This function starts at 0 and reaches 1 in roughly one second. It is fast at the start and then
                 // tails off more slowly towards the end.
                 float progress = Mathf.Log(timePassed, 30f) + 1;
                 transform.rotation = Quaternion.Lerp(upright, targetRotation, progress);
-                // Run this every frame rather than every fixed update for smoother movement.
-                yield return null;
+                
+                // Doing it every frame is smooth, but can slingshot the player depending on position.
+                // Doing it on fixed update is safe, but looks jittery due to low update rate.
+                yield return new WaitForFixedUpdate();
             }
             DeathrunInit._Log.Debug("Lifepod topple has finished rotating.");
         }
