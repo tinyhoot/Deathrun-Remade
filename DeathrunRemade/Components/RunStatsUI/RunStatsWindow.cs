@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 namespace DeathrunRemade.Components.RunStatsUI
 {
+    /// <summary>
+    /// A component added in unity editor which controls the gameobjects of all runs displayed in the highscore window.
+    /// </summary>
     internal class RunStatsWindow : MonoBehaviour
     {
         // This is set in the editor, the compiler is freaking out over nothing.
@@ -61,6 +64,7 @@ namespace DeathrunRemade.Components.RunStatsUI
         {
             GameObject rowObject = Instantiate(statsRow, scorePanel.transform, false);
             var row = rowObject.GetComponent<RunStatsRow>();
+            row.ShowDeleteButton(true);
             row.Stats = stats;
             row.UpdateRow();
             _runRows.Add(row);

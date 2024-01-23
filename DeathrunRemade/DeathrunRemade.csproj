@@ -42,6 +42,7 @@
         <Compile Include="Components\FastAscent.cs" />
         <Compile Include="Components\RunStatsTracker.cs" />
         <Compile Include="Components\RunStatsUI\ButtonEventTrigger.cs" />
+        <Compile Include="Components\RunStatsUI\RunStatsHints.cs" />
         <Compile Include="Components\RunStatsUI\RunStatsWindow.cs" />
         <Compile Include="Components\RunStatsUI\RunStatsRow.cs" />
         <Compile Include="Components\SafeDepthHud.cs" />
@@ -111,7 +112,7 @@
       <Content Include="Assets\DeathrunStarts.csv" />
       <Content Include="Assets\RecipeChanges.json" />
       <Content Include="Assets\ScanNumberChanges.json" />
-      <Content Include="Assets\highscores" />
+      <Content Include="Assets\highscoreswindow" />
       <Content Include="todo_list.txt" />
       <EmbeddedResource Include="Assets\AcidBattery.png" />
       <EmbeddedResource Include="Assets\AcidPowerCell.png" />

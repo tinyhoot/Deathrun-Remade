@@ -72,6 +72,23 @@ namespace DeathrunRemade.Handlers
             SaveData.Main.Save();
         }
 
+        /// <inheritdoc cref="DeleteRun(int, float)"/>
+        public void DeleteRun(RunStats run)
+        {
+            DeleteRun(run.id, run.scoreTotal);
+        }
+
+        /// <summary>
+        /// Delete a run from the saved statistics.
+        /// </summary>
+        public void DeleteRun(int id, float scoreTotal)
+        {
+            ModStats.bestRuns = ModStats.bestRuns
+                .Where(stats => stats.id != id && !Mathf.Approximately(stats.scoreTotal, scoreTotal))
+                .ToList();
+            _ = ModStats.SaveAsync();
+        }
+
         /// <summary>
         /// Start a new run and set up everything for it to be tracked properly.
         /// </summary>

@@ -24,12 +24,10 @@ Checks at the very end
 - Do bases really get damaged by the explosion?
 - Are all relevant config settings contributing to the score?
 - Are all the encyclopedia tutorials accurate and up to date?
-- Oxygen below 100m works as it should?
 
 Reworks before release
 - Properly adjust all in-game messaging to the Warnings system.
 - Have more than one tutorial message.
-- Highscores window not rudimentary, with removable runs.
 - Rework the filterchip into something that actually makes sense.
 - Be consistent with which places accumulate nitrogen and which do not. Add config option for e.g. bases.
 - Respect cheats everywhere. Pay special attention to damage, oxygen, and power.

@@ -4,6 +4,6 @@
     <ItemGroup>
         <Assets Include="Assets\*.json" />
         <Assets Include="Assets\DeathrunStarts.csv" />
-        <Assets Include="Assets\highscores" />
+        <Assets Include="Assets\highscoreswindow" />
     </ItemGroup>
 </Project>

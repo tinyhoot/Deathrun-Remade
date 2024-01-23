@@ -5,9 +5,12 @@ using UnityEngine;
 
 namespace DeathrunRemade.Components.RunStatsUI
 {
+    /// <summary>
+    /// A component used in unity editor to represent data related to a run in one standardised row.
+    /// </summary>
     internal class RunStatsRow : MonoBehaviour
     {
-        // This is set in the editor, the compiler is freaking out over nothing.
+        // This is set in the editor, the compiler is helpful but wrong.
 #pragma warning disable CS0649
         public TextMeshProUGUI rank;
         public TextMeshProUGUI startPoint;
@@ -16,13 +19,30 @@ namespace DeathrunRemade.Components.RunStatsUI
         public TextMeshProUGUI deaths;
         public TextMeshProUGUI scoreMult;
         public TextMeshProUGUI score;
+        public GameObject deleteButton;
 #pragma warning restore CS0649
         [NonSerialized] public RunStats Stats;
-
 
         public void SetRank(int ranking)
         {
             rank.text = $"{ranking}";
+        }
+
+        /// <summary>
+        /// Delete this row from the window and its associated run data from the overall statistics.
+        /// </summary>
+        public void DeleteRow()
+        {
+            Destroy(gameObject);
+            DeathrunInit._RunHandler.DeleteRun(Stats);
+        }
+
+        /// <summary>
+        /// Every row except for the descriptive header should have a delete button.
+        /// </summary>
+        public void ShowDeleteButton(bool visible)
+        {
+            deleteButton.SetActive(visible);
         }
 
         /// <summary>

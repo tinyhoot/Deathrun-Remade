@@ -157,7 +157,7 @@ namespace DeathrunRemade
             
             // Load the assets for the highscore window. This was prepared in the unity editor.
             _Log.Debug("Loading assets...");
-            AssetBundle bundle = AssetBundleLoadingUtils.LoadFromAssetsFolder(Hootils.GetAssembly(), "highscores");
+            AssetBundle bundle = AssetBundleLoadingUtils.LoadFromAssetsFolder(Hootils.GetAssembly(), "highscoreswindow");
             _baseStatsWindow = bundle.LoadAsset<GameObject>("Highscores");
             // For some reason doing this causes the game to take a full minute to quit.
             // _baseStatsWindow.transform.SetParent(_persistentObject.transform);
