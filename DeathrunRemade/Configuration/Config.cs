@@ -62,6 +62,7 @@ namespace DeathrunRemade.Configuration
         public ConfigEntryWrapper<bool> PacifistChallenge;
 
         // UI
+        public ConfigEntryWrapper<bool> ShowHints;
         public ConfigEntryWrapper<bool> ShowTutorials;
         public ConfigEntryWrapper<Hints> ShowWarnings;
         public ConfigEntryWrapper<float> ExplosionWindowPosX;
@@ -379,6 +380,12 @@ namespace DeathrunRemade.Configuration
 
         private void RegisterUIOptions()
         {
+            ShowHints = RegisterEntry(
+                section: SectionUI,
+                key: nameof(ShowHints),
+                defaultValue: true,
+                description: "Show helpful tips in the stats window in the main menu."
+            ).WithDescription("Show Hints and Tips");
             ShowTutorials = RegisterEntry(
                 section: SectionUI,
                 key: nameof(ShowTutorials),
@@ -464,6 +471,7 @@ namespace DeathrunRemade.Configuration
             modOptions.AddSeparator(persistentParent);
             modOptions.AddText("These options can always be changed and will take effect immediately, even during a "
                                + "run. They do not affect your score.");
+            modOptions.AddItem(ShowHints.ToModToggleOption());
             modOptions.AddItem(ShowTutorials.ToModToggleOption());
             modOptions.AddItem(ShowWarnings.ToModChoiceOption());
             var windowPosHSlider = ExplosionWindowPosX.ToModSliderOption(0f, 1f, stepSize: 0.01f);
