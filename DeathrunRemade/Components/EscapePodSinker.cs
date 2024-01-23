@@ -121,7 +121,7 @@ namespace DeathrunRemade.Components
             var asset = AudioUtils.GetFmodAsset("event:/sub/cyclops/impact_solid_hard");
             FMODUWE.PlayOneShot(asset, transform.position);
             
-            DeathrunInit._Log.InGameMessage("The lifepod has hit bottom!");
+            NotificationHandler.VanillaMessage("dr_lifepodHitBottom");
         }
 
         /// <summary>

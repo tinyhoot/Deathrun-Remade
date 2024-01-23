@@ -15,8 +15,10 @@ namespace DeathrunRemade.Handlers
     /// </summary>
     internal class NotificationHandler : MonoBehaviour
     {
+        public const string Vanilla = "vanilla";
+        public const string TopLeft = "top_left";
         public const string TopMiddle = "top_middle";
-        public const string LeftMiddle = "left_middle";
+        public const string MiddleLeft = "middle_left";
         public const string Centre = "centre";
 
         public static NotificationHandler Main;
@@ -50,9 +52,12 @@ namespace DeathrunRemade.Handlers
         /// </summary>
         private void SetupSlots()
         {
-            RectTransform rect = (RectTransform)uGUI.main.intro.transform;
-            CreateSlot(TopMiddle, 0, (int)(rect.rect.height / 2) - 150);
-            CreateSlot(LeftMiddle, (int)(rect.rect.width / -2) + 20, 0)
+            // Get the screen size from the intro screen.
+            Rect rect = ((RectTransform)uGUI.main.intro.transform).rect;
+            CreateSlot(TopLeft, (int)(rect.width / -2) + 20, (int)(rect.height / 2) - 200)
+                .SetAlign(TextAlignmentOptions.Left);
+            CreateSlot(TopMiddle, 0, (int)(rect.height / 2) - 150);
+            CreateSlot(MiddleLeft, (int)(rect.width / -2) + 20, 0)
                 .SetAlign(TextAlignmentOptions.Left);
             CreateSlot(Centre, 0, 75);
             Ready = true;
@@ -95,6 +100,11 @@ namespace DeathrunRemade.Handlers
         /// <exception cref="ArgumentException">Thrown if the slot id does not exist.</exception>
         public Message AddMessage(string slotId, string key, bool showImmediately = true)
         {
+            if (slotId == Vanilla)
+            {
+                VanillaMessage(key);
+                return null;
+            }
             if (!_textSlots.ContainsKey(slotId))
                 throw new ArgumentException($"No text slot with id {slotId} exists!");
 
@@ -203,6 +213,24 @@ namespace DeathrunRemade.Handlers
             if (fade == null || text == null)
                 return false;
             return slot.GetTextFade().enabled && slot.GetTextObject().activeSelf;
+        }
+
+        /// <summary>
+        /// Displays a message in the top left corner using the same system as e.g. vanilla base integrity messages.
+        /// </summary>
+        /// <param name="key">The <see cref="Language"/> key of the message for translation. If not a valid key, the key
+        /// is used as the message text instead.</param>
+        public static void VanillaMessage(string key)
+        {
+            string text = Language.main.Get(key);
+            DeathrunInit._Log.InGameMessage(text);
+        }
+        
+        /// <inheritdoc cref="VanillaMessage(string)"/>
+        public static void VanillaMessage(string key, params object[] formatArgs)
+        {
+            string text = Language.main.GetFormat(key, formatArgs);
+            DeathrunInit._Log.InGameMessage(text);
         }
     }
 }

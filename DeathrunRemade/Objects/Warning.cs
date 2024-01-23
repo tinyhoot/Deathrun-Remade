@@ -24,7 +24,15 @@ namespace DeathrunRemade.Objects
             SaveField = AccessTools.Field(typeof(WarningSave), nameof(WarningSave.lastCrushDepthWarningTime)),
             Interval = 30f,
             NotificationSlot = NotificationHandler.TopMiddle,
-            Key = "dr_warn_crush",
+            Key = "dr_warn_crushImminent",
+        };
+
+        public static Warning CrushDamage => new Warning
+        {
+            SaveField = AccessTools.Field(typeof(WarningSave), nameof(WarningSave.lastCrushDamageWarningTime)),
+            Interval = WarningHandler.MinDelay,
+            NotificationSlot = NotificationHandler.TopMiddle,
+            Key = "dr_warn_crushDamage",
         };
 
         public static Warning Decompression => new Warning
@@ -43,11 +51,12 @@ namespace DeathrunRemade.Objects
             Key = "dr_warn_bendsDamage",
         };
 
-        // public static Warning UnbreathableAir => new Warning
-        // {
-        //     SaveField = AccessTools.Field(typeof(WarningSave), nameof(WarningSave.lastBreathWarningTime)),
-        //     Interval = 3f,
-        //     Text = "",
-        // };
+        public static Warning UnbreathableAir => new Warning
+        {
+            SaveField = AccessTools.Field(typeof(WarningSave), nameof(WarningSave.lastBreathWarningTime)),
+            Interval = 30f,
+            NotificationSlot = NotificationHandler.Vanilla,
+            Key = "dr_unbreathableAir"
+        };
     }
 }

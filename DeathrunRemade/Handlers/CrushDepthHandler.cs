@@ -91,7 +91,7 @@ namespace DeathrunRemade.Handlers
             // Together with the separate global damage multiplier, this gets quite punishing.
             float damageExp = 1f + Mathf.Clamp(diff / 8f, 1f, 5f);
             player.GetComponent<LiveMixin>().TakeDamage(Mathf.Pow(2f, damageExp), type: DamageType.Pressure);
-            DeathrunInit._Log.InGameMessage("The pressure is crushing you!");
+            WarningHandler.ShowWarning(Warning.CrushDamage);
         }
         
         /// <summary>

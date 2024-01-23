@@ -27,10 +27,22 @@
   "Tooltip_deathrunremade_photosynthesistanksmall": "An air tank housing microorganisms which produce oxygen when exposed to sunlight.",
   
   "dr_auroraRepairedBreathable": "The air filtration system roars to life!",
+  "dr_lifepodHitBottom": "The lifepod has hit bottom!",
+  "dr_notEnoughCraftPower": "Not enough power (need {0}).",
+  "dr_unbreathableAir": "The surface air is not breathable!",
+  "dr_vehicleExitPowerLoss": "{0} drained of {1} energy for exiting at {2} depth.",
+  
   "dr_tut_exosuitVehicleExitPowerLoss": "Although more efficient than the Seamoth, the Prawn suit\nstill draws power when exited at depth.",
   "dr_tut_seamothVehicleExitPowerLoss": "Exiting the Seamoth underwater causes battery drain.\nExit at surface or Moonpool for optimal power use.",
+  
   "dr_warn_fastAscent": "Ascending too quickly!",
-  "dr_warn_crush": "Personal crush depth exceeded. Return to safe depth!",
+  "dr_warn_crushImminent": "Personal crush depth exceeded. Return to safe depth!",
+  "dr_warn_crushDamage": "The pressure is crushing you!",
   "dr_warn_bendsImminent": "Decompression Warning\nDive to Safe Depth!",
-  "dr_warn_bendsDamage": "You have the bends! Slow your ascent!"
+  "dr_warn_bendsDamage": "You have the bends! Slow your ascent!",
+  
+  "dr_run_death1": "Survived for {0} days while dying {1} times.",
+  "dr_run_death2": "Died to {0}.",
+  "dr_run_victory": "Victory in {1} deaths and {0} days!",
+  "dr_run_deathlessVictory": "Flawless victory in {0} days!"
 }

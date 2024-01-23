@@ -26,7 +26,6 @@ Checks at the very end
 - Are all the encyclopedia tutorials accurate and up to date?
 
 Reworks before release
-- Properly adjust all in-game messaging to the Warnings system.
 - Have more than one tutorial message.
 - Move encyclopedia to localisation system.
 - Add hints to the highscore window.
@@ -49,6 +48,7 @@ Substantial changes from the original
 - Re-introduces a patch that lets you deploy filterpumps from the water surface.
 - Scoring system is reworked. Legacy runs can be imported, but will show different scores.
 - The scanner room does not passively drain power.
+- The mod can now be translated simply by adding a localisation file to the Assets/Localization folder.
 
 Known Issues
 - Nitrogen bar starts off with the wrong value on game start.

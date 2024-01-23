@@ -143,10 +143,10 @@ namespace DeathrunRemade.Handlers
             save.Stats.causeOfDeath = GetCauseOfDeath(damageType);
             AddAndSaveRun(save.Stats);
 
-            int deaths = save.Stats.deaths;
-            string plural = deaths == 1 ? "" : "s";
-            _log.InGameMessage($"Survived for {DeathrunUtils.TimeToGameDays(save.Stats.time):F0} days in {deaths} death{plural}.");
-            _log.InGameMessage($"Died to {save.Stats.causeOfDeath}.");
+            // Get the language lines and let the game insert stats variables for us.
+            NotificationHandler.VanillaMessage("dr_run_death1",
+                Mathf.Floor(DeathrunUtils.TimeToGameDays(save.Stats.time)), save.Stats.deaths);
+            NotificationHandler.VanillaMessage("dr_run_death2", save.Stats.causeOfDeath);
         }
 
         private void OnVictory(Player player)
@@ -157,9 +157,8 @@ namespace DeathrunRemade.Handlers
             AddAndSaveRun(save.Stats);
             
             int deaths = save.Stats.deaths;
-            string plural = deaths == 1 ? "" : "s";
-            string message = deaths > 0 ? $"Victory in {deaths} death{plural} and" : "Flawless victory in";
-            _log.InGameMessage($"{message} {DeathrunUtils.TimeToGameDays(save.Stats.time):F0} days!");
+            string key = deaths > 0 ? "dr_run_victory" : "dr_run_deathlessVictory";
+            NotificationHandler.VanillaMessage(key, Mathf.Floor(DeathrunUtils.TimeToGameDays(save.Stats.time)), deaths);
         }
         
         /// <summary>

@@ -75,8 +75,9 @@ namespace DeathrunRemade.Objects
         // These do get assigned and used but by reflection rather than directly.
 #pragma warning disable CS0649
         public double lastAscentWarningTime;
-        public double lastCrushDepthWarningTime;
         public double lastBreathWarningTime;
+        public double lastCrushDepthWarningTime;
+        public double lastCrushDamageWarningTime;
         public double lastDecompressionWarningTime;
         public double lastDecoDamageWarningTime;
 #pragma warning restore CS0649

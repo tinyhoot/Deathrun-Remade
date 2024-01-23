@@ -1,4 +1,5 @@
 using DeathrunRemade.Configuration;
+using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
@@ -39,9 +40,8 @@ namespace DeathrunRemade.Patches
             // Don't notify when inside a powered-down vehicle or an alien base.
             if (Player.main.IsInsideSubOrVehicle() || Player.main.motorMode == Player.MotorMode.Walk)
                 return true;
-
-            // TODO: More detailed warnings depending on config.
-            DeathrunInit._Log.InGameMessage("The surface air is unbreathable!");
+            
+            WarningHandler.ShowWarning(Warning.UnbreathableAir);
             PlayerDamageSounds sounds = Player.main.GetComponent<PlayerDamageSounds>();
             if (sounds != null)
                 sounds.painSmoke.Play();

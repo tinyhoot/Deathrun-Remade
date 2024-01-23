@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
@@ -70,7 +71,7 @@ namespace DeathrunRemade.Patches
             amount = ModifyConsumeEnergy(amount, IsInRadiation(powerRelay));
             if (powerRelay.GetPower() < amount)
             {
-                DeathrunInit._Log.InGameMessage($"Not enough power (need {amount})");
+                NotificationHandler.VanillaMessage("dr_notEnoughCraftPower", amount);
                 __result = false;
                 return false;
             }
@@ -148,8 +149,8 @@ namespace DeathrunRemade.Patches
             
             // Drain the energy.
             _ejectedVehicle.energyInterface.ConsumeEnergy(energyCost);
-            DeathrunInit._Log.InGameMessage($"{_ejectedVehicle.subName.GetName()} drained of {energyCost:F0} energy "
-                                            + $"for exiting at {depth:F0}m depth.");
+            NotificationHandler.VanillaMessage("dr_vehicleExitPowerLoss", _ejectedVehicle.subName.GetName(),
+                Mathf.FloorToInt(energyCost), Mathf.FloorToInt(depth));
 
             // Ensure the player understands what just happened.
             if (_ejectedVehicle is SeaMoth)
