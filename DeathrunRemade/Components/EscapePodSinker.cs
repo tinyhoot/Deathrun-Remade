@@ -15,7 +15,7 @@ namespace DeathrunRemade.Components
         private WorldForces _wf;
         private SaveData _saveData;
         
-        public float freezeDistance = 100f;
+        public float freezeDistance = 75f;
         public bool IsAnchored { get; private set; }
         public bool IsSinking { get; private set; }
 
