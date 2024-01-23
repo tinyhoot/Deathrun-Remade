@@ -25,7 +25,7 @@ namespace DeathrunRemade.Items
         public IEnumerable<SerialTechData> GetCraftData(string configKey, string configValue)
         {
             string key = $"{configKey}.{configValue}";
-            return _recipeJson.TryGetValue(key, out List<SerialTechData> data) ? data : Enumerable.Empty<SerialTechData>();
+            return GetCraftData(key);
         }
         
         /// <summary>
@@ -33,6 +33,7 @@ namespace DeathrunRemade.Items
         /// </summary>
         public IEnumerable<SerialTechData> GetCraftData(string key)
         {
+            DeathrunInit._Log.Debug($"Grabbing craft data changes for '{key}'");
             return _recipeJson.TryGetValue(key, out List<SerialTechData> data) ? data : Enumerable.Empty<SerialTechData>();
         }
         
