@@ -28,6 +28,8 @@ Checks at the very end
 Reworks before release
 - Properly adjust all in-game messaging to the Warnings system.
 - Have more than one tutorial message.
+- Move encyclopedia to localisation system.
+- Add hints to the highscore window.
 - Rework the filterchip into something that actually makes sense.
 - Be consistent with which places accumulate nitrogen and which do not. Add config option for e.g. bases.
 - Respect cheats everywhere. Pay special attention to damage, oxygen, and power.

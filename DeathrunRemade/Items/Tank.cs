@@ -35,8 +35,8 @@ namespace DeathrunRemade.Items
             
             _prefabInfo = Hootils.CreatePrefabInfo(
                 GetClassId(variant),
-                GetDisplayName(variant),
-                GetDescription(variant),
+                null,
+                null,
                 GetSprite(variant)
             );
             AssignTechType(_prefabInfo, variant);
@@ -100,34 +100,6 @@ namespace DeathrunRemade.Items
                 _ => null
             };
             return $"{ClassIdPrefix}{id}";
-        }
-        
-        /// <summary>
-        /// Gets the display name for the type of tank.
-        /// </summary>
-        private string GetDisplayName(Variant variant)
-        {
-            return variant switch
-            {
-                Variant.ChemosynthesisTank => "Chemosynthesis Tank",
-                Variant.PhotosynthesisTank => "Photosynthesis Tank",
-                Variant.PhotosynthesisTankSmall => "Small Photosynthesis Tank",
-                _ => null
-            };
-        }
-
-        /// <summary>
-        /// Gets the description for the type of tank.
-        /// </summary>
-        private string GetDescription(Variant variant)
-        {
-            return variant switch
-            {
-                Variant.ChemosynthesisTank => "A lightweight O2 tank that houses microorganisms that produce oxygen under high temperatures.",
-                Variant.PhotosynthesisTank => "A lightweight air tank housing microorganisms which produce oxygen when exposed to sunlight.",
-                Variant.PhotosynthesisTankSmall => "An air tank housing microorganisms which produce oxygen when exposed to sunlight.",
-                _ => null
-            };
         }
         
         /// <summary>

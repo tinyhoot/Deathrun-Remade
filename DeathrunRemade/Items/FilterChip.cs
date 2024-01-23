@@ -16,9 +16,8 @@ namespace DeathrunRemade.Items
             var sprite = SpriteManager.Get(TechType.ComputerChip);
             _prefabInfo = Hootils.CreatePrefabInfo(
                 ClassIdPrefix + "filterchip",
-                "Integrated Air Filter",
-                "Makes surface air breathable and purges nitrogen from the bloodstream while indoors. "
-                + "Comes with an integrated Compass.",
+                null,
+                null,
                 sprite
             );
             TechType = _prefabInfo.TechType;

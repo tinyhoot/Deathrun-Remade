@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using BepInEx;
 using DeathrunRemade.Components;
 using DeathrunRemade.Configuration;
@@ -154,6 +155,7 @@ namespace DeathrunRemade
             _recipeChanges = new VanillaRecipeChanges();
             // Ignore a compiler warning.
             _ = _recipeChanges.LoadFromDiskAsync();
+            LanguageHandler.RegisterLocalizationFolder(Path.Combine("Assets", "Localization"));
             
             // Load the assets for the highscore window. This was prepared in the unity editor.
             _Log.Debug("Loading assets...");
@@ -255,7 +257,9 @@ namespace DeathrunRemade
                 RadiationPatcher.UpdateIsImmune(null, null);
                 Inventory.main.equipment.onEquip += RadiationPatcher.UpdateIsImmune;
                 Inventory.main.equipment.onUnequip += RadiationPatcher.UpdateIsImmune;
-                Tutorial.RegisterEvents();
+                // Here just to make sure that LeakingRadiation has properly readied and we can access the key.
+                StoryGoalHandler.RegisterCustomEvent(LeakingRadiation.main.leaksFixedGoal.key,
+                    () => NotificationHandler.Main.AddMessage(NotificationHandler.Centre, "dr_auroraRepairedBreathable"));
             }
             catch (Exception ex)
             {

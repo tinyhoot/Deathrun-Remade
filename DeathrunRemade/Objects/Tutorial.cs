@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using DeathrunRemade.Handlers;
-using Nautilus.Handlers;
 
 namespace DeathrunRemade.Objects
 {
@@ -8,13 +7,11 @@ namespace DeathrunRemade.Objects
     {
         public string Key;
         public string SlotId;
-        public string Text;
 
-        public Tutorial(string key, string slotId, string text)
+        public Tutorial(string key, string slotId)
         {
             Key = key;
             SlotId = slotId;
-            Text = text;
         }
 
         /// <inheritdoc cref="Trigger(NotificationHandler, SaveData)"/>
@@ -36,42 +33,22 @@ namespace DeathrunRemade.Objects
             if (saveData.Tutorials.completedTutorials.Contains(Key))
                 return false;
 
-            notifications.AddMessage(SlotId, Text);
+            notifications.AddMessage(SlotId, Key);
             saveData.Tutorials.completedTutorials ??= new HashSet<string>();
             saveData.Tutorials.completedTutorials.Add(Key);
             return true;
         }
 
-        /// <summary>
-        /// Register events for tutorials which do not need to be triggered under overly complex conditions.
-        /// </summary>
-        public static void RegisterEvents()
-        {
-            StoryGoalHandler.RegisterCustomEvent(LeakingRadiation.main.leaksFixedGoal.key,
-                () => AuroraRepairedBreathable.Trigger());
-        }
-
-        public static Tutorial AuroraRepairedBreathable => new Tutorial
-        {
-            Key = "AuroraRepairedBreathable",
-            SlotId = NotificationHandler.Centre,
-            Text = "The air filtration system roars to life!"
-        };
-
         public static Tutorial ExosuitVehicleExitPowerLoss => new Tutorial
         {
-            Key = "ExosuitVehicleExitPowerLoss",
-            SlotId = NotificationHandler.Centre,
-            Text = "Although more efficient than the Seamoth, the Prawn suit\n"
-                   + "still draws power when exited at depth."
+            Key = "dr_tut_exosuitVehicleExitPowerLoss",
+            SlotId = NotificationHandler.Centre
         };
         
         public static Tutorial SeamothVehicleExitPowerLoss => new Tutorial
         {
-            Key = "SeamothVehicleExitPowerLoss",
-            SlotId = NotificationHandler.Centre,
-            Text = "Exiting the Seamoth underwater causes battery drain.\n"
-                   + "Exit at surface or Moonpool for optimal power use."
+            Key = "dr_tut_seamothVehicleExitPowerLoss",
+            SlotId = NotificationHandler.Centre
         };
     }
 }

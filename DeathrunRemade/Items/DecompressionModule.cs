@@ -18,9 +18,8 @@ namespace DeathrunRemade.Items
             var sprite = SpriteManager.Get(TechType.PowerUpgradeModule);
             _prefabInfo = Hootils.CreatePrefabInfo(
                 ClassIdPrefix + "decompressionmodule",
-                "Nano Decompression Module",
-                "Eliminates nitrogen from the bloodstream of vehicle pilot. Reduces energy expended when "
-                + "exiting the vehicle. Stacking multiple modules increases the benefit.",
+                null,
+                null,
                 sprite
             );
             TechType = _prefabInfo.TechType;

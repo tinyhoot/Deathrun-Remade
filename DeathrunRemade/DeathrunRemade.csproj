@@ -110,6 +110,7 @@
     </ItemGroup>
     <ItemGroup>
       <Content Include="Assets\DeathrunStarts.csv" />
+      <Content Include="Assets\Localization\English.json" />
       <Content Include="Assets\RecipeChanges.json" />
       <Content Include="Assets\ScanNumberChanges.json" />
       <Content Include="Assets\highscoreswindow" />

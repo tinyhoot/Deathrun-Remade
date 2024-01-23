@@ -6,7 +6,7 @@ namespace DeathrunRemade.Items
     {
         // Do not assign a prefix in debug builds, which makes the items easier to spawn in and test but more at risk
         // of clashes with other mods.
-#if DEBUG
+#if DEBUG2
         public const string ClassIdPrefix = "";
 #else
         public const string ClassIdPrefix = "deathrunremade_";

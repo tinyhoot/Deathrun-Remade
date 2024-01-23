@@ -28,8 +28,8 @@ namespace DeathrunRemade.Items
             
             _prefabInfo = Hootils.CreatePrefabInfo(
                 GetClassId(variant),
-                GetDisplayName(variant),
-                GetDescription(variant),
+                null,
+                null,
                 GetSprite(variant)
             );
             AssignTechType(_prefabInfo, variant);
@@ -88,35 +88,6 @@ namespace DeathrunRemade.Items
                 _ => null
             };
             return $"{ClassIdPrefix}{id}";
-        }
-
-        /// <summary>
-        /// Gets the display name for the type of drop.
-        /// </summary>
-        private string GetDisplayName(Variant variant)
-        {
-            return variant switch
-            {
-                Variant.LavaLizardScale => "Lava Lizard Scale",
-                Variant.SpineEelScale => "River Prowler Scale",
-                Variant.ThermophileSample => "Thermophile Sample",
-                _ => null
-            };
-        }
-
-        /// <summary>
-        /// Gets the description for the type of drop.
-        /// </summary>
-        private string GetDescription(Variant variant)
-        {
-            return variant switch
-            {
-                Variant.LavaLizardScale => "A scale from a Lava Lizard. Has uses in depth and heat resistant fabrication.",
-                Variant.SpineEelScale => "A scale from the head of a River Prowler. Has uses in depth-resistant fabrication.",
-                Variant.ThermophileSample => "A viable sample of a unique thermophile bacteria found in Lava Larvae. "
-                                          + "Undergoes chemosynthesis at high temperatures.",
-                _ => null
-            };
         }
 
         /// <summary>

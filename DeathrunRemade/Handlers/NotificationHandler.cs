@@ -89,12 +89,18 @@ namespace DeathrunRemade.Handlers
         /// <summary>
         /// Add a message to be displayed later.
         /// </summary>
+        /// <param name="slotId">The id of the slot the message should be shown in.</param>
+        /// <param name="key">The <see cref="Language"/> key of the message.</param>
+        /// <param name="showImmediately">If true, shows the message immediately rather than at a later time.</param>
         /// <exception cref="ArgumentException">Thrown if the slot id does not exist.</exception>
-        public Message AddMessage(string slotId, string text, bool showImmediately = true)
+        public Message AddMessage(string slotId, string key, bool showImmediately = true)
         {
             if (!_textSlots.ContainsKey(slotId))
                 throw new ArgumentException($"No text slot with id {slotId} exists!");
-            
+
+            // Translate the message. If we're not translating, just use the provided key as a fallback.
+            if (!Language.main.TryGet(key, out string text))
+                text = key;
             var message = new Message(slotId, text);
             _messages.Add(message);
             if (showImmediately)

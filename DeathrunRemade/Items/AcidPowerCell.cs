@@ -20,8 +20,8 @@ namespace DeathrunRemade.Items
             var sprite = Hootils.LoadSprite("AcidPowerCell.png", true);
             _prefabInfo = Hootils.CreatePrefabInfo(
                 ClassIdPrefix + "acidpowercell",
-                "Lead Acid Power Cell",
-                "A basic lead/acid vehicle power source - not super powerful, but it IS rechargeable.",
+                null,
+                null,
                 sprite
             );
             TechType = _prefabInfo.TechType;

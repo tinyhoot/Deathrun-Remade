@@ -9,14 +9,14 @@ namespace DeathrunRemade.Objects
         public FieldInfo SaveField;
         public float Interval;
         public string NotificationSlot;
-        public string Text;
+        public string Key;
 
         public static Warning AscentSpeed => new Warning
         {
             SaveField = AccessTools.Field(typeof(WarningSave), nameof(WarningSave.lastAscentWarningTime)),
             Interval = WarningHandler.MinDelay,
             NotificationSlot = NotificationHandler.TopMiddle,
-            Text = "Ascending too quickly!",
+            Key = "dr_warn_fastAscent",
         };
 
         public static Warning CrushDepth => new Warning
@@ -24,7 +24,7 @@ namespace DeathrunRemade.Objects
             SaveField = AccessTools.Field(typeof(WarningSave), nameof(WarningSave.lastCrushDepthWarningTime)),
             Interval = 30f,
             NotificationSlot = NotificationHandler.TopMiddle,
-            Text = "Personal crush depth exceeded. Return to safe depth!",
+            Key = "dr_warn_crush",
         };
 
         public static Warning Decompression => new Warning
@@ -32,7 +32,7 @@ namespace DeathrunRemade.Objects
             SaveField = AccessTools.Field(typeof(WarningSave), nameof(WarningSave.lastDecompressionWarningTime)),
             Interval = WarningHandler.MinDelay,
             NotificationSlot = NotificationHandler.Centre,
-            Text = "Decompression Warning\nDive to Safe Depth!",
+            Key = "dr_warn_bendsImminent",
         };
 
         public static Warning DecompressionDamage => new Warning
@@ -40,7 +40,7 @@ namespace DeathrunRemade.Objects
             SaveField = AccessTools.Field(typeof(WarningSave), nameof(WarningSave.lastDecoDamageWarningTime)),
             Interval = WarningHandler.MinDelay,
             NotificationSlot = NotificationHandler.Centre,
-            Text = "You have the bends! Slow your ascent!",
+            Key = "dr_warn_bendsDamage",
         };
 
         // public static Warning UnbreathableAir => new Warning

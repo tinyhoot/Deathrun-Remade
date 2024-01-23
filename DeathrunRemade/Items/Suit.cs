@@ -34,8 +34,8 @@ namespace DeathrunRemade.Items
             
             _prefabInfo = Hootils.CreatePrefabInfo(
                 GetClassId(variant),
-                GetDisplayName(variant),
-                GetDescription(variant),
+                null,
+                null,
                 GetSprite(variant)
             );
             AssignTechType(_prefabInfo, variant);
@@ -84,37 +84,6 @@ namespace DeathrunRemade.Items
                 _ => null
             };
             return $"{ClassIdPrefix}{id}";
-        }
-
-        /// <summary>
-        /// Gets the display name for the type of suit upgrade.
-        /// </summary>
-        private string GetDisplayName(Variant variant)
-        {
-            return variant switch
-            {
-                Variant.ReinforcedSuitMk2 => "Reinforced Dive Suit Mk2",
-                Variant.ReinforcedSuitMk3 => "Reinforced Dive Suit Mk3",
-                Variant.ReinforcedFiltrationSuit => "Reinforced Water Filtration Suit",
-                _ => null
-            };
-        }
-
-        /// <summary>
-        /// Gets the description for the type of suit upgrade.
-        /// </summary>
-        private string GetDescription(Variant variant)
-        {
-            return variant switch
-            {
-                Variant.ReinforcedSuitMk2 => "An upgraded dive suit capable of protecting the user at depths up to "
-                                             + "1300m and providing heat protection up to 75C.",
-                Variant.ReinforcedSuitMk3 => "An upgraded dive suit capable of protecting the user at all depths and "
-                                             + "providing heat protection up to 90C.",
-                Variant.ReinforcedFiltrationSuit => "An upgraded filtration suit capable of protecting the user at "
-                                                    + "depths up to 1300m and temperatures up to 70C.",
-                _ => null
-            };
         }
 
         /// <summary>
