@@ -49,7 +49,7 @@ namespace DeathrunRemade.Handlers
             if (!EnoughTimePassed(warning))
                 return false;
             
-            _notifications.AddMessage(warning.NotificationSlot, warning.Key).SetDuration(DisplayTime);
+            _notifications.AddMessage(warning.NotificationSlot, warning.Key)?.SetDuration(DisplayTime);
             warning.SaveField.SetValue(_save.Warnings, DayNightCycle.main.timePassed);
             return true;
         }

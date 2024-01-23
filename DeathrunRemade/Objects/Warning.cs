@@ -56,7 +56,7 @@ namespace DeathrunRemade.Objects
             SaveField = AccessTools.Field(typeof(WarningSave), nameof(WarningSave.lastBreathWarningTime)),
             Interval = 30f,
             NotificationSlot = NotificationHandler.Vanilla,
-            Key = "dr_unbreathableAir"
+            Key = "dr_warn_unbreathableAir"
         };
     }
 }
