@@ -28,12 +28,12 @@ Checks at the very end
 Reworks before release
 - Have more than one tutorial message.
 - Move encyclopedia to localisation system.
-- Add hints to the highscore window.
 - Rework the filterchip into something that actually makes sense.
 - Be consistent with which places accumulate nitrogen and which do not. Add config option for e.g. bases.
 - Respect cheats everywhere. Pay special attention to damage, oxygen, and power.
 - Replace the names of starts with more inventive ones. Add new ones.
   - Remove 'Dramatic View' and other non-terrain starts entirely due to collision check issues.
+- Rework nitrogen UI entirely.
 
 Substantial changes from the original
 - Photosynthetic tanks always work in sunlight, including the surface

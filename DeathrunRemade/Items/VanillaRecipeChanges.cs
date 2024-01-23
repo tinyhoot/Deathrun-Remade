@@ -113,7 +113,7 @@ namespace DeathrunRemade.Items
             List<SerialTechData> changes = GetBatteryChanges(config).ToList();
             changes.AddRange(GetCraftData(nameof(config.ToolCosts), config.ToolCosts.ToString()));
             changes.AddRange(GetCraftData(nameof(config.VehicleCosts), config.VehicleCosts.ToString()));
-            changes.AddRange(GetCraftData(nameof(config.NoVehicleChallenge)));
+            changes.AddRange(GetCraftData(nameof(config.NoVehicleChallenge), config.NoVehicleChallenge.ToString()));
             
             foreach (var craftData in changes.Where(techData => techData != null))
             {

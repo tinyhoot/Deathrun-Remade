@@ -1375,7 +1375,7 @@
       ]
     }
   ],
-  "NoVehicleChallenge": [
+  "NoVehicleChallenge.true": [
     {
       "techType": "Seamoth",
       "craftAmount": 1,
