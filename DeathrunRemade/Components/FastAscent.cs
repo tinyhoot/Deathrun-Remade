@@ -32,7 +32,7 @@ namespace DeathrunRemade.Components
         private SaveData _saveData;
         private Hootimer _timer;
 
-        public static event Action<float> OnAscentRateChanged;
+        public event Action<float> OnAscentRateChanged;
 
         private void Awake()
         {

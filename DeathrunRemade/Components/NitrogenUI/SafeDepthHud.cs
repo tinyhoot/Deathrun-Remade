@@ -79,7 +79,7 @@ namespace DeathrunRemade.Components.NitrogenUI
             GameObject accelPrefab = (GameObject)objRequest.asset;
             GameObject accelInstance = Instantiate(accelPrefab, transform, false);
             _accelTween = accelInstance.GetComponentInChildren<MovingBarTween>();
-            FastAscent.OnAscentRateChanged += rate => _accelTween.SetTarget(0f, (rate - FastAscent.ResetThreshold) / FastAscent.DamageThreshold);
+            Player.main.GetComponent<FastAscent>().OnAscentRateChanged += OnAscentRateChanged;
             
             // We're done with the bundle, unload it to free some memory. Sync because Subnautica's unity version
             // does not support UnloadAsync.
@@ -121,6 +121,14 @@ namespace DeathrunRemade.Components.NitrogenUI
             _fadeModifier = -FadeScalar;
         }
 
+        /// <summary>
+        /// Ensure the accelerometer receives data to act on.
+        /// </summary>
+        private void OnAscentRateChanged(float rate)
+        {
+            _accelTween.SetTarget(0f, (rate - FastAscent.ResetThreshold) / FastAscent.DamageThreshold);
+        }
+        
         /// <summary>
         /// When the hud updates its vanilla elements, ensure this component is altered to match.
         /// </summary>
