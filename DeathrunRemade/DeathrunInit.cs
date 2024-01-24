@@ -2,6 +2,7 @@
 using System.IO;
 using BepInEx;
 using DeathrunRemade.Components;
+using DeathrunRemade.Components.NitrogenUI;
 using DeathrunRemade.Configuration;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
@@ -159,12 +160,12 @@ namespace DeathrunRemade
             
             // Load the assets for the highscore window. This was prepared in the unity editor.
             _Log.Debug("Loading assets...");
-            AssetBundle bundle = AssetBundleLoadingUtils.LoadFromAssetsFolder(Hootils.GetAssembly(), "highscoreswindow");
-            _baseStatsWindow = bundle.LoadAsset<GameObject>("Highscores");
+            AssetBundle scoreBundle = AssetBundleLoadingUtils.LoadFromAssetsFolder(Hootils.GetAssembly(), "highscoreswindow");
+            _baseStatsWindow = scoreBundle.LoadAsset<GameObject>("Highscores");
             // For some reason doing this causes the game to take a full minute to quit.
             // _baseStatsWindow.transform.SetParent(_persistentObject.transform);
             _baseStatsWindow.SetActive(false);
-
+            
             _Log.Debug("Assets loaded.");
         }
 
@@ -231,7 +232,7 @@ namespace DeathrunRemade
                 if (config.NitrogenBends != Difficulty3.Normal && GameModeUtils.RequiresOxygen())
                 {
                     HootHudBar.Create<NitrogenBar>("NitrogenBar", -45, out GameObject _);
-                    SafeDepthHud.Create(out GameObject _);
+                    SafeDepthHud.Create();
                     player.gameObject.AddComponent<NitrogenHandler>();
                     player.gameObject.AddComponent<FastAscent>();
                 }

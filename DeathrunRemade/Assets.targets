@@ -6,5 +6,6 @@
         <Assets Include="Assets\*.json" />
         <Assets Include="Assets\DeathrunStarts.csv" />
         <Assets Include="Assets\highscoreswindow" />
+        <Assets Include="Assets\safedepthhud" />
     </ItemGroup>
 </Project>

@@ -34,6 +34,8 @@ Reworks before release
 - Replace the names of starts with more inventive ones. Add new ones.
   - Remove 'Dramatic View' and other non-terrain starts entirely due to collision check issues.
 - Rework nitrogen UI entirely.
+  - Add config options for moving
+  - Remove bar and add grace period to safe depth hud
 
 Substantial changes from the original
 - Photosynthetic tanks always work in sunlight, including the surface

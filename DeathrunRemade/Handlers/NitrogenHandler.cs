@@ -164,7 +164,7 @@ namespace DeathrunRemade.Handlers
         {
             if (depth < safeDepth)
                 return SafeDepthStatus.Exceeded;
-            if (IsApproachingSafeDepth(depth, safeDepth))
+            if (safeDepth >= GraceDepth && IsApproachingSafeDepth(depth, safeDepth))
                 return SafeDepthStatus.Approaching;
             return SafeDepthStatus.Safe;
         }

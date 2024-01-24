@@ -1,3 +1,4 @@
+using System;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Objects;
 using HootLib.Objects;
@@ -20,12 +21,18 @@ namespace DeathrunRemade.Components
             new Keyframe(1f, 1f)
         });
         
-        private float _ascentRate;
+        public float AscentRate { get; private set; }
+        public const float ResetThreshold = 1.5f;
+        public const float WarnThreshold = 4f;
+        public const float DamageThreshold = 4.5f;
+        
         private float _dangerTime;
         private NitrogenHandler _nitrogenHandler;
         private Rigidbody _rigidbody;
         private SaveData _saveData;
         private Hootimer _timer;
+
+        public static event Action<float> OnAscentRateChanged;
 
         private void Awake()
         {
@@ -40,17 +47,17 @@ namespace DeathrunRemade.Components
             if (_saveData is null)
                 return;
             
-            switch (_ascentRate)
+            switch (AscentRate)
             {
-                case <= 1.5f:
+                case <= ResetThreshold:
                     // Reset punishments if we're moving at comfortable speeds.
                     DecreaseDangerTime();
                     break;
-                case > 4f and <= 4.5f:
+                case > WarnThreshold and <= DamageThreshold:
                     // Increase danger time without direct consequences, for now.
                     IncreaseDangerTime();
                     break;
-                case > 4.5f:
+                case > DamageThreshold:
                     // Increase danger time and cause issues for the player.
                     IncreaseDangerTime();
                     DoConsequences();
@@ -62,11 +69,15 @@ namespace DeathrunRemade.Components
         {
             if (_rigidbody == null)
                 return;
-            
+
+            float oldRate = AscentRate;
             // Average the player's vertical speed over the past second.
             float speed = _rigidbody.velocity.y;
             float ups = (1 / Time.fixedDeltaTime);
-            _ascentRate = (_ascentRate * (ups - 1) + speed) / ups;
+            AscentRate = (AscentRate * (ups - 1) + speed) / ups;
+            // Notify all listeners if the rate has changed.
+            if (!Mathf.Approximately(oldRate, AscentRate))
+                OnAscentRateChanged?.Invoke(AscentRate);
         }
         
         private void DecreaseDangerTime()
