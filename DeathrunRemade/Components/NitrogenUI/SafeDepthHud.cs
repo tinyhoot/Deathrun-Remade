@@ -1,7 +1,7 @@
 using System.Collections;
 using DeathrunRemade.Handlers;
-using DeathrunRemade.Objects;
 using HootLib;
+using Nautilus.Options;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,10 +14,6 @@ namespace DeathrunRemade.Components.NitrogenUI
     internal class SafeDepthHud : MonoBehaviour
     {
         private const float HudScale = 0.6f;
-        private const float HudPosMult = 1.15f;
-        private const float FadeScalar = 0.016f;  // Take around one second to fully fade in/out.
-        
-        private float _fadeModifier;
 
         private CanvasGroup _canvasGroup;
         private FastAscent _fastAscent;
@@ -41,12 +37,12 @@ namespace DeathrunRemade.Components.NitrogenUI
             _canvasGroup ??= GetComponent<CanvasGroup>();
             _fastAscent ??= Player.main.GetComponent<FastAscent>();
             SetupLayout();
-            SetPosition();
+            SetPositionFromConfig();
             transform.localScale *= HudScale;
             
             GameEventHandler.OnHudUpdate += OnHudUpdate;
-            NitrogenHandler.OnDepthHudFadeIn += FadeIn;
-            NitrogenHandler.OnDepthHudFadeOut += FadeOut;
+            DeathrunInit._Config.ModOptions.OnChanged += OnSettingChanged;
+            Player.main.GetComponent<FastAscent>().OnAscentRateChanged += OnAscentRateChanged;
 
             StartCoroutine(CreateChildren());
         }
@@ -79,7 +75,6 @@ namespace DeathrunRemade.Components.NitrogenUI
             GameObject accelPrefab = (GameObject)objRequest.asset;
             GameObject accelInstance = Instantiate(accelPrefab, transform, false);
             _accelTween = accelInstance.GetComponentInChildren<MovingBarTween>();
-            Player.main.GetComponent<FastAscent>().OnAscentRateChanged += OnAscentRateChanged;
             
             // We're done with the bundle, unload it to free some memory. Sync because Subnautica's unity version
             // does not support UnloadAsync.
@@ -89,36 +84,10 @@ namespace DeathrunRemade.Components.NitrogenUI
             SetVisible(true);
         }
 
-        private void Update()
-        {
-            Player player = Player.main;
-            SaveData save = SaveData.Main;
-            if (player == null || save == null)
-                return;
-            
-            // TODO
-            // UpdateOpacity();
-        }
-
         private void OnDestroy()
         {
             GameEventHandler.OnHudUpdate -= OnHudUpdate;
-        }
-
-        /// <summary>
-        /// Fade in the hud, if it wasn't visible already.
-        /// </summary>
-        public void FadeIn()
-        {
-            _fadeModifier = FadeScalar;
-        }
-        
-        /// <summary>
-        /// Fade out the hud, if it wasn't hidden already.
-        /// </summary>
-        public void FadeOut()
-        {
-            _fadeModifier = -FadeScalar;
+            DeathrunInit._Config.ModOptions.OnChanged -= OnSettingChanged;
         }
 
         /// <summary>
@@ -138,17 +107,18 @@ namespace DeathrunRemade.Components.NitrogenUI
         }
 
         /// <summary>
-        /// Move the hud to the correct position based on the position of the actual depth compass.
+        /// Reposition the UI when the user changes the corresponding setting in the mod menu.
         /// </summary>
-        private void SetPosition()
+        private void OnSettingChanged(object _, OptionEventArgs args)
         {
-            float originalWidth = uGUI.main.hud.transform.Find("Content/DepthCompass").GetComponent<RectTransform>().rect.width;
-            var localPos = transform.localPosition;
-            localPos.x = originalWidth * HudPosMult;
-            transform.localPosition = localPos;
-
-            // TODO
-            transform.localPosition = new Vector3(200f, 450f, 0f);
+            if (args.Id == DeathrunInit._Config.NitrogenUiPosX.GetId() || args.Id == DeathrunInit._Config.NitrogenUiPosY.GetId())
+                SetPositionFromConfig();
+        }
+        
+        private void SetPositionFromConfig()
+        {
+            DeathrunUtils.SetRelativeScreenPosition(transform, DeathrunInit._Config.NitrogenUiPosX.Value,
+                DeathrunInit._Config.NitrogenUiPosY.Value);
         }
 
         /// <summary>
@@ -160,22 +130,6 @@ namespace DeathrunRemade.Components.NitrogenUI
             {
                 child.gameObject.SetActive(visible);
             }
-        }
-
-        /// <summary>
-        /// Alter the hud's opacity one step in the desired direction.
-        /// </summary>
-        private void UpdateOpacity()
-        {
-            // No changes necessary.
-            if (_fadeModifier == 0)
-                return;
-
-            float alpha = Mathf.Clamp01(_canvasGroup.alpha + _fadeModifier);
-            _canvasGroup.alpha = alpha;
-            // Stop making changes on future frames if we already reached one of the extremes.
-            if (alpha >= 1 || alpha <= 0)
-                _fadeModifier = 0f;
         }
     }
 }

@@ -19,6 +19,8 @@ namespace DeathrunRemade.Configuration
 {
     internal class Config : HootConfig
     {
+        public HootModOptions ModOptions;
+        
         // Section Keys. Intentionally static readonly to enable quick equality checks by reference.
         public static readonly string SectionChallenges = "Challenges";
         public static readonly string SectionCosts = "Costs";
@@ -68,6 +70,8 @@ namespace DeathrunRemade.Configuration
         public ConfigEntryWrapper<float> ExplosionWindowPosX;
         public ConfigEntryWrapper<float> ExplosionWindowPosY;
         public ConfigEntryWrapper<bool> MoveSunbeamWindow;
+        public ConfigEntryWrapper<float> NitrogenUiPosX;
+        public ConfigEntryWrapper<float> NitrogenUiPosY;
 
         internal readonly List<StartLocation> _startLocations;
         private Color _disabledOptionTint = new Color(1f, 0.4f, 0.4f, 0.15f);
@@ -417,63 +421,75 @@ namespace DeathrunRemade.Configuration
                 description: "If enabled, sets the window of the sunbeam arrival countdown to the same position as any "
                              + "Deathrun countdown windows. It overlaps with stickied blueprints in the default position."
             ).WithDescription("Also move Sunbeam window?");
+            NitrogenUiPosX = RegisterEntry(
+                section: SectionUI,
+                key: nameof(NitrogenUiPosX),
+                defaultValue: 0.58f,
+                description: "Sets the distance of the nitrogen UI from the left edge of the screen."
+            ).WithDescription("Nitrogen UI Horiz. Position");
+            NitrogenUiPosY = RegisterEntry(
+                section: SectionUI,
+                key: nameof(NitrogenUiPosY),
+                defaultValue: 0.07f,
+                description: "Sets the distance of the nitrogen UI from the top edge of the screen."
+            ).WithDescription("Nitrogen UI Vert. Position");
         }
 
         protected override void RegisterControllingOptions() { }
 
         public override void RegisterModOptions(string name, Transform persistentParent = null)
         {
-            HootModOptions modOptions = new HootModOptions(name, this);
-            modOptions.OnAddOptionToMenu += OnAddOptionToModMenu;
+            ModOptions = new HootModOptions(name, this);
+            ModOptions.OnAddOptionToMenu += OnAddOptionToModMenu;
             
-            modOptions.AddText("Choose carefully. Any options you set here lock in and <color=#FF0000FF>cannot</color>"
+            ModOptions.AddText("Choose carefully. Any options you set here lock in and <color=#FF0000FF>cannot</color>"
                                + " be changed during an ongoing game.");
             // Add a preview of the score multiplier, which updates whenever the user changes an option.
             var scorePreview = new ScoreMultPreviewText(this, "Your current settings grant you a score multiplier "
                                                               + "of <b>{0}</b>");
-            modOptions.AddDecorator(scorePreview);
+            ModOptions.AddDecorator(scorePreview);
             
-            modOptions.AddSeparator(persistentParent);
-            modOptions.AddItem(PersonalCrushDepth.ToModChoiceOption());
-            modOptions.AddItem(DamageTaken.ToModChoiceOption());
-            modOptions.AddItem(NitrogenBends.ToModChoiceOption());
-            modOptions.AddItem(SurfaceAir.ToModChoiceOption());
-            modOptions.AddItem(SpecialAirTanks.ToModToggleOption());
-            modOptions.AddItem(StartLocation.ToModChoiceOption());
-            modOptions.AddItem(SinkLifepod.ToModToggleOption());
-            modOptions.AddItem(ToppleLifepod.ToModToggleOption());
+            ModOptions.AddSeparator(persistentParent);
+            ModOptions.AddItem(PersonalCrushDepth.ToModChoiceOption());
+            ModOptions.AddItem(DamageTaken.ToModChoiceOption());
+            ModOptions.AddItem(NitrogenBends.ToModChoiceOption());
+            ModOptions.AddItem(SurfaceAir.ToModChoiceOption());
+            ModOptions.AddItem(SpecialAirTanks.ToModToggleOption());
+            ModOptions.AddItem(StartLocation.ToModChoiceOption());
+            ModOptions.AddItem(SinkLifepod.ToModToggleOption());
+            ModOptions.AddItem(ToppleLifepod.ToModToggleOption());
             
-            modOptions.AddSeparator(persistentParent);
-            modOptions.AddItem(CreatureAggression.ToModChoiceOption());
-            modOptions.AddItem(WaterMurkiness.ToModChoiceOption());
-            modOptions.AddItem(ExplosionDepth.ToModChoiceOption());
-            modOptions.AddItem(ExplosionTime.ToModChoiceOption());
-            modOptions.AddItem(RadiationDepth.ToModChoiceOption());
-            modOptions.AddItem(RadiationFX.ToModChoiceOption());
+            ModOptions.AddSeparator(persistentParent);
+            ModOptions.AddItem(CreatureAggression.ToModChoiceOption());
+            ModOptions.AddItem(WaterMurkiness.ToModChoiceOption());
+            ModOptions.AddItem(ExplosionDepth.ToModChoiceOption());
+            ModOptions.AddItem(ExplosionTime.ToModChoiceOption());
+            ModOptions.AddItem(RadiationDepth.ToModChoiceOption());
+            ModOptions.AddItem(RadiationFX.ToModChoiceOption());
             
-            modOptions.AddSeparator(persistentParent);
-            modOptions.AddItem(ToolCosts.ToModChoiceOption());
-            modOptions.AddItem(VehicleCosts.ToModChoiceOption());
-            modOptions.AddItem(ScansRequired.ToModChoiceOption());
-            modOptions.AddItem(BatteryCosts.ToModChoiceOption());
-            modOptions.AddItem(BatteryCapacity.ToModChoiceOption());
-            modOptions.AddItem(PowerCosts.ToModChoiceOption());
-            modOptions.AddItem(VehicleExitPowerLoss.ToModChoiceOption());
+            ModOptions.AddSeparator(persistentParent);
+            ModOptions.AddItem(ToolCosts.ToModChoiceOption());
+            ModOptions.AddItem(VehicleCosts.ToModChoiceOption());
+            ModOptions.AddItem(ScansRequired.ToModChoiceOption());
+            ModOptions.AddItem(BatteryCosts.ToModChoiceOption());
+            ModOptions.AddItem(BatteryCapacity.ToModChoiceOption());
+            ModOptions.AddItem(PowerCosts.ToModChoiceOption());
+            ModOptions.AddItem(VehicleExitPowerLoss.ToModChoiceOption());
             
-            modOptions.AddSeparator(persistentParent);
-            modOptions.AddItem(FoodChallenge.ToModChoiceOption());
-            modOptions.AddItem(FarmingChallenge.ToModChoiceOption());
-            modOptions.AddItem(IslandFoodChallenge.ToModChoiceOption());
-            modOptions.AddItem(FilterPumpChallenge.ToModChoiceOption());
-            modOptions.AddItem(NoVehicleChallenge.ToModToggleOption());
-            modOptions.AddItem(PacifistChallenge.ToModToggleOption());
+            ModOptions.AddSeparator(persistentParent);
+            ModOptions.AddItem(FoodChallenge.ToModChoiceOption());
+            ModOptions.AddItem(FarmingChallenge.ToModChoiceOption());
+            ModOptions.AddItem(IslandFoodChallenge.ToModChoiceOption());
+            ModOptions.AddItem(FilterPumpChallenge.ToModChoiceOption());
+            ModOptions.AddItem(NoVehicleChallenge.ToModToggleOption());
+            ModOptions.AddItem(PacifistChallenge.ToModToggleOption());
             
-            modOptions.AddSeparator(persistentParent);
-            modOptions.AddText("These options can always be changed and will take effect immediately, even during a "
+            ModOptions.AddSeparator(persistentParent);
+            ModOptions.AddText("These options can always be changed and will take effect immediately, even during a "
                                + "run. They do not affect your score.");
-            modOptions.AddItem(ShowHints.ToModToggleOption());
-            modOptions.AddItem(ShowTutorials.ToModToggleOption());
-            modOptions.AddItem(ShowWarnings.ToModChoiceOption());
+            ModOptions.AddItem(ShowHints.ToModToggleOption());
+            ModOptions.AddItem(ShowTutorials.ToModToggleOption());
+            ModOptions.AddItem(ShowWarnings.ToModChoiceOption());
             var windowPosHSlider = ExplosionWindowPosX.ToModSliderOption(0f, 1f, stepSize: 0.01f);
             var windowPosVSlider = ExplosionWindowPosY.ToModSliderOption(0f, 1f, stepSize: 0.01f);
             // Update all countdown windows whenever these position settings are changed.
@@ -481,11 +497,13 @@ namespace DeathrunRemade.Configuration
             windowPosVSlider.OnChanged += ExplosionCountdown.OnUpdateSettingsY;
             windowPosHSlider.OnChanged += (obj, args) => CountdownPatcher.MoveSunbeamCountdownWindow();
             windowPosVSlider.OnChanged += (obj, args) => CountdownPatcher.MoveSunbeamCountdownWindow();
-            modOptions.AddItem(windowPosHSlider);
-            modOptions.AddItem(windowPosVSlider);
-            modOptions.AddItem(MoveSunbeamWindow.ToModToggleOption());
+            ModOptions.AddItem(windowPosHSlider);
+            ModOptions.AddItem(windowPosVSlider);
+            ModOptions.AddItem(MoveSunbeamWindow.ToModToggleOption());
+            ModOptions.AddItem(NitrogenUiPosX.ToModSliderOption(0f, 1f, stepSize: 0.01f));
+            ModOptions.AddItem(NitrogenUiPosY.ToModSliderOption(0f, 1f, stepSize: 0.01f));
 
-            OptionsPanelHandler.RegisterModOptions(modOptions);
+            OptionsPanelHandler.RegisterModOptions(ModOptions);
         }
 
         private void OnAddOptionToModMenu(AddOptionToMenuEventArgs args)

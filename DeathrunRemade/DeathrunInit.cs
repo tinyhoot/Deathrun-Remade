@@ -14,6 +14,7 @@ using HootLib;
 using HootLib.Components;
 using Nautilus.Handlers;
 using Nautilus.Utility;
+using Story;
 using UnityEngine;
 using ILogHandler = HootLib.Interfaces.ILogHandler;
 
@@ -351,6 +352,7 @@ namespace DeathrunRemade
             {
                 _Log.Debug($"Layer {i} - '{LayerMask.LayerToName(i)}'");
             }
+            StoryGoalManager.main.OnGoalComplete("Story_AuroraWarning3");
         }
     }
 }

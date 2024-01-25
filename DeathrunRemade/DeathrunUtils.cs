@@ -95,17 +95,46 @@ namespace DeathrunRemade
         {
             // Get the transform which holds the actual visible window itself.
             Transform contentHolder = countdownWindow.GetChild(0);
-            // Find the rectangle of the entire screen.
-            Rect screenRect = countdownWindow.GetComponent<RectTransform>().rect;
             RectTransform contentRect = contentHolder.GetComponent<RectTransform>();
-            // Set the positional centre of the countdown window to its upper left corner.
-            contentRect.pivot = new Vector2(0f, 1f);
-            // Calculate the position based on the given percentages. The coordinate centre is the middle of the screen
-            // so it takes a little extra math to get the correct offset.
-            float x = -(screenRect.width / 2f) + ((screenRect.width - contentRect.rect.width) * xpos);
-            float y = (screenRect.height / 2f) - ((screenRect.height - contentRect.rect.height) * ypos);
-            Vector3 position = new Vector3(x, y, contentHolder.localPosition.z);
-            contentHolder.transform.localPosition = position;
+            SetRelativeScreenPositionInbounds(contentRect, new Vector2(xpos, ypos));
+        }
+
+        /// <summary>
+        /// Set a UI transform's position on the screen relative to the total screen size, while respecting the
+        /// transform's pivot and size properties to ensure it does not partially leave the screen.
+        /// </summary>
+        /// <param name="rect">The transform to move.</param>
+        /// <param name="targetPos">How far from the top left corner of the screen the window should be placed,
+        /// measured as a fraction of the total screen width/height. Accepts values from 0 to 1.</param>
+        public static void SetRelativeScreenPositionInbounds(RectTransform rect, Vector2 targetPos)
+        {
+            Vector2 size = rect.rect.size;
+            Vector2 availableSpace = new Vector2(1920f, 1080f) - size;
+
+            Vector2 absolutePos = availableSpace * targetPos;
+            Vector2 centreOffset = availableSpace / 2f;
+            
+            // Pivot is already in the inverted system, do not convert it.
+            Vector2 convertedPos = (absolutePos - centreOffset) * new Vector2(1f, -1f);
+            Vector2 pivotOffset = size * (rect.pivot - new Vector2(0.5f, 0.5f));
+            rect.localPosition = (convertedPos + pivotOffset).WithZ(rect.localPosition.z);
+        }
+
+        /// <summary>
+        /// Set a UI transform's position on the screen relative to the total screen size.
+        /// </summary>
+        /// <param name="transform">The transform to move.</param>
+        /// <param name="x">How far from the left edge of the screen the window should be placed,
+        /// measured as a fraction of the total screen width.</param>
+        /// <param name="y">How far down from the top of the screen the window should be placed,
+        /// measured as a fraction of the total screen height.</param>
+        public static void SetRelativeScreenPosition(Transform transform, float x, float y)
+        {
+            // The base resolution of all UI is 1920x1080. For other resolutions, unity keeps the coordinate system
+            // intact and scales the result appropriately.
+            Vector2 absolute = new Vector2(x * 1920f, y * -1080f);
+            Vector2 offset = new Vector2(1920f / 2f, -1080f / 2f);
+            transform.localPosition = (absolute - offset).WithZ(transform.localPosition.z);
         }
     }
 }
