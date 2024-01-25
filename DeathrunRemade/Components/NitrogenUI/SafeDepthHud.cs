@@ -42,9 +42,14 @@ namespace DeathrunRemade.Components.NitrogenUI
             
             GameEventHandler.OnHudUpdate += OnHudUpdate;
             DeathrunInit._Config.ModOptions.OnChanged += OnSettingChanged;
-            Player.main.GetComponent<FastAscent>().OnAscentRateChanged += OnAscentRateChanged;
 
             StartCoroutine(CreateChildren());
+        }
+
+        private void Start()
+        {
+            // This one isn't ready yet during Awake().
+            Player.main.GetComponent<FastAscent>().OnAscentRateChanged += OnAscentRateChanged;
         }
 
         /// <summary>
