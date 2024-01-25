@@ -232,7 +232,6 @@ namespace DeathrunRemade
                 // Nitrogen and its UI if required by config and game mode settings.
                 if (config.NitrogenBends != Difficulty3.Normal && GameModeUtils.RequiresOxygen())
                 {
-                    HootHudBar.Create<NitrogenBar>("NitrogenBar", -45, out GameObject _);
                     SafeDepthHud.Create();
                     player.gameObject.AddComponent<NitrogenHandler>();
                     player.gameObject.AddComponent<FastAscent>();

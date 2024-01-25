@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -45,10 +44,6 @@ namespace DeathrunRemade.Handlers
             { TechType.Rebreather, new[] { 0.05f, 0f } },
         };
 
-        public static event Action OnDepthHudFadeIn;
-        
-        public static event Action OnDepthHudFadeOut;
-
         /// <summary>
         /// Add a new suit to the dictionary of TechTypes and their Nitrogen Modifiers.
         /// </summary>
@@ -91,7 +86,6 @@ namespace DeathrunRemade.Handlers
             float oldSafeDepth = save.Nitrogen.safeDepth;
             save.Nitrogen.safeDepth = UpdateSafeDepth(currentDepth, save.Nitrogen.safeDepth, intensity, save.Nitrogen.nitrogen);
             CheckForBendsDamage(player, save, currentDepth, save.Nitrogen.safeDepth, save.Nitrogen.nitrogen);
-            UpdateHud(oldSafeDepth, save.Nitrogen.safeDepth);
         }
 
         /// <summary>
@@ -152,7 +146,6 @@ namespace DeathrunRemade.Handlers
         /// </summary>
         public void ResetNitrogen()
         {
-            UpdateHud(SaveData.Main.Nitrogen.safeDepth, 0f);
             SaveData.Main.Nitrogen.nitrogen = 0f;
             SaveData.Main.Nitrogen.safeDepth = 0f;
         }
@@ -304,20 +297,6 @@ namespace DeathrunRemade.Handlers
             // After damage, adjust the safe depth upwards a bit.
             save.Nitrogen.safeDepth = Mathf.Max(Mathf.Min(currentDepth, GraceDepth),
                 CalculateSafeDepth(save.Nitrogen.safeDepth));
-        }
-
-        /// <summary>
-        /// Notify the hud element when it should show or hide itself.
-        /// </summary>
-        private void UpdateHud(float oldSafeDepth, float newSafeDepth)
-        {
-            if (oldSafeDepth < GraceDepth && newSafeDepth >= GraceDepth)
-            {
-                OnDepthHudFadeIn?.Invoke();
-                return;
-            }
-            if (newSafeDepth < 3f)
-                OnDepthHudFadeOut?.Invoke();
         }
 
         /// <summary>

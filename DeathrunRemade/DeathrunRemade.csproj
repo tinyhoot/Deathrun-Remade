@@ -72,7 +72,6 @@
         <Compile Include="Items\Suit.cs" />
         <Compile Include="Items\Tank.cs" />
         <Compile Include="Components\DeathrunTank.cs" />
-        <Compile Include="Components\NitrogenBar.cs" />
         <Compile Include="Items\VanillaRecipeChanges.cs" />
         <Compile Include="Objects\DeathrunStats.cs" />
         <Compile Include="Objects\Enums\Difficulty.cs" />

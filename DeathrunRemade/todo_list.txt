@@ -33,8 +33,6 @@ Reworks before release
 - Respect cheats everywhere. Pay special attention to damage, oxygen, and power.
 - Replace the names of starts with more inventive ones. Add new ones.
   - Remove 'Dramatic View' and other non-terrain starts entirely due to collision check issues.
-- Rework nitrogen UI entirely.
-  - Remove bar and add grace period to safe depth hud
 - Make mod fully able to function in repeated saving and loading between in-game and main menu.
 
 Substantial changes from the original

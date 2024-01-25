@@ -12,6 +12,7 @@ namespace DeathrunRemade.Components.NitrogenUI
         private readonly Color _damageColor = Color.red;
         private readonly Color _warningColor = Color.yellow;
         private readonly Color _normalColor = Color.white;
+        private readonly Color _graceColor = new Color(0.2f, 0.4f, 0.8f);
         
         private Image _halfMoon;
         private Image _shadow;
@@ -68,12 +69,7 @@ namespace DeathrunRemade.Components.NitrogenUI
             _depthText.text = IntStringCache.GetStringForInt(Mathf.CeilToInt(safeDepth));
 
             SafeDepthStatus status = NitrogenHandler.CalculateDepthStatus(depth, safeDepth);
-            Color textColor = status switch
-            {
-                SafeDepthStatus.Approaching => _warningColor,
-                SafeDepthStatus.Exceeded => _damageColor,
-                _ => _normalColor
-            };
+            Color textColor = GetTextColor(save.Nitrogen.nitrogen, status);
             UpdateTextColor(textColor);
             UpdateSprites(status != SafeDepthStatus.Safe);
         }
@@ -111,6 +107,20 @@ namespace DeathrunRemade.Components.NitrogenUI
                 return;
             _meterSuffix = language.Get("MeterSuffix");
             _depthText.text = _meterSuffix;
+        }
+
+        private Color GetTextColor(float nitrogen, SafeDepthStatus status)
+        {
+            // While the grace period is in effect, add a dissipating "safety" colour.
+            if (nitrogen < 95f)
+                return Color.Lerp(_graceColor, _normalColor, nitrogen / 100f);
+
+            return status switch
+            {
+                SafeDepthStatus.Approaching => _warningColor,
+                SafeDepthStatus.Exceeded => _damageColor,
+                _ => _normalColor
+            };
         }
 
         private void UpdateTextColor(Color color)
