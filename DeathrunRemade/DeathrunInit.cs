@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
+using System.Threading.Tasks;
 using BepInEx;
 using DeathrunRemade.Components;
 using DeathrunRemade.Components.NitrogenUI;
@@ -13,7 +15,6 @@ using HarmonyLib;
 using HootLib;
 using HootLib.Components;
 using Nautilus.Handlers;
-using Nautilus.Utility;
 using Story;
 using UnityEngine;
 using ILogHandler = HootLib.Interfaces.ILogHandler;
@@ -59,7 +60,7 @@ namespace DeathrunRemade
 
             try {
                 InitHandlers();
-                LoadFiles();
+                StartCoroutine(LoadFilesAsync());
                 SetupCraftTree();
                 RegisterItems();
                 RegisterCommands();
@@ -164,21 +165,27 @@ namespace DeathrunRemade
         /// <summary>
         /// Load any files or assets the mod needs in order to run.
         /// </summary>
-        private void LoadFiles()
+        private IEnumerator LoadFilesAsync()
         {
-            _Log.Debug("Loading files...");
+            _Log.Debug("Loading assets...");
             _recipeChanges = new VanillaRecipeChanges();
-            // Ignore a compiler warning.
-            _ = _recipeChanges.LoadFromDiskAsync();
+            // There's no need to yield and wait for this to finish, just let it load in parallel.
+            Task.Run(_recipeChanges.LoadFromDiskAsync);
             LanguageHandler.RegisterLocalizationFolder(Path.Combine("Assets", "Localization"));
             
             // Load the assets for the highscore window. This was prepared in the unity editor.
-            _Log.Debug("Loading assets...");
-            AssetBundle scoreBundle = AssetBundleLoadingUtils.LoadFromAssetsFolder(Hootils.GetAssembly(), "highscoreswindow");
-            _baseStatsWindow = scoreBundle.LoadAsset<GameObject>("Highscores");
-            // For some reason doing this causes the game to take a full minute to quit.
-            // _baseStatsWindow.transform.SetParent(_persistentObject.transform);
+            var fileRequest = AssetBundle.LoadFromFileAsync(Hootils.GetAssetHandle("highscoreswindow"));
+            yield return fileRequest;
+            AssetBundle bundle = fileRequest.assetBundle;
+            var objRequest = bundle.LoadAssetAsync<GameObject>("Highscores");
+            yield return objRequest;
+            _baseStatsWindow = objRequest.asset as GameObject;
+            if (_baseStatsWindow == null)
+                throw new NullReferenceException("Run stats window loaded from asset bundle is null!");
+            
             _baseStatsWindow.SetActive(false);
+            // Save a bit of memory by unloading the compressed bundle data.
+            bundle.Unload(false);
             
             _Log.Debug("Assets loaded.");
         }
