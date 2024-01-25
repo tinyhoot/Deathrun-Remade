@@ -46,8 +46,7 @@ namespace DeathrunRemade
             _Log.Info($"{NAME} v{VERSION} starting up.");
 
             // Create a holding GameObject under BepInEx's for data which should persist in both main menu and ingame.
-            // Will not actually persist if the BepInEx object is not tagged with SceneCleanerPreserve. But at that
-            // point you have other problems.
+            // Will not actually persist if the BepInEx manager object is not tagged with SceneCleanerPreserve.
             _persistentObject = new GameObject("Deathrun Components");
             _persistentObject.transform.SetParent(transform, false);
             
@@ -66,10 +65,11 @@ namespace DeathrunRemade
                 RegisterCommands();
                 RegisterGameEvents();
                 
-                // Set up all the harmony patching.
+                // Set up harmony patching so that we unpatch and re-patch every time the user enters the game.
                 _harmony = new Harmony(GUID);
-                HarmonyPatching(_harmony);
-                SaveData.OnSaveDataLoaded += HarmonyPatchingDelayed;
+                // This event is one of the few not relying on a patch to trigger.
+                GameEventHandler.OnMainMenuLoaded += () => HarmonyPatching(_harmony);
+                SaveData.OnSaveDataLoaded += save => HarmonyPatchingDelayed(_harmony, save.Config);
             }
             catch (Exception ex)
             {
@@ -84,22 +84,35 @@ namespace DeathrunRemade
         /// </summary>
         private void HarmonyPatching(Harmony harmony)
         {
-            // Waiting for HarmonyX to update their fork with PatchCategories
-            harmony.PatchAll(typeof(GameEventHandler));
-            harmony.PatchAll(typeof(BatteryPatcher));
-            harmony.PatchAll(typeof(CauseOfDeathPatcher));
-            harmony.PatchAll(typeof(CompassPatcher));
-            harmony.PatchAll(typeof(CountdownPatcher));
-            harmony.PatchAll(typeof(EscapePodPatcher));
-            harmony.PatchAll(typeof(ExplosionPatcher));
-            harmony.PatchAll(typeof(FilterPumpPatcher));
-            harmony.PatchAll(typeof(FoodChallengePatcher));
-            harmony.PatchAll(typeof(RadiationPatcher));
-            harmony.PatchAll(typeof(RunStatsTracker));
-            harmony.PatchAll(typeof(SaveFileMenuPatcher));
-            harmony.PatchAll(typeof(SuitPatcher));
-            harmony.PatchAll(typeof(TooltipPatcher));
-            harmony.PatchAll(typeof(WaterMurkPatcher));
+            try
+            {
+                _Log.Debug("Unpatching any active harmony patches.");
+                // Undo all our active harmony patches so we can patch with a clean slate. Does nothing on startup but helps
+                // the mod not break on trying to load into a game for the second time.
+                harmony.UnpatchSelf();
+                
+                _Log.Debug("Applying general harmony patches.");
+                // Waiting for HarmonyX to update their fork with PatchCategories
+                harmony.PatchAll(typeof(GameEventHandler));
+                harmony.PatchAll(typeof(BatteryPatcher));
+                harmony.PatchAll(typeof(CauseOfDeathPatcher));
+                harmony.PatchAll(typeof(CompassPatcher));
+                harmony.PatchAll(typeof(CountdownPatcher));
+                harmony.PatchAll(typeof(EscapePodPatcher));
+                harmony.PatchAll(typeof(ExplosionPatcher));
+                harmony.PatchAll(typeof(FilterPumpPatcher));
+                harmony.PatchAll(typeof(FoodChallengePatcher));
+                harmony.PatchAll(typeof(RadiationPatcher));
+                harmony.PatchAll(typeof(RunStatsTracker));
+                harmony.PatchAll(typeof(SaveFileMenuPatcher));
+                harmony.PatchAll(typeof(SuitPatcher));
+                harmony.PatchAll(typeof(TooltipPatcher));
+                harmony.PatchAll(typeof(WaterMurkPatcher));
+            }
+            catch (Exception ex)
+            {
+                DeathrunUtils.FatalError(ex);
+            }
         }
         
         /// <summary>
@@ -109,27 +122,27 @@ namespace DeathrunRemade
         /// Some of these could totally run at the beginning of the game too, but why patch things when there's no
         /// need to?
         /// </summary>
-        private void HarmonyPatchingDelayed(SaveData save)
+        private void HarmonyPatchingDelayed(Harmony harmony, ConfigSave config)
         {
             try
             {
-                ConfigSave config = save.Config;
+                _Log.Debug("Applying config-reliant harmony patches.");
                 if (config.CreatureAggression != Difficulty4.Normal)
-                    _harmony.PatchAll(typeof(AggressionPatcher));
+                    harmony.PatchAll(typeof(AggressionPatcher));
                 if (config.DamageTaken != DamageDifficulty.Normal)
-                    _harmony.PatchAll(typeof(DamageTakenPatcher));
+                    harmony.PatchAll(typeof(DamageTakenPatcher));
                 if (config.SurfaceAir != Difficulty3.Normal)
-                    _harmony.PatchAll(typeof(BreathingPatcher));
+                    harmony.PatchAll(typeof(BreathingPatcher));
                 if (config.NitrogenBends != Difficulty3.Normal)
                 {
-                    _harmony.PatchAll(typeof(NitrogenPatcher));
-                    _harmony.PatchAll(typeof(SurvivalPatcher));
+                    harmony.PatchAll(typeof(NitrogenPatcher));
+                    harmony.PatchAll(typeof(SurvivalPatcher));
                 }
 
                 if (config.PowerCosts != Difficulty4.Normal)
-                    _harmony.PatchAll(typeof(PowerPatcher));
+                    harmony.PatchAll(typeof(PowerPatcher));
                 if (config.PacifistChallenge)
-                    _harmony.PatchAll(typeof(PacifistPatcher));
+                    harmony.PatchAll(typeof(PacifistPatcher));
             }
             catch (Exception ex)
             {
@@ -321,9 +334,7 @@ namespace DeathrunRemade
         {
             Atlas.Sprite suitIcon = Hootils.LoadSprite("SuitTabIcon.png", true);
             Atlas.Sprite tankIcon = Hootils.LoadSprite("TankTabIcon.png", true);
-
-            // This won't actually work because you can't add new tabs to ones which already contain items, but it
-            // should play nicely with mods that reorganise the craft tree.
+            
             CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, Suit.WorkbenchSuitTab,
                 "Dive Suit Upgrades", suitIcon);
             CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, Tank.WorkbenchTankTab,
