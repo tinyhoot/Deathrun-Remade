@@ -33,13 +33,20 @@ namespace DeathrunRemade
         internal static ILogHandler _Log;
         internal static RunHandler _RunHandler;
         private EncyclopediaHandler _encyclopediaHandler;
-        private VanillaRecipeChanges _recipeChanges;
+        internal static VanillaRecipeChanges _recipeChanges;
 
         // Persists across scenes, holds vital components.
         private GameObject _persistentObject;
         // The base object from which the main menu highscores window is instantiated.
         private GameObject _baseStatsWindow;
         private Harmony _harmony;
+
+        /// <summary>
+        /// Called when the player returns to the main menu after playing, necessitating a reset of all save-specific
+        /// setup so that everything is ready for immediately loading another save (or starting a new run).<br />
+        /// This mostly concerns data sent to Nautilus like recipe changes.
+        /// </summary>
+        public static event Action OnReset;
 
         private void Awake()
         {
@@ -60,7 +67,7 @@ namespace DeathrunRemade
 
             try {
                 InitHandlers();
-                StartCoroutine(LoadFilesAsync());
+                StartCoroutine(Hootils.WrapCoroutine(LoadFilesAsync(), DeathrunUtils.FatalError));
                 SetupCraftTree();
                 RegisterItems();
                 RegisterCommands();
@@ -204,6 +211,9 @@ namespace DeathrunRemade
             // Put this new option in the right place - just after the options menu button.
             int index = uGUI_MainMenu.main.primaryOptions.transform.Find("PrimaryOptions/MenuButtons/ButtonOptions").GetSiblingIndex();
             option.SetIndex(index + 1);
+            
+            // Tell everything that hasn't been destroyed by the SceneCleaner to undo any changes.
+            OnReset?.Invoke();
         }
 
         /// <summary>

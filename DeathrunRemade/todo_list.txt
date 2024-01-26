@@ -33,7 +33,7 @@ Reworks before release
 - Respect cheats everywhere. Pay special attention to damage, oxygen, and power.
 - Replace the names of starts with more inventive ones. Add new ones.
   - Remove 'Dramatic View' and other non-terrain starts entirely due to collision check issues.
-- Make mod fully able to function in repeated saving and loading between in-game and main menu.
+- Sanitise startup sequence and the exact timing of mod components. Lots of things could be moved or consolidated.
 
 Substantial changes from the original
 - Photosynthetic tanks always work in sunlight, including the surface
@@ -49,3 +49,7 @@ Substantial changes from the original
 - Scoring system is reworked. Legacy runs can be imported, but will show different scores.
 - The scanner room does not passively drain power.
 - The mod can now be translated simply by adding a localisation file to the Assets/Localization folder.
+
+Things that block the mod from loading into the game for a second time without issues
+- There is no way to undo recipe and fragment changes once registered. The original, vanilla state is no longer accessible
+  and may not even be desirable (in case of other mods modifying the same recipe).

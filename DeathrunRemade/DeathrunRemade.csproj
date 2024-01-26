@@ -81,6 +81,7 @@
         <Compile Include="Objects\LegacyStats.cs" />
         <Compile Include="Objects\Message.cs" />
         <Compile Include="Objects\JsonTechData.cs" />
+        <Compile Include="Objects\NautilusShell.cs" />
         <Compile Include="Objects\RunStats.cs" />
         <Compile Include="Objects\SaveData.cs" />
         <Compile Include="Objects\StartLocation.cs" />
@@ -99,6 +100,7 @@
         <Compile Include="Patches\FilterPumpPatcher.cs" />
         <Compile Include="Patches\FoodChallengePatcher.cs" />
         <Compile Include="Patches\NitrogenPatcher.cs" />
+        <Compile Include="Patches\PdaPatcher.cs" />
         <Compile Include="Patches\SaveFileMenuPatcher.cs" />
         <Compile Include="Patches\SurvivalPatcher.cs" />
         <Compile Include="Patches\PacifistPatcher.cs" />

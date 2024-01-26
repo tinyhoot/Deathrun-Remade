@@ -16,6 +16,39 @@ The rewrite is in its playtesting stage and nearing completion.
 - Building the project will leave you with a `DeathrunRemade.dll` in the default build directory and automatically 
   copy all necessary mod files to your `Subnautica/BepInEx/plugins` directory for quick testing.
 
+## For Modders: Initialisation Timeline
+
+Deathrun Remade uses a *lot* of non-traditional timing for when it registers its changes. This overview is intended to
+help other modders interact with Deathrun, be it through the API, Nautilus, or Harmony patches.
+
+- Plugin `Awake()`
+  - Custom items are registered with Nautilus.
+  - Persistent data which does not change depending on settings is registered with Nautilus, such as PDA encyclopedia entries.
+  - Systems underlying the API are initialised.
+- Main Menu loads.
+  - If this is not the first time loading the main menu, all existing changes are wiped. Harmony is unpatched, recipe 
+    changes are reversed, state is restored to vanilla as much as possible.
+  - Harmony patches that are always necessary are applied.
+- User presses Play and starts/loads a game.
+  - `SaveDataCache` loads.
+    - The config locks in and can no longer be changed.
+    - Config-specific harmony patches are applied.
+    - Changes to recipes, fragments, etc. are registered with Nautilus.
+  - Player `Awake()`
+    - MonoBehaviours are added to `Player.main`.
+    - UI elements are instantiated and set up.
+  - Main Scene loads; systems like `PDAScanner` awake.
+    - Caches like the fragment scan number cache are updated with vanilla state *before* Nautilus applies its modifications.
+  - Most of Nautilus' patchers activate.
+  - EscapePod `Awake()`
+    - MonoBehaviours specific to the lifepod are attached to it.
+  - The 'DEATHRUN' info on which start was chosen appears on the loading screen.
+  - The world loads.
+- The loading screen finishes and the player gains control over their character.
+  - Vanilla GUI elements are copied and repurposed.
+  - Radiation events are registered.
+- On quit, repeat from Main Menu load.
+
 ## Credits
 
 - ["Anticlockwise Rotation Icon"](https://game-icons.net/1x1/delapouite/anticlockwise-rotation.html) by Delapouite under [CC-BY-3.0](https://creativecommons.org/licenses/by/3.0/)

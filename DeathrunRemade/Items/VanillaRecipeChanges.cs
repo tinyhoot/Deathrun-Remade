@@ -18,6 +18,18 @@ namespace DeathrunRemade.Items
         private const string FragmentFileName = "ScanNumberChanges.json";
         private Dictionary<string, List<SerialScanData>> _fragmentJson;
         private Dictionary<string, List<SerialTechData>> _recipeJson;
+        private NautilusShell<TechType, ITechData> _recipeCache;
+        private NautilusShell<TechType, int> _scanNumberCache;
+
+        public VanillaRecipeChanges()
+        {
+            // Set up caching so we can reset our changes at any point.
+            _recipeCache = new NautilusShell<TechType, ITechData>(CraftDataHandler.SetRecipeData, CraftDataHandler.GetRecipeData);
+            _scanNumberCache = new NautilusShell<TechType, int>(PDAHandler.EditFragmentsToScan, GetFragmentScanNumber);
+
+            // Ensure we clean up after ourselves.
+            DeathrunInit.OnReset += Reset;
+        }
 
         /// <summary>
         /// Get all recipe changes for a specific value of a setting.
@@ -99,7 +111,7 @@ namespace DeathrunRemade.Items
             foreach (var scanData in changes)
             {
                 DeathrunInit._Log.Debug($"Setting fragments required for {scanData.techType}: {scanData.amount}");
-                PDAHandler.EditFragmentsToScan(scanData.techType, scanData.amount);
+                _scanNumberCache.SendChanges(scanData.techType, scanData.amount);
             }
         }
 
@@ -119,8 +131,39 @@ namespace DeathrunRemade.Items
             foreach (var craftData in changes.Where(techData => techData != null))
             {
                 DeathrunInit._Log.Debug($"Setting recipe for {craftData.techType}: {craftData.ingredients.ElementsToString()}");
-                CraftDataHandler.SetRecipeData(craftData.techType, craftData.ToTechData());
+                _recipeCache.SendChanges(craftData.techType, craftData.ToTechData());
             }
         }
+
+        /// <summary>
+        /// Undo all changes committed by this class.
+        /// </summary>
+        public void Reset()
+        {
+            DeathrunInit._Log.Debug("Undoing all recipe and fragment changes.");
+            _recipeCache.UndoChanges();
+            _scanNumberCache.UndoChanges();
+            // Restore the regular battery as a starting item.
+            KnownTechHandler.UnlockOnStart(TechType.Battery);
+        }
+        
+        /// <summary>
+        /// Small wrapper for easier <see cref="NautilusShell{TKey,TValue}"/> setup.
+        /// </summary>
+        private int GetFragmentScanNumber(TechType techType)
+        {
+            // At the time of writing, Nautilus only patches fragment edits once on PDAScanner.Initialize(). This is a
+            // problem since the game is unable to provide its current data before that point and will just return null.
+            // At the same time, delaying the edit past Initialize() and editing the mapping ourselves causes the in-game
+            // number of fragments required to not update properly for items visible at start (e.g. seaglide).
+            // So, set the value to something nonsensical so that a perfectly timed harmony patch can recognise and
+            // update it later.
+            return PDAScanner.GetEntryData(techType)?.totalFragments ?? -1;
+        }
+
+        /// <summary>
+        /// Exists so that a harmony patch can update the values at the appropriate time. It's a mess.
+        /// </summary>
+        public NautilusShell<TechType, int> GetFragmentScanCache() => _scanNumberCache;
     }
 }
