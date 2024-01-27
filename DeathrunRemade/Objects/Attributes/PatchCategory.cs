@@ -56,7 +56,7 @@ namespace DeathrunRemade.Objects.Attributes
             }
         }
 
-        /// <inheritdoc cref="UnpatchTypesWithCategory(HarmonyLib.Harmony,ApplyPatch)"/>
+        /// <inheritdoc cref="UnpatchTypesWithCategory(HarmonyLib.Harmony,string)"/>
         public static void UnpatchTypesWithCategory(this Harmony harmony, ApplyPatch category)
         {
             UnpatchTypesWithCategory(harmony, category.AsString());

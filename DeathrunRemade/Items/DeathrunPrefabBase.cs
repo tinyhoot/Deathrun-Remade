@@ -4,13 +4,7 @@ namespace DeathrunRemade.Items
 {
     internal abstract class DeathrunPrefabBase
     {
-        // Do not assign a prefix in debug builds, which makes the items easier to spawn in and test but more at risk
-        // of clashes with other mods.
-#if DEBUG2
-        public const string ClassIdPrefix = "";
-#else
         public const string ClassIdPrefix = "deathrunremade_";
-#endif
         
         protected PrefabInfo _prefabInfo;
         protected CustomPrefab _prefab;
@@ -21,11 +15,37 @@ namespace DeathrunRemade.Items
         
         public virtual PrefabInfo PrefabInfo => _prefabInfo;
 
+        // Ideally this would be static abstract but C#11 is unsupported on Subnautica's .NET Framework.
         public virtual TechType TechType => _prefabInfo.TechType;
+
+        public void RegisterTechType()
+        {
+            _prefabInfo = CreatePrefabInfo();
+        }
+
+        public void SetupPrefab()
+        {
+            _prefab = CreatePrefab(_prefabInfo);
+        }
+
+        protected virtual PrefabInfo CreatePrefabInfo()
+        {
+            return default;
+        }
+
+        protected virtual CustomPrefab CreatePrefab(PrefabInfo info)
+        {
+            return default;
+        }
 
         public virtual void Register()
         {
             _prefab.Register();
+        }
+
+        public virtual void Unregister()
+        {
+            _prefab.Unregister();
         }
     }
 }

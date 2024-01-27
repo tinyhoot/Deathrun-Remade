@@ -1,5 +1,6 @@
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
+using HarmonyLib;
 using HootLib;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
@@ -15,37 +16,51 @@ namespace DeathrunRemade.Items
     {
         public new static TechType TechType;
         
-        public AcidBattery()
+        protected override PrefabInfo CreatePrefabInfo()
         {
             var sprite = Hootils.LoadSprite("AcidBattery.png", true);
-            _prefabInfo = Hootils.CreatePrefabInfo(
-                ClassIdPrefix + "acidbattery",
-                null,
-                null,
-                sprite
-            );
-            TechType = _prefabInfo.TechType;
+            PrefabInfo info = Hootils.CreatePrefabInfo(ClassIdPrefix + "acidbattery", sprite);
+            TechType = info.TechType;
+            return info;
+        }
 
-            _prefab = new CustomPrefab(_prefabInfo);
-            _prefab.SetRecipe(new RecipeData(
+        protected override CustomPrefab CreatePrefab(PrefabInfo info)
+        {
+            CustomPrefab prefab = new CustomPrefab(_prefabInfo);
+            prefab.SetRecipe(new RecipeData(
                     new Ingredient(TechType.Copper, 1),
                     new Ingredient(TechType.AcidMushroom, 2)
                 ))
                 .WithFabricatorType(CraftTree.Type.Fabricator)
                 .WithStepsToFabricatorTab(CraftTreeHandler.Paths.FabricatorsElectronics);
-            _prefab.SetPdaGroupCategory(TechGroup.Resources, TechCategory.Electronics);
-            _prefab.SetUnlock(TechType.AcidMushroom);
-            // Prefab.SetEquipment(EquipmentType.BatteryCharger);
+            prefab.SetPdaGroupCategory(TechGroup.Resources, TechCategory.Electronics);
+            prefab.SetUnlock(TechType.AcidMushroom);
 
             var template = new EnergySourceTemplate(_prefabInfo, 100);
             template.ModifyPrefab += ChangeCapacity;
-            _prefab.SetGameObject(template);
+            prefab.SetGameObject(template);
+
+            return prefab;
+        }
+
+        public override void Register()
+        {
+            base.Register();
+            AddRecyclingRecipe();
+        }
+
+        public override void Unregister()
+        {
+            base.Unregister();
+            // Also remove the recycling recipe.
+            CraftDataHandler.SetRecipeData(TechType.Copper, null);
+            CraftTreeHandler.RemoveNode(CraftTree.Type.Fabricator, CraftTreeHandler.Paths.FabricatorsElectronics.AddToArray(TechType.Copper.AsString()));
         }
 
         /// <summary>
         /// Add a recipe for recycling acid batteries.
         /// </summary>
-        public static void AddRecyclingRecipe()
+        private void AddRecyclingRecipe()
         {
             RecipeData recycling = new RecipeData(new Ingredient(TechType, 3));
             recycling.craftAmount = 2;

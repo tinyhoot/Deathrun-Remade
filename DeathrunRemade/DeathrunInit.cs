@@ -16,7 +16,6 @@ using HarmonyLib;
 using HootLib;
 using HootLib.Components;
 using Nautilus.Handlers;
-using Story;
 using UnityEngine;
 using ILogHandler = HootLib.Interfaces.ILogHandler;
 
@@ -43,8 +42,8 @@ namespace DeathrunRemade
         private Harmony _harmony;
 
         /// <summary>
-        /// Called when the player returns to the main menu after playing, necessitating a reset of all save-specific
-        /// setup so that everything is ready for immediately loading another save (or starting a new run).<br />
+        /// Called when a reset of all save-specific patches and changes is necessary so that everything is ready for
+        /// immediately loading another save (or starting a new run).<br />
         /// This mostly concerns data sent to Nautilus like recipe changes.
         /// </summary>
         public static event Action OnReset;
@@ -79,8 +78,8 @@ namespace DeathrunRemade
                 // Patch everything that needs to be on regardless of settings.
                 _Log.Debug("Applying general harmony patches.");
                 _harmony.PatchTypesWithCategory(ApplyPatch.Always);
-                GameEventHandler.OnMainMenuLoaded += () => HarmonyPatching(_harmony);
-                SaveData.OnSaveDataLoaded += save => HarmonyPatchingDelayed(_harmony, save.Config);
+                OnReset += () => UnpatchHarmony(_harmony);
+                SaveData.OnSaveDataLoaded += save => PatchHarmonyWithConfig(_harmony, save.Config);
             }
             catch (Exception ex)
             {
@@ -91,15 +90,16 @@ namespace DeathrunRemade
         }
 
         /// <summary>
-        /// Execute all harmony patches that need to run every time regardless of which config options were chosen.
+        /// Unpatch all harmony patches which should only be enabled with specific config settings.
         /// </summary>
-        private void HarmonyPatching(Harmony harmony)
+        private void UnpatchHarmony(Harmony harmony)
         {
             try
             {
-                _Log.Debug("Unpatching any active harmony patches.");
-                // Undo all our active harmony patches so we can patch with a clean slate. Does nothing on startup but helps
-                // the mod not break on trying to load into a game for the second time.
+                _Log.Debug("Unpatching config-reliant harmony patches.");
+                // Undo all config-reliant harmony patches so we can patch with a clean slate. Does nothing the first time
+                // (telling Harmony to unpatch something it never patched is safe) but helps the mod not break when
+                // trying to load into a game for the second time.
                 harmony.UnpatchTypesWithCategory(ApplyPatch.Config);
             }
             catch (Exception ex)
@@ -115,11 +115,13 @@ namespace DeathrunRemade
         /// Some of these could totally run at the beginning of the game too, but why patch things when there's no
         /// need to?
         /// </summary>
-        private void HarmonyPatchingDelayed(Harmony harmony, ConfigSave config)
+        private void PatchHarmonyWithConfig(Harmony harmony, ConfigSave config)
         {
             try
             {
                 _Log.Debug("Applying config-reliant harmony patches.");
+                // I considered creating new categories for each config option but it's just not worth it when
+                // each option only has 1-2 patching classes. Category-based unpatching is convenient enough.
                 if (config.CreatureAggression != Difficulty4.Normal)
                     harmony.PatchAll(typeof(AggressionPatcher));
                 if (config.DamageTaken != DamageDifficulty.Normal)
@@ -197,9 +199,6 @@ namespace DeathrunRemade
             // Put this new option in the right place - just after the options menu button.
             int index = uGUI_MainMenu.main.primaryOptions.transform.Find("PrimaryOptions/MenuButtons/ButtonOptions").GetSiblingIndex();
             option.SetIndex(index + 1);
-            
-            // Tell everything that hasn't been destroyed by the SceneCleaner to undo any changes.
-            OnReset?.Invoke();
         }
 
         /// <summary>
@@ -296,6 +295,7 @@ namespace DeathrunRemade
         {
             GameEventHandler.RegisterEvents();
             GameEventHandler.OnMainMenuLoaded += OnMainMenuLoaded;
+            GameEventHandler.OnMainMenuPressPlay += () => OnReset?.Invoke();
             GameEventHandler.OnPlayerAwake += OnPlayerAwake;
             GameEventHandler.OnPlayerGainControl += OnPlayerGainControl;
             SaveData.OnSaveDataLoaded += OnConfigLockedIn;
@@ -306,15 +306,20 @@ namespace DeathrunRemade
         /// </summary>
         private void RegisterItems()
         {
+            // List<DeathrunPrefabBase> customItems = Hootils.InstantiateSubclassesInAssembly<DeathrunPrefabBase>(Hootils.GetAssembly());
+            
             // Very basic items first, so later items can rely on them for recipes.
             new MobDrop(MobDrop.Variant.LavaLizardScale).Register();
             new MobDrop(MobDrop.Variant.SpineEelScale).Register();
             new MobDrop(MobDrop.Variant.ThermophileSample).Register();
 
-            new AcidBattery().Register();
+            var bat = new AcidBattery();
+            bat.RegisterTechType();
+            bat.SetupPrefab();
+            bat.Register();
             new AcidPowerCell().Register();
             // Do this here so that the order of recipes is correct.
-            AcidBattery.AddRecyclingRecipe();
+            // AcidBattery.AddRecyclingRecipe();
             new DecompressionModule().Register();
             new FilterChip().Register();
             
@@ -365,7 +370,10 @@ namespace DeathrunRemade
             {
                 _Log.Debug($"Layer {i} - '{LayerMask.LayerToName(i)}'");
             }
-            StoryGoalManager.main.OnGoalComplete("Story_AuroraWarning3");
+            // StoryGoalManager.main.OnGoalComplete("Story_AuroraWarning3");
+            SaveData.Main.Config = default;
+            SaveData.Main.EscapePod = default;
+            SaveData.Main.Nitrogen = default;
         }
     }
 }

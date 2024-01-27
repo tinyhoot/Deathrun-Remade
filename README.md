@@ -25,11 +25,13 @@ help other modders interact with Deathrun, be it through the API, Nautilus, or H
   - Custom items are registered with Nautilus.
   - Persistent data which does not change depending on settings is registered with Nautilus, such as PDA encyclopedia entries.
   - Systems underlying the API are initialised.
-- Main Menu loads.
-  - If this is not the first time loading the main menu, all existing changes are wiped. Harmony is unpatched, recipe 
-    changes are reversed, state is restored to vanilla as much as possible.
   - Harmony patches that are always necessary are applied.
+- Main Menu loads.
+  - If this is not the first time loading the main menu, all existing changes are wiped. Recipe 
+    changes are reversed, state is restored to vanilla as much as possible.
 - User presses Play and starts/loads a game.
+  - Event for clicking Play is invoked.
+    - All config-specific harmony patches are unpatched to get a clean slate for the setup in the next steps.
   - `SaveDataCache` loads.
     - The config locks in and can no longer be changed.
     - Config-specific harmony patches are applied.
