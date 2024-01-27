@@ -2,12 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using DeathrunRemade.Objects;
+using DeathrunRemade.Objects.Attributes;
+using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using UnityEngine;
 
 namespace DeathrunRemade.Patches
 {
     [HarmonyPatch]
+    [PatchCategory(ApplyPatch.Config)]
     internal class PacifistPatcher
     {
         /// <summary>

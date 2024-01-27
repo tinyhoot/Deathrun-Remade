@@ -73,8 +73,10 @@
         <Compile Include="Items\Tank.cs" />
         <Compile Include="Components\DeathrunTank.cs" />
         <Compile Include="Items\VanillaRecipeChanges.cs" />
+        <Compile Include="Objects\Attributes\PatchCategory.cs" />
         <Compile Include="Objects\DeathrunStats.cs" />
         <Compile Include="Objects\Enums\Difficulty.cs" />
+        <Compile Include="Objects\Enums\ApplyPatch.cs" />
         <Compile Include="Objects\Enums\RunAchievements.cs" />
         <Compile Include="Objects\Enums\SafeDepthStatus.cs" />
         <Compile Include="Objects\Exceptions\DeathrunException.cs" />

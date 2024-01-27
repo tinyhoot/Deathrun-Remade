@@ -2,11 +2,14 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
+using DeathrunRemade.Objects.Attributes;
+using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 
 namespace DeathrunRemade.Patches
 {
     [HarmonyPatch]
+    [PatchCategory(ApplyPatch.Always)]
     internal class CompassPatcher
     {
         private static bool _compassHasInitialised;

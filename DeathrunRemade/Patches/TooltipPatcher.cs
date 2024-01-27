@@ -1,12 +1,15 @@
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using DeathrunRemade.Handlers;
+using DeathrunRemade.Objects.Attributes;
+using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using HootLib;
 
 namespace DeathrunRemade.Patches
 {
     [HarmonyPatch]
+    [PatchCategory(ApplyPatch.Always)]
     internal static class TooltipPatcher
     {
         /// <summary>

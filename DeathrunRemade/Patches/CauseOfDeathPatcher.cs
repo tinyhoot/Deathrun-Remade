@@ -3,6 +3,8 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using DeathrunRemade.Handlers;
+using DeathrunRemade.Objects.Attributes;
+using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using UnityEngine;
 
@@ -13,6 +15,7 @@ namespace DeathrunRemade.Patches
     /// Set an override where necessary so we still capture the causes accurately.
     /// </summary>
     [HarmonyPatch]
+    [PatchCategory(ApplyPatch.Always)]
     internal class CauseOfDeathPatcher
     {
         /// <summary>

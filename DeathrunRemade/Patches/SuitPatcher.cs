@@ -1,9 +1,12 @@
 using DeathrunRemade.Items;
+using DeathrunRemade.Objects.Attributes;
+using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 
 namespace DeathrunRemade.Patches
 {
     [HarmonyPatch]
+    [PatchCategory(ApplyPatch.Always)]
     internal class SuitPatcher
     {
         public const float MinTemperatureLimit = 49f;

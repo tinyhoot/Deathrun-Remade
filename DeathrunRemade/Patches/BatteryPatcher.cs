@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
+using DeathrunRemade.Objects.Attributes;
 using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 
 namespace DeathrunRemade.Patches
 {
     [HarmonyPatch]
+    [PatchCategory(ApplyPatch.Always)]
     internal static class BatteryPatcher
     {
         /// <summary>

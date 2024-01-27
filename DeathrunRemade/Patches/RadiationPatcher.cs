@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using DeathrunRemade.Objects;
+using DeathrunRemade.Objects.Attributes;
 using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using UnityEngine;
@@ -11,6 +12,7 @@ using UnityEngine;
 namespace DeathrunRemade.Patches
 {
     [HarmonyPatch]
+    [PatchCategory(ApplyPatch.Always)]
     internal static class RadiationPatcher
     {
         // Static readonly means it can be used by reference, which allows quick equality checks.

@@ -4,6 +4,7 @@ using System.Reflection.Emit;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
+using DeathrunRemade.Objects.Attributes;
 using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using HootLib.Objects.Exceptions;
@@ -12,6 +13,7 @@ using UnityEngine;
 namespace DeathrunRemade.Patches
 {
     [HarmonyPatch]
+    [PatchCategory(ApplyPatch.Config)]
     internal class PowerPatcher
     {
         // Used to keep track of which vehicle is being exited by the player.

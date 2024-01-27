@@ -1,10 +1,12 @@
 using DeathrunRemade.Objects;
+using DeathrunRemade.Objects.Attributes;
 using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 
 namespace DeathrunRemade.Patches
 {
     [HarmonyPatch]
+    [PatchCategory(ApplyPatch.Config)]
     internal class FarmingChallengePatcher
     {
         /// <summary>

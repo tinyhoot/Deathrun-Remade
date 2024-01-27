@@ -1,5 +1,7 @@
 using DeathrunRemade.Components;
 using DeathrunRemade.Handlers;
+using DeathrunRemade.Objects.Attributes;
+using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using UnityEngine;
 
@@ -10,6 +12,7 @@ namespace DeathrunRemade.Patches
     /// which cannot be handled by <see cref="Handlers.NitrogenHandler"/> without harmony patching.
     /// </summary>
     [HarmonyPatch]
+    [PatchCategory(ApplyPatch.Config)]
     internal static class NitrogenPatcher
     {
         /// <summary>

@@ -1,12 +1,15 @@
 using System.Collections.Generic;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Objects;
+using DeathrunRemade.Objects.Attributes;
+using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using UnityEngine;
 
 namespace DeathrunRemade.Patches
 {
     [HarmonyPatch]
+    [PatchCategory(ApplyPatch.Config)]
     internal class SurvivalPatcher
     {
         // The worst things can get with severely rotten food.

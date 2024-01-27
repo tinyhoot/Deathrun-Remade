@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using DeathrunRemade.Configuration;
 using DeathrunRemade.Objects;
+using DeathrunRemade.Objects.Attributes;
 using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using HootLib.Objects;
@@ -14,6 +15,7 @@ namespace DeathrunRemade.Components
     /// This component is added to the player's GameObject, meaning it awakes and dies while in-game.
     /// </summary>
     [HarmonyPatch]
+    [PatchCategory(ApplyPatch.Always)]
     internal class RunStatsTracker : MonoBehaviour
     {
         // By the time this component awakes, the savedata should have been initialised for a long time already.

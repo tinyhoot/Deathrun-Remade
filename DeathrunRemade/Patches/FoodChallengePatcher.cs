@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using DeathrunRemade.Objects;
+using DeathrunRemade.Objects.Attributes;
 using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using UnityEngine;
@@ -7,6 +8,7 @@ using UnityEngine;
 namespace DeathrunRemade.Patches
 {
     [HarmonyPatch]
+    [PatchCategory(ApplyPatch.Always)]
     internal class FoodChallengePatcher
     {
         private static readonly HashSet<TechType> Fish = new HashSet<TechType>

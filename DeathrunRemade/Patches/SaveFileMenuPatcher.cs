@@ -1,3 +1,5 @@
+using DeathrunRemade.Objects.Attributes;
+using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using HootLib;
 using UnityEngine;
@@ -9,6 +11,7 @@ namespace DeathrunRemade.Patches
     /// Responsible for hooking into the appearance of the save files visible in the main menu.
     /// </summary>
     [HarmonyPatch]
+    [PatchCategory(ApplyPatch.Always)]
     internal static class SaveFileMenuPatcher
     {
         private static Color _disabledSaveTint = new Color(0.7f, 0.45f, 0.45f, 0.45f);

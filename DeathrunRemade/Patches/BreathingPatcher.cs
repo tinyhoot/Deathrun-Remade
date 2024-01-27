@@ -2,6 +2,7 @@ using DeathrunRemade.Configuration;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
+using DeathrunRemade.Objects.Attributes;
 using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace DeathrunRemade.Patches
     /// Poison the surface air and make it difficult to breathe in general. You know, just like real life.
     /// </summary>
     [HarmonyPatch]
+    [PatchCategory(ApplyPatch.Config)]
     internal class BreathingPatcher
     {
         /// <summary>

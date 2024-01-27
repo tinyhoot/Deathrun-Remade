@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection.Emit;
 using DeathrunRemade.Objects;
+using DeathrunRemade.Objects.Attributes;
 using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using UnityEngine;
@@ -9,6 +10,7 @@ using UnityEngine;
 namespace DeathrunRemade.Patches
 {
     [HarmonyPatch]
+    [PatchCategory(ApplyPatch.Always)]
     public static class ExplosionPatcher
     {
         private const float DealDamageAfterSeconds = 1.6f;

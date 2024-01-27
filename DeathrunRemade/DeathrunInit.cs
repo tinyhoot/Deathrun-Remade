@@ -9,6 +9,7 @@ using DeathrunRemade.Configuration;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
+using DeathrunRemade.Objects.Attributes;
 using DeathrunRemade.Objects.Enums;
 using DeathrunRemade.Patches;
 using HarmonyLib;
@@ -75,7 +76,9 @@ namespace DeathrunRemade
                 
                 // Set up harmony patching so that we unpatch and re-patch every time the user enters the game.
                 _harmony = new Harmony(GUID);
-                // This event is one of the few not relying on a patch to trigger.
+                // Patch everything that needs to be on regardless of settings.
+                _Log.Debug("Applying general harmony patches.");
+                _harmony.PatchTypesWithCategory(ApplyPatch.Always);
                 GameEventHandler.OnMainMenuLoaded += () => HarmonyPatching(_harmony);
                 SaveData.OnSaveDataLoaded += save => HarmonyPatchingDelayed(_harmony, save.Config);
             }
@@ -97,25 +100,7 @@ namespace DeathrunRemade
                 _Log.Debug("Unpatching any active harmony patches.");
                 // Undo all our active harmony patches so we can patch with a clean slate. Does nothing on startup but helps
                 // the mod not break on trying to load into a game for the second time.
-                harmony.UnpatchSelf();
-                
-                _Log.Debug("Applying general harmony patches.");
-                // Waiting for HarmonyX to update their fork with PatchCategories
-                harmony.PatchAll(typeof(GameEventHandler));
-                harmony.PatchAll(typeof(BatteryPatcher));
-                harmony.PatchAll(typeof(CauseOfDeathPatcher));
-                harmony.PatchAll(typeof(CompassPatcher));
-                harmony.PatchAll(typeof(CountdownPatcher));
-                harmony.PatchAll(typeof(EscapePodPatcher));
-                harmony.PatchAll(typeof(ExplosionPatcher));
-                harmony.PatchAll(typeof(FilterPumpPatcher));
-                harmony.PatchAll(typeof(FoodChallengePatcher));
-                harmony.PatchAll(typeof(RadiationPatcher));
-                harmony.PatchAll(typeof(RunStatsTracker));
-                harmony.PatchAll(typeof(SaveFileMenuPatcher));
-                harmony.PatchAll(typeof(SuitPatcher));
-                harmony.PatchAll(typeof(TooltipPatcher));
-                harmony.PatchAll(typeof(WaterMurkPatcher));
+                harmony.UnpatchTypesWithCategory(ApplyPatch.Config);
             }
             catch (Exception ex)
             {
@@ -146,9 +131,10 @@ namespace DeathrunRemade
                     harmony.PatchAll(typeof(NitrogenPatcher));
                     harmony.PatchAll(typeof(SurvivalPatcher));
                 }
-
                 if (config.PowerCosts != Difficulty4.Normal)
                     harmony.PatchAll(typeof(PowerPatcher));
+                if (config.FarmingChallenge != Difficulty3.Normal)
+                    harmony.PatchAll(typeof(FarmingChallengePatcher));
                 if (config.PacifistChallenge)
                     harmony.PatchAll(typeof(PacifistPatcher));
             }

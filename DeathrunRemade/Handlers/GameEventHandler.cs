@@ -1,4 +1,6 @@
 using System;
+using DeathrunRemade.Objects.Attributes;
+using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using UnityEngine.SceneManagement;
 using UWE;
@@ -10,6 +12,7 @@ namespace DeathrunRemade.Handlers
     /// few common methods.
     /// </summary>
     [HarmonyPatch]
+    [PatchCategory(ApplyPatch.Always)]
     internal static class GameEventHandler
     {
         /// <summary>
