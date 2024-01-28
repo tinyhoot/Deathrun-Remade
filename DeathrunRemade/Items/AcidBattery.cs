@@ -1,3 +1,4 @@
+using DeathrunRemade.Configuration;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
@@ -14,19 +15,19 @@ namespace DeathrunRemade.Items
 {
     internal class AcidBattery : DeathrunPrefabBase
     {
-        public new static TechType TechType;
+        public static TechType s_TechType;
         
         protected override PrefabInfo CreatePrefabInfo()
         {
             var sprite = Hootils.LoadSprite("AcidBattery.png", true);
             PrefabInfo info = Hootils.CreatePrefabInfo(ClassIdPrefix + "acidbattery", sprite);
-            TechType = info.TechType;
+            s_TechType = info.TechType;
             return info;
         }
 
         protected override CustomPrefab CreatePrefab(PrefabInfo info)
         {
-            CustomPrefab prefab = new CustomPrefab(_prefabInfo);
+            CustomPrefab prefab = new CustomPrefab(info);
             prefab.SetRecipe(new RecipeData(
                     new Ingredient(TechType.Copper, 1),
                     new Ingredient(TechType.AcidMushroom, 2)
@@ -36,14 +37,20 @@ namespace DeathrunRemade.Items
             prefab.SetPdaGroupCategory(TechGroup.Resources, TechCategory.Electronics);
             prefab.SetUnlock(TechType.AcidMushroom);
 
-            var template = new EnergySourceTemplate(_prefabInfo, 100);
+            var template = new EnergySourceTemplate(info, 100);
             template.ModifyPrefab += ChangeCapacity;
             prefab.SetGameObject(template);
 
             return prefab;
         }
 
-        public override void Register()
+        protected override bool ShouldActivateForConfig(ConfigSave config)
+        {
+            // Disable these batteries on low difficulty.
+            return config.BatteryCosts > Difficulty4.Normal;
+        }
+
+        protected override void Register()
         {
             base.Register();
             AddRecyclingRecipe();
@@ -54,7 +61,9 @@ namespace DeathrunRemade.Items
             base.Unregister();
             // Also remove the recycling recipe.
             CraftDataHandler.SetRecipeData(TechType.Copper, null);
-            CraftTreeHandler.RemoveNode(CraftTree.Type.Fabricator, CraftTreeHandler.Paths.FabricatorsElectronics.AddToArray(TechType.Copper.AsString()));
+            CraftTreeHandler.RemoveNode(CraftTree.Type.Fabricator,
+                CraftTreeHandler.Paths.FabricatorsElectronics.AddToArray(TechType.Copper.AsString()));
+            KnownTechHandler.RemoveDefaultUnlock(TechType.Copper);
         }
 
         /// <summary>

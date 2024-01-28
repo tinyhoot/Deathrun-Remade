@@ -1,3 +1,4 @@
+using DeathrunRemade.Configuration;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using HootLib;
@@ -13,34 +14,41 @@ namespace DeathrunRemade.Items
 {
     internal class AcidPowerCell : DeathrunPrefabBase
     {
-        public new static TechType TechType;
+        public static TechType s_TechType;
         
-        public AcidPowerCell()
+        protected override PrefabInfo CreatePrefabInfo()
         {
             var sprite = Hootils.LoadSprite("AcidPowerCell.png", true);
-            _prefabInfo = Hootils.CreatePrefabInfo(
-                ClassIdPrefix + "acidpowercell",
-                null,
-                null,
-                sprite
-            );
-            TechType = _prefabInfo.TechType;
+            PrefabInfo info = Hootils.CreatePrefabInfo(ClassIdPrefix + "acidpowercell", sprite);
+            s_TechType = info.TechType;
+            return info;
+        }
 
-            _prefab = new CustomPrefab(_prefabInfo);
-            _prefab.SetRecipe(new RecipeData(
+        protected override CustomPrefab CreatePrefab(PrefabInfo info)
+        {
+            CustomPrefab prefab = new CustomPrefab(info);
+            prefab.SetRecipe(new RecipeData(
                     new Ingredient(TechType.Lead, 2),
                     new Ingredient(TechType.AcidMushroom, 4),
                     new Ingredient(TechType.Silicone, 1)
                 ))
                 .WithFabricatorType(CraftTree.Type.Fabricator)
                 .WithStepsToFabricatorTab(CraftTreeHandler.Paths.FabricatorsElectronics);
-            _prefab.SetPdaGroupCategory(TechGroup.Resources, TechCategory.Electronics);
-            _prefab.SetUnlock(AcidBattery.TechType);
-            _prefab.SetEquipment(EquipmentType.PowerCellCharger);
+            prefab.SetPdaGroupCategory(TechGroup.Resources, TechCategory.Electronics);
+            prefab.SetUnlock(AcidBattery.s_TechType);
+            prefab.SetEquipment(EquipmentType.PowerCellCharger);
 
-            var template = new EnergySourceTemplate(_prefabInfo, 200);
+            var template = new EnergySourceTemplate(info, 200);
             template.ModifyPrefab += ChangeCapacity;
-            _prefab.SetGameObject(template);
+            prefab.SetGameObject(template);
+
+            return prefab;
+        }
+        
+        protected override bool ShouldActivateForConfig(ConfigSave config)
+        {
+            // Disable these batteries on low difficulty.
+            return config.BatteryCosts > Difficulty4.Normal;
         }
 
         /// <summary>

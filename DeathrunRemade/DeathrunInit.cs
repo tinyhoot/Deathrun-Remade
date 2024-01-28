@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using BepInEx;
@@ -40,6 +41,7 @@ namespace DeathrunRemade
         // The base object from which the main menu highscores window is instantiated.
         private GameObject _baseStatsWindow;
         private Harmony _harmony;
+        internal static List<DeathrunPrefabBase> CustomItems { get; private set; }
 
         /// <summary>
         /// Called when a reset of all save-specific patches and changes is necessary so that everything is ready for
@@ -209,6 +211,7 @@ namespace DeathrunRemade
         private void OnConfigLockedIn(SaveData save)
         {
             var config = save.Config;
+            CustomItems.Do(item => item.Register(config));
             _recipeChanges.LockBatteryBlueprint(config.BatteryCosts);
             // Deal with any recipe changes.
             _recipeChanges.RegisterFragmentChanges(config);
@@ -306,46 +309,25 @@ namespace DeathrunRemade
         /// </summary>
         private void RegisterItems()
         {
-            // List<DeathrunPrefabBase> customItems = Hootils.InstantiateSubclassesInAssembly<DeathrunPrefabBase>(Hootils.GetAssembly());
-            
-            // Very basic items first, so later items can rely on them for recipes.
-            new MobDrop(MobDrop.Variant.LavaLizardScale).Register();
-            new MobDrop(MobDrop.Variant.SpineEelScale).Register();
-            new MobDrop(MobDrop.Variant.ThermophileSample).Register();
-
-            var bat = new AcidBattery();
-            bat.RegisterTechType();
-            bat.SetupPrefab();
-            bat.Register();
-            new AcidPowerCell().Register();
-            // Do this here so that the order of recipes is correct.
-            // AcidBattery.AddRecyclingRecipe();
-            new DecompressionModule().Register();
-            new FilterChip().Register();
-            
-            new Suit(Suit.Variant.ReinforcedFiltrationSuit).Register();
-            new Suit(Suit.Variant.ReinforcedSuitMk2).Register();
-            new Suit(Suit.Variant.ReinforcedSuitMk3).Register();
-            Suit.RegisterCrushDepths();
-            Suit.RegisterNitrogenModifiers();
-            PDAScanner.onAdd += Suit.UnlockSuitOnScanFish;
-            
-            new Tank(Tank.Variant.ChemosynthesisTank).Register();
-            new Tank(Tank.Variant.PhotosynthesisTank).Register();
-            new Tank(Tank.Variant.PhotosynthesisTankSmall).Register();
+            // Use reflection to instantiate all items.
+            CustomItems = Hootils.InstantiateSubclassesInAssembly<DeathrunPrefabBase>(Hootils.GetAssembly());
+            // Iterate through this twice so that these items can use each other's TechTypes in their recipes.
+            CustomItems.Do(item => item.SetupTechType());
+            CustomItems.Do(item => item.SetupPrefab());
         }
 
         /// <summary>
-        /// Add all the new nodes to the craft tree.
+        /// Add all the new nodes to the craft tree. This does not need to be reset since an empty tab node will simply
+        /// not show up.
         /// </summary>
         private void SetupCraftTree()
         {
             Atlas.Sprite suitIcon = Hootils.LoadSprite("SuitTabIcon.png", true);
             Atlas.Sprite tankIcon = Hootils.LoadSprite("TankTabIcon.png", true);
             
-            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, Suit.WorkbenchSuitTab,
+            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, SuitBase.WorkbenchSuitTab,
                 "Dive Suit Upgrades", suitIcon);
-            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, Tank.WorkbenchTankTab,
+            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, TankBase.WorkbenchTankTab,
                 "Specialty O2 Tanks", tankIcon);
         }
 

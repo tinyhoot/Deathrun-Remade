@@ -143,7 +143,7 @@ namespace DeathrunRemade.Patches
             energyCost += 100f / divisor;
             
             // Reduce power cost for decompression modules.
-            int modules = _ejectedVehicle.modules.GetCount(DecompressionModule.TechType);
+            int modules = _ejectedVehicle.modules.GetCount(DecompressionModule.s_TechType);
             // No reduction at zero, halved at 1, no cost at 2 and above.
             energyCost -= energyCost * (modules / 2f);
             if (energyCost < 1f)

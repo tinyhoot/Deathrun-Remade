@@ -1,3 +1,4 @@
+using DeathrunRemade.Configuration;
 using Nautilus.Assets;
 
 namespace DeathrunRemade.Items
@@ -6,8 +7,8 @@ namespace DeathrunRemade.Items
     {
         public const string ClassIdPrefix = "deathrunremade_";
         
-        protected PrefabInfo _prefabInfo;
-        protected CustomPrefab _prefab;
+        private PrefabInfo _prefabInfo;
+        private CustomPrefab _prefab;
 
         public virtual string ClassId => _prefabInfo.ClassID;
 
@@ -18,34 +19,62 @@ namespace DeathrunRemade.Items
         // Ideally this would be static abstract but C#11 is unsupported on Subnautica's .NET Framework.
         public virtual TechType TechType => _prefabInfo.TechType;
 
-        public void RegisterTechType()
+        /// <summary>
+        /// Create the <see cref="PrefabInfo"/> for this item, thereby registering the custom TechType with Nautilus.
+        /// </summary>
+        public void SetupTechType()
         {
             _prefabInfo = CreatePrefabInfo();
         }
 
+        /// <summary>
+        /// Set up and modify the prefab that will be instantiated.
+        /// </summary>
         public void SetupPrefab()
         {
             _prefab = CreatePrefab(_prefabInfo);
         }
 
-        protected virtual PrefabInfo CreatePrefabInfo()
+        /// <inheritdoc cref="SetupTechType"/>
+        protected abstract PrefabInfo CreatePrefabInfo();
+
+        /// <inheritdoc cref="SetupPrefab"/>
+        protected abstract CustomPrefab CreatePrefab(PrefabInfo info);
+
+        /// <summary>
+        /// Check whether to register this prefab with Nautilus under the current settings.
+        /// </summary>
+        /// <param name="config">The config for this save file.</param>
+        /// <returns>Whether the prefab should activate for this save.</returns>
+        protected abstract bool ShouldActivateForConfig(ConfigSave config);
+
+        /// <summary>
+        /// Register the prefab with Nautilus. This is also the place for any additional work that needs to be done once
+        /// the prefab is supposed to activate.
+        /// </summary>
+        public void Register(ConfigSave config)
         {
-            return default;
+            if (!ShouldActivateForConfig(config))
+                return;
+            
+            Register();
         }
 
-        protected virtual CustomPrefab CreatePrefab(PrefabInfo info)
-        {
-            return default;
-        }
-
-        public virtual void Register()
+        /// <inheritdoc cref="Register"/>
+        protected virtual void Register()
         {
             _prefab.Register();
+            // Unregister this custom item on every reset.
+            DeathrunInit.OnReset += Unregister;
         }
 
+        /// <summary>
+        /// Unregister and clean up any additional things.
+        /// </summary>
         public virtual void Unregister()
         {
             _prefab.Unregister();
+            DeathrunInit.OnReset -= Unregister;
         }
     }
 }

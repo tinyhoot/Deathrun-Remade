@@ -1,3 +1,4 @@
+using DeathrunRemade.Configuration;
 using HootLib;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
@@ -10,22 +11,21 @@ namespace DeathrunRemade.Items
 {
     internal class DecompressionModule : DeathrunPrefabBase
     {
-        public new static TechType TechType;
+        public static TechType s_TechType;
         public const TechType UnlockTechType = TechType.Cyclops;
 
-        public DecompressionModule()
+        protected override PrefabInfo CreatePrefabInfo()
         {
             var sprite = SpriteManager.Get(TechType.PowerUpgradeModule);
-            _prefabInfo = Hootils.CreatePrefabInfo(
-                ClassIdPrefix + "decompressionmodule",
-                null,
-                null,
-                sprite
-            );
-            TechType = _prefabInfo.TechType;
+            PrefabInfo info = Hootils.CreatePrefabInfo(ClassIdPrefix + "decompressionmodule", sprite);
+            s_TechType = info.TechType;
+            return info;
+        }
 
-            _prefab = new CustomPrefab(_prefabInfo);
-            _prefab.SetRecipe(new RecipeData(
+        protected override CustomPrefab CreatePrefab(PrefabInfo info)
+        {
+            CustomPrefab prefab = new CustomPrefab(info);
+            prefab.SetRecipe(new RecipeData(
                     new Ingredient(TechType.ComputerChip, 1),
                     new Ingredient(TechType.Aerogel, 2),
                     new Ingredient(TechType.Sulphur, 2),
@@ -34,13 +34,20 @@ namespace DeathrunRemade.Items
                 ))
                 .WithFabricatorType(CraftTree.Type.SeamothUpgrades)
                 .WithStepsToFabricatorTab(CraftTreeHandler.Paths.VehicleUpgradesCommonModules);
-            _prefab.SetPdaGroupCategory(TechGroup.VehicleUpgrades, TechCategory.VehicleUpgrades);
-            _prefab.SetUnlock(UnlockTechType);
-            _prefab.SetEquipment(EquipmentType.VehicleModule)
+            prefab.SetPdaGroupCategory(TechGroup.VehicleUpgrades, TechCategory.VehicleUpgrades);
+            prefab.SetUnlock(UnlockTechType);
+            prefab.SetEquipment(EquipmentType.VehicleModule)
                 .WithQuickSlotType(QuickSlotType.Passive);
 
-            var template = new CloneTemplate(_prefabInfo, TechType.VehicleArmorPlating);
-            _prefab.SetGameObject(template);
+            var template = new CloneTemplate(info, TechType.VehicleArmorPlating);
+            prefab.SetGameObject(template);
+            
+            return prefab;
+        }
+
+        protected override bool ShouldActivateForConfig(ConfigSave config)
+        {
+            return true;
         }
     }
 }

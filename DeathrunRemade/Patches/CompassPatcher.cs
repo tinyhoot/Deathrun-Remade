@@ -24,7 +24,7 @@ namespace DeathrunRemade.Patches
             if (!techType.Equals(TechType.Compass) || __result > 0)
                 return;
             
-            __result = __instance.equippedCount.GetOrDefault(FilterChip.TechType, 0);
+            __result = __instance.equippedCount.GetOrDefault(FilterChip.s_TechType, 0);
         }
 
         /// <summary>

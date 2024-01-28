@@ -35,6 +35,8 @@ Reworks before release
   - Remove 'Dramatic View' and other non-terrain starts entirely due to collision check issues.
 - Sanitise startup sequence and the exact timing of mod components. Lots of things could be moved or consolidated.
   - Several things are initialised even when they don't need to be. Modded items, radiation systems.
+  - Encyclopedia? Unify with mod items?
+- Safe depth speed for low depths.
 
 Substantial changes from the original
 - Photosynthetic tanks always work in sunlight, including the surface

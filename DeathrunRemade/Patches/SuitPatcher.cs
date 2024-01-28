@@ -22,9 +22,9 @@ namespace DeathrunRemade.Patches
                 return;
 
             var equipment = Inventory.main.equipment;
-            __result = equipment.GetCount(Suit.ReinforcedFiltration) > 0
-                       || equipment.GetCount(Suit.ReinforcedMk2) > 0
-                       || equipment.GetCount(Suit.ReinforcedMk3) > 0;
+            __result = equipment.GetCount(ReinforcedFiltrationSuit.s_TechType) > 0
+                       || equipment.GetCount(ReinforcedSuitMk2.s_TechType) > 0
+                       || equipment.GetCount(ReinforcedSuitMk3.s_TechType) > 0;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace DeathrunRemade.Patches
             TechType suit = Inventory.main.equipment.GetTechTypeInSlot("Body");
 
             // Only change things if this is a suit added by our mod.
-            if (!Suit.TryGetTemperatureLimit(suit, out float limit))
+            if (!SuitBase.TryGetTemperatureLimit(suit, out float limit))
                 return;
             if (__instance.HasReinforcedGloves())
                 limit += 6f;

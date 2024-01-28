@@ -116,7 +116,7 @@ namespace DeathrunRemade.Handlers
                 new UnlockBlueprintData
                 {
                     unlockType = UnlockBlueprintData.UnlockType.Available,
-                    techType = FilterChip.TechType
+                    techType = FilterChip.s_TechType
                 }
             });
         }

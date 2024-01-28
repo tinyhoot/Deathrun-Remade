@@ -111,7 +111,7 @@ namespace DeathrunRemade.Patches
             // If this doesn't pass the game is not yet done loading.
             if (Inventory.main == null || Inventory.main.equipment == null)
                 return true;
-            if (Inventory.main.equipment.GetCount(FilterChip.TechType) > 0)
+            if (Inventory.main.equipment.GetCount(FilterChip.s_TechType) > 0)
                 return true;
             
             // Special case: Aurora is breathable after fixing the generator.

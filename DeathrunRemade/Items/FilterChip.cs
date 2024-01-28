@@ -1,3 +1,4 @@
+using DeathrunRemade.Configuration;
 using HootLib;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
@@ -9,21 +10,20 @@ namespace DeathrunRemade.Items
 {
     internal class FilterChip : DeathrunPrefabBase
     {
-        public new static TechType TechType;
-        
-        public FilterChip()
+        public static TechType s_TechType;
+
+        protected override PrefabInfo CreatePrefabInfo()
         {
             var sprite = SpriteManager.Get(TechType.ComputerChip);
-            _prefabInfo = Hootils.CreatePrefabInfo(
-                ClassIdPrefix + "filterchip",
-                null,
-                null,
-                sprite
-            );
-            TechType = _prefabInfo.TechType;
+            PrefabInfo info = Hootils.CreatePrefabInfo(ClassIdPrefix + "filterchip", sprite);
+            s_TechType = info.TechType;
+            return info;
+        }
 
-            _prefab = new CustomPrefab(_prefabInfo);
-            _prefab.SetRecipe(new RecipeData(
+        protected override CustomPrefab CreatePrefab(PrefabInfo info)
+        {
+            CustomPrefab prefab = new CustomPrefab(info);
+            prefab.SetRecipe(new RecipeData(
                     new CraftData.Ingredient(TechType.Compass, 1),
                     new CraftData.Ingredient(TechType.ComputerChip, 1),
                     new CraftData.Ingredient(TechType.Polyaniline, 1),
@@ -31,12 +31,19 @@ namespace DeathrunRemade.Items
                 ))
                 .WithFabricatorType(CraftTree.Type.Fabricator)
                 .WithStepsToFabricatorTab(CraftTreeHandler.Paths.FabricatorEquipment);
-            _prefab.SetPdaGroupCategory(TechGroup.Personal, TechCategory.Equipment);
-            _prefab.SetEquipment(EquipmentType.Chip)
+            prefab.SetPdaGroupCategory(TechGroup.Personal, TechCategory.Equipment);
+            prefab.SetEquipment(EquipmentType.Chip)
                 .WithQuickSlotType(QuickSlotType.None);
 
-            var template = new CloneTemplate(_prefabInfo, TechType.Compass);
-            _prefab.SetGameObject(template);
+            var template = new CloneTemplate(info, TechType.Compass);
+            prefab.SetGameObject(template);
+
+            return prefab;
+        }
+        
+        protected override bool ShouldActivateForConfig(ConfigSave config)
+        {
+            return true;
         }
     }
 }
