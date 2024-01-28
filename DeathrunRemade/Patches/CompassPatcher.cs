@@ -43,6 +43,7 @@ namespace DeathrunRemade.Patches
             // Instead, connect it to our custom implementation.
             CrushDepthHandler.CompassDepthClassOverride.changedEvent.AddHandler(__instance, __instance.OnDepthClassChanged);
             _compassHasInitialised = true;
+            DeathrunInit.OnReset += OnReset;
         }
 
         /// <summary>
@@ -68,6 +69,12 @@ namespace DeathrunRemade.Patches
         private static void UpdateCompass(Player __instance)
         {
             CrushDepthHandler.UpdateCompassDepthClass(__instance);
+        }
+
+        private static void OnReset()
+        {
+            _compassHasInitialised = false;
+            DeathrunInit.OnReset -= OnReset;
         }
     }
 }

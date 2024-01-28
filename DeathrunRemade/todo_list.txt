@@ -37,6 +37,7 @@ Reworks before release
   - Several things are initialised even when they don't need to be. Modded items, radiation systems.
   - Encyclopedia? Unify with mod items?
 - Safe depth speed for low depths.
+- Modded items don't disappear from fabricator after deregistering?
 
 Substantial changes from the original
 - Photosynthetic tanks always work in sunlight, including the surface
