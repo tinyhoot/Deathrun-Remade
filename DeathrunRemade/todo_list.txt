@@ -38,6 +38,7 @@ Reworks before release
   - Encyclopedia? Unify with mod items?
 - Safe depth speed for low depths.
 - Modded items don't disappear from fabricator after deregistering?
+- Nautilus issue: Save files don't load properly on second load.
 
 Substantial changes from the original
 - Photosynthetic tanks always work in sunlight, including the surface

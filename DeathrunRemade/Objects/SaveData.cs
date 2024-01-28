@@ -42,10 +42,27 @@ namespace DeathrunRemade.Objects
                 DeathrunInit._Log.Info($"Loading existing run with id {Stats.id}");
             }
 
+            DeathrunInit.OnReset += OnReset;
             // Once the file has completed loading/creation, notify everything waiting on it.
             Ready = true;
             DeathrunInit._Log.Debug("Save data is ready.");
             OnSaveDataLoaded?.Invoke(this);
+        }
+
+        /// <summary>
+        /// Work around an issue in Nautilus/Newtonsoft(?) where the JSON fails to populate fields that already have
+        /// values in them. By resetting these we ensure the save games of successive games are loaded properly.
+        /// </summary>
+        public void OnReset()
+        {
+            DeathrunInit._Log.Debug("Purging save data from memory.");
+            Config = default;
+            EscapePod = default;
+            Nitrogen = default;
+            Stats = default;
+            Tutorials = default;
+            Warnings = default;
+            DeathrunInit.OnReset -= OnReset;
         }
     }
 
