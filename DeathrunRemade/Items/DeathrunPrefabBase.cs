@@ -1,4 +1,6 @@
 using DeathrunRemade.Configuration;
+using DeathrunRemade.Objects;
+using HarmonyLib;
 using Nautilus.Assets;
 
 namespace DeathrunRemade.Items
@@ -74,6 +76,8 @@ namespace DeathrunRemade.Items
         public virtual void Unregister()
         {
             _prefab.Unregister();
+            // Nautilus does not undo changes made by Gadgets, so we do it ourselves.
+            _prefab.GetAllGadgets().Do(gadget => gadget.Value.Teardown());
             DeathrunInit.OnReset -= Unregister;
         }
     }
