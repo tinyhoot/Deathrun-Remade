@@ -83,6 +83,17 @@ namespace DeathrunRemade
         }
 
         /// <summary>
+        /// Deal damage but prevent one-shots by reducing lethal damage if the LiveMixin's current health is above the
+        /// threshold.
+        /// </summary>
+        public static void TakeOneShotProtectedDamage(LiveMixin liveMixin, float damage, DamageType type, float threshold = 10f)
+        {
+            if (liveMixin.health > threshold)
+                damage = Mathf.Min(damage, liveMixin.health - (threshold / 2f));
+            liveMixin.TakeDamage(damage, type: type);
+        }
+
+        /// <summary>
         /// Set the position of a countdown window.
         /// </summary>
         /// <param name="countdownWindow">The transform of the controlling object of the countdown window. For the

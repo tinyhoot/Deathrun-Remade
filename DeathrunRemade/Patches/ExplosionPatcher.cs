@@ -41,8 +41,7 @@ namespace DeathrunRemade.Patches
         /// </summary>
         public static float GetPlayerExplosionDamageMult(Difficulty3 difficulty, Player player)
         {
-            LiveMixin health = player.GetComponent<LiveMixin>();
-            if (difficulty == Difficulty3.Normal || health == null)
+            if (difficulty == Difficulty3.Normal)
                 return 0f;
 
             float multiplier = 1f;

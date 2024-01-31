@@ -90,7 +90,7 @@ namespace DeathrunRemade.Handlers
             // At 8 depth, ^2 (4dmg). At 40 depth, ^6 (64dmg).
             // Together with the separate global damage multiplier, this gets quite punishing.
             float damageExp = 1f + Mathf.Clamp(diff / 8f, 1f, 5f);
-            player.GetComponent<LiveMixin>().TakeDamage(Mathf.Pow(2f, damageExp), type: DamageType.Pressure);
+            DeathrunUtils.TakeOneShotProtectedDamage(player.liveMixin, Mathf.Pow(2f, damageExp), type: DamageType.Pressure);
             WarningHandler.ShowWarning(Warning.CrushDamage);
         }
         

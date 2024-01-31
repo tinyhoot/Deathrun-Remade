@@ -1,8 +1,5 @@
 Things that still need doing because if I don't write them down right now I'll forget
 
-Monos
-- Complete functionality of deco module and filterchip
-
 New Ideas
 - Make tanks not refill by themselves. Refill at special point?
 - Progressively worse Kharaa infection to counteract difficulty being too frontloaded
@@ -35,7 +32,6 @@ Reworks before release
 - Sanitise startup sequence and the exact timing of mod components. Lots of things could be moved or consolidated.
   - Several things are initialised even when they don't need to be. Modded items, radiation systems.
   - Encyclopedia? Unify with mod items?
-- Respect bends config options in speed.
 
 Substantial changes from the original
 - Photosynthetic tanks always work in sunlight, including the surface

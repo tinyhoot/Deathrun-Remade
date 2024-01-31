@@ -305,30 +305,24 @@ namespace DeathrunRemade.Handlers
         /// </summary>
         private void TakeDamage(Player player, SaveData save, float currentDepth)
         {
-            LiveMixin health = player.GetComponent<LiveMixin>();
             float depthDiff = save.Nitrogen.safeDepth - currentDepth;
-            
             int baseDamage = GetBendsDamage(save.Config.NitrogenBends);
             // Make the damage more manageable for small transgressions.
-            if (depthDiff < 5)
+            baseDamage = depthDiff switch
             {
-                if (depthDiff < 2)
-                    baseDamage /= 4;
-                else
-                    baseDamage /= 2;
-            }
-
-            float damage = baseDamage + (Random.value * baseDamage) + depthDiff;
-            // Don't oneshot the player from like half health.
-            if (health.health > 0.1f)
-                damage = Mathf.Min(damage, health.health - 0.05f);
-
+                < 2f => baseDamage / 4,
+                < 5f => baseDamage / 2,
+                _ => baseDamage
+            };
+            
             WarningHandler.ShowWarning(Warning.DecompressionDamage);
             DeathrunInit._RunHandler.SetCauseOfDeathOverride("The Bends");
-            health.TakeDamage(damage, type: DamageType.Starve);
-            // After damage, adjust the safe depth upwards a bit.
-            save.Nitrogen.safeDepth = Mathf.Max(Mathf.Min(currentDepth, GraceDepth),
-                CalculateSafeDepth(save.Nitrogen.safeDepth));
+            float damage = baseDamage + (Random.value * baseDamage) + depthDiff;
+            DeathrunUtils.TakeOneShotProtectedDamage(player.liveMixin, damage, DamageType.Starve);
+            
+            // Bring the player halfway to their ideal safe depth to prevent punishing multiple times for the same
+            // mistake while making it hard to tank through.
+            RemoveNitrogen((currentDepth - CalculateSafeDepth(currentDepth)) / 2f);
         }
 
         /// <summary>
