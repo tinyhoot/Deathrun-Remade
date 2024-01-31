@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using HootLib.Objects;
@@ -15,27 +16,36 @@ namespace DeathrunRemade.Handlers
     internal class NitrogenHandler : MonoBehaviour
     {
         private const float AccumulationScalar = 10f * UpdateInterval;
-        private const float GraceDepth = 10f; // Consider this value and below as completely safe, no bends.
+        public const float GraceDepth = 10f; // Consider this value and below as completely safe, no bends.
+        public const float MaxDepth = 2000f; // The maximum depth as far as calculations are concerned.
+        public const float MaxNitrogenBuildup = 70f; // The value nitrogen buildup must reach for safe depth to kick in.
         private const int TicksBeforeDamage = (int)(2f / UpdateInterval); // Number of seconds relative to ups.
-        private const float UpdateInterval = 0.25f;
-        
-        private readonly AnimationCurve _intensityCurve = new AnimationCurve(new[]
-        {
-            new Keyframe(0f, 0.20f),
-            new Keyframe(1f, 1f)
-        });
-        private readonly AnimationCurve _nitrogenCurve = new AnimationCurve(new[]
-        {
-            new Keyframe((GraceDepth / 100) - 0.01f, 0f), // No nitrogen up until the grace depth.
-            new Keyframe(GraceDepth / 100, 1f),
-            new Keyframe((GraceDepth / 50) - 0.01f, 1.25f), // Only small increases just after the grace depth.
-            new Keyframe(GraceDepth / 50, 1.25f), // After grace depth *2, let loose.
-            new Keyframe(1f, 10f) // Maximum speed at 2000 depth.
-        });
+        private const float UpdateInterval = 0.1f; // Controls the number of updates per second.
+        private const float WindupMin = 0.5f;
+        private const float WindupMax = 1f;
+        private const float WindupDelta = 0.5f * UpdateInterval; // Reach max speed in about a second.
         
         private int _damageTicks;
         private Hootimer _timer;
-
+        private float _windupModifier;
+        
+        private readonly AnimationCurve _dissipationCurve = new AnimationCurve(new[]
+        {
+            new Keyframe(0f, 1f), // Fast dissipation on the last few meters.
+            new Keyframe(GraceDepth / MaxDepth, 0.75f),
+            new Keyframe((GraceDepth / MaxDepth) + 0.01f, 0.25f), // Dissipation speed is about the same at all times
+            new Keyframe(1f, 0.35f)
+        });
+        private readonly AnimationCurve _accumulationCurve = new AnimationCurve(new[]
+        {
+            new Keyframe(0f, 0f),
+            new Keyframe((GraceDepth / MaxDepth) - 0.01f, 0f), // No buildup until the grace depth.
+            new Keyframe(GraceDepth / MaxDepth, 0.3f),
+            new Keyframe(0.35f, 1f), // 700m. Tighten the screws after the Lost River.
+            new Keyframe(0.55f, 3f), // 1100m, lava zones.
+            new Keyframe(0.75f, 4f), // Be lenient at 1500m and below - the prison aquarium.
+            new Keyframe(1f, 1f)
+        });
         private static readonly Dictionary<TechType, float[]> SuitNitrogenModifiers = new Dictionary<TechType, float[]>
         {
             { TechType.RadiationSuit, new[] { 0.05f, 0.05f } },
@@ -47,8 +57,6 @@ namespace DeathrunRemade.Handlers
         /// <summary>
         /// Add a new suit to the dictionary of TechTypes and their Nitrogen Modifiers.
         /// </summary>
-        /// <param name="techType"></param>
-        /// <param name="crushDepth"></param>
         public static void AddNitrogenModifier(TechType techType, IEnumerable<float> crushDepth)
         {
             SuitNitrogenModifiers[techType] = crushDepth.ToArray();
@@ -81,11 +89,11 @@ namespace DeathrunRemade.Handlers
                 return;
 
             float currentDepth = player.GetDepth();
-            float intensity = GetDepthIntensity(currentDepth);
-            save.Nitrogen.nitrogen = UpdateNitrogen(currentDepth, save.Nitrogen.safeDepth, save.Nitrogen.nitrogen);
-            float oldSafeDepth = save.Nitrogen.safeDepth;
-            save.Nitrogen.safeDepth = UpdateSafeDepth(currentDepth, save.Nitrogen.safeDepth, intensity, save.Nitrogen.nitrogen);
+            UpdateNitrogen(currentDepth, save.Nitrogen.safeDepth);
             CheckForBendsDamage(player, save, currentDepth, save.Nitrogen.safeDepth, save.Nitrogen.nitrogen);
+#if DEBUG
+            ShowDebugInfo();
+#endif
         }
 
         /// <summary>
@@ -107,14 +115,14 @@ namespace DeathrunRemade.Handlers
             if (save is null)
                 return;
 
-            float leftToFill = 100f - save.Nitrogen.nitrogen;
+            float leftToFill = MaxNitrogenBuildup - save.Nitrogen.nitrogen;
             if (leftToFill >= nitrogen)
             {
                 save.Nitrogen.nitrogen += nitrogen;
                 return;
             }
 
-            save.Nitrogen.nitrogen = 100f;
+            save.Nitrogen.nitrogen = MaxNitrogenBuildup;
             save.Nitrogen.safeDepth += nitrogen - leftToFill;
         }
 
@@ -126,9 +134,8 @@ namespace DeathrunRemade.Handlers
             SaveData save = SaveData.Main;
             if (save is null)
                 return;
-
-            // Be a bit fuzzy with safe depth so all the calculations can update properly.
-            float safeDepthPortion = save.Nitrogen.safeDepth - (GraceDepth / 2);
+            
+            float safeDepthPortion = save.Nitrogen.safeDepth;
             // Safe depth is not active, just remove nitrogen.
             if (safeDepthPortion <= 0)
             {
@@ -151,26 +158,14 @@ namespace DeathrunRemade.Handlers
         }
 
         /// <summary>
-        /// Calculate the player's current safe depth status based on how close they're cutting it.
-        /// </summary>
-        public static SafeDepthStatus CalculateDepthStatus(float depth, float safeDepth)
-        {
-            if (depth < safeDepth)
-                return SafeDepthStatus.Exceeded;
-            if (safeDepth >= GraceDepth && IsApproachingSafeDepth(depth, safeDepth))
-                return SafeDepthStatus.Approaching;
-            return SafeDepthStatus.Safe;
-        }
-
-        /// <summary>
         /// Calculate the hypothetical safe depth for the given depth.
         /// </summary>
         public static float CalculateSafeDepth(float depth)
         {
-            float safeDepth = depth * 3 / 4;
+            float safeDepth = depth * 3f / 4f;
             // Make ascending just that tiny bit less annoying in the last few meters.
-            if (depth < GraceDepth * 2)
-                safeDepth -= 2;
+            if (depth < GraceDepth * 2f)
+                safeDepth -= 3f;
             return safeDepth;
         }
 
@@ -179,7 +174,7 @@ namespace DeathrunRemade.Handlers
         /// </summary>
         private void CheckForBendsDamage(Player player, SaveData save, float depth, float safeDepth, float nitrogen)
         {
-            if (depth >= safeDepth - 1 || safeDepth <= GraceDepth || nitrogen < 100f)
+            if (depth >= safeDepth - 1 || safeDepth <= GraceDepth || nitrogen < MaxNitrogenBuildup)
                 return;
             // No consequences for any of this happening inside vehicles or bases.
             if (player.IsInsidePoweredSubOrVehicle())
@@ -199,11 +194,10 @@ namespace DeathrunRemade.Handlers
         /// Calculate the modifier for how quickly the player accumulates nitrogen. 
         /// Better suits accumulate nitrogen more slowly. 
         /// Wearing the rebreather will also slow down accumulation.
-        /// Mods can add modifiers to items by calling AddNitrogenModifier.
+        /// Mods can add modifiers to items by calling <see cref="AddNitrogenModifier"/>.
         /// </summary>
-        private float GetAccumulationModifier(Inventory inventory)
+        private float GetEquipmentModifier(Inventory inventory)
         {
-
             SaveData save = SaveData.Main;
 
             if (save == null)
@@ -250,13 +244,28 @@ namespace DeathrunRemade.Handlers
         }
 
         /// <summary>
-        /// Calculate a modifier based on the given depth to indicate how heavily that depth should influence
-        /// nitrogen and bends accumulation.
+        /// Handle special circumstances which modify the ideal safe depth, such as decompression modules.
         /// </summary>
-        private float GetDepthIntensity(float depth)
+        private float GetSafeDepthOverride(float safeDepth)
         {
-            float time = depth / 2000f;
-            return _intensityCurve.Evaluate(time);
+            Player player = Player.main;
+            // Decompression module.
+            if (player.IsInsidePoweredVehicle() 
+                && player.GetVehicle().modules.GetCount(DecompressionModule.s_TechType) > 0)
+                return 0f;
+            // Filterchip.
+            if ((player.IsInsideWalkable() || player.precursorOutOfWater) 
+                && Inventory.main.equipment.GetCount(FilterChip.s_TechType) > 0)
+                return 0f;
+            
+            return safeDepth;
+        }
+
+        private float GetWindupModifier()
+        {
+            if (_windupModifier < WindupMax)
+                _windupModifier = Mathf.Min(_windupModifier + WindupDelta, WindupMax);
+            return _windupModifier;
         }
         
         /// <summary>
@@ -266,6 +275,15 @@ namespace DeathrunRemade.Handlers
         {
             float diff = depth - safeDepth;
             return diff < 10 || diff / safeDepth < 0.08f;
+        }
+
+        /// <summary>
+        /// Returns true if the player is currently ascending.
+        /// </summary>
+        public static bool IsGoingUp(float safeDepth, float lastSafeDepth)
+        {
+            // Set to lower or *equals* so we get dissipation logic for the nitrogen buffer at 0 depth.
+            return safeDepth <= lastSafeDepth;
         }
 
         /// <summary>
@@ -300,71 +318,43 @@ namespace DeathrunRemade.Handlers
         }
 
         /// <summary>
-        /// Calculate and return the new nitrogen value.
+        /// Calculate the nitrogen difference of the current timestep.
         /// </summary>
-        /// <param name="depth">The current depth.</param>
-        /// <param name="safeDepth">The current safe depth.</param>
-        /// <param name="lastNitrogen">The nitrogen level on the last update.</param>
-        private float UpdateNitrogen(float depth, float safeDepth, float lastNitrogen)
+        /// <param name="depth">The player's current depth.</param>
+        /// <param name="lastSafeDepth">The safe depth during the last timestep.</param>
+        private void UpdateNitrogen(float depth, float lastSafeDepth)
         {
-            // Nitrogen always fills up before safe depth lowers, and only empties after safe depth is gone.
-            float target;
-            if (depth <= GraceDepth && safeDepth == 0)
-                target = 0f;
-            else if (safeDepth <= GraceDepth / 2)
-                target = (depth - GraceDepth) * 10;
-            else
-                // Do not start dissipating Nitrogen until the safe depth is back within reasonable bounds.
-                target = 100f;
-            target = Mathf.Clamp(target, 0f, 100f);
+            // Calculate the ideal safe depth for the current depth.
+            float safeDepth = CalculateSafeDepth(depth);
+            safeDepth = GetSafeDepthOverride(safeDepth);
+            bool dissipating = IsGoingUp(safeDepth, lastSafeDepth);
+            // Don't adjust anything if we're already close enough.
+            if (Mathf.Abs(safeDepth - lastSafeDepth) < 0.5f && !dissipating)
+            {
+                // Reset windup.
+                _windupModifier = Mathf.Max(_windupModifier - WindupDelta, WindupMin);
+                return;
+            }
+
+            // If we're going down, reduce accumulation based on equipment.
+            float equipMult = dissipating ? 1f : GetEquipmentModifier(Inventory.main);
+            // Use different speed modifiers for going up vs going down.
+            AnimationCurve curve = dissipating ? _dissipationCurve : _accumulationCurve;
+            float depthMult = curve.Evaluate(safeDepth / MaxDepth);
+            // If going down, add a windup modifier that makes the depth lower slowly and gradually adjusts to full speed.
+            float windupMult = dissipating ? 1f : GetWindupModifier();
             
-            // Shortcut this if there is nothing to update.
-            if (Mathf.Approximately(target, lastNitrogen))
-                return lastNitrogen;
-
-            // Be a bit more lenient in shallow depths but then quickly get harsher the lower the player goes.
-            float time;
-            if (depth <= GraceDepth * 2)
-            {
-                time = GraceDepth / 100f;
-            }
+            float delta = equipMult * depthMult * windupMult * AccumulationScalar;
+            if (dissipating)
+                RemoveNitrogen(delta);
             else
-            {
-                time = GraceDepth / 50f;
-                time += depth / 2000f;
-            }
-
-            float rate = _nitrogenCurve.Evaluate(time);
-            return UWE.Utils.Slerp(lastNitrogen, target, rate);
+                AddNitrogen(delta);
         }
 
-        /// <summary>
-        /// Calculate the safe depth and return a depth approaching it by one time step from the current depth.
-        /// </summary>
-        /// <param name="currentDepth">The current depth.</param>
-        /// <param name="lastSafeDepth">The safe depth on the last update.</param>
-        /// <param name="modifier">A modifier to influence how quickly the result adjusts to the safe depth.</param>
-        /// <param name="nitrogen">The current nitrogen level.</param>
-        private float UpdateSafeDepth(float currentDepth, float lastSafeDepth, float modifier, float nitrogen)
+        private void ShowDebugInfo()
         {
-            float safeDepth = 0f;
-            // Use nitrogen as a buffer before safe depth really comes into play.
-            if (nitrogen >= 100f)
-                // Safe depth will always tend towards around 3/4 of your current depth.
-                safeDepth = CalculateSafeDepth(currentDepth);
-            // If we're going up, make the last few meters very fast to disappear.
-            if (safeDepth <= GraceDepth && lastSafeDepth <= GraceDepth * 1.5f)
-            {
-                modifier *= 5f;
-                safeDepth = 0f;
-            }
-
-            // If we're going down, apply modifiers from equipment to slow the adjustment rate.
-            float equipMult = 1f;
-            if (safeDepth > lastSafeDepth)
-                equipMult = GetAccumulationModifier(Inventory.main);
-
-            return UWE.Utils.Slerp(lastSafeDepth, safeDepth, equipMult * modifier * AccumulationScalar);
+            string msg = $"Nitrogen: {SaveData.Main.Nitrogen.nitrogen}";
+            NotificationHandler.Main.AddMessage(NotificationHandler.MiddleLeft, msg);
         }
     }
 }

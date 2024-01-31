@@ -28,7 +28,6 @@ Checks at the very end
 Reworks before release
 - Have more than one tutorial message.
 - Move encyclopedia to localisation system.
-- Rework the filterchip into something that actually makes sense.
 - Be consistent with which places accumulate nitrogen and which do not. Add config option for e.g. bases.
 - Respect cheats everywhere. Pay special attention to damage, oxygen, and power.
 - Replace the names of starts with more inventive ones. Add new ones.
@@ -36,9 +35,7 @@ Reworks before release
 - Sanitise startup sequence and the exact timing of mod components. Lots of things could be moved or consolidated.
   - Several things are initialised even when they don't need to be. Modded items, radiation systems.
   - Encyclopedia? Unify with mod items?
-- Safe depth speed for low depths.
-- Modded items don't disappear from fabricator after deregistering?
-- Nautilus issue: Save files don't load properly on second load.
+- Respect bends config options in speed.
 
 Substantial changes from the original
 - Photosynthetic tanks always work in sunlight, including the surface
