@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -89,7 +90,7 @@ namespace DeathrunRemade.Handlers
                 return;
 
             float currentDepth = player.GetDepth();
-            UpdateNitrogen(currentDepth, save.Nitrogen.safeDepth);
+            UpdateNitrogen(player, save, currentDepth, save.Nitrogen.safeDepth);
             CheckForBendsDamage(player, save, currentDepth, save.Nitrogen.safeDepth, save.Nitrogen.nitrogen);
 #if DEBUG
             ShowDebugInfo();
@@ -244,11 +245,24 @@ namespace DeathrunRemade.Handlers
         }
 
         /// <summary>
+        /// Get the difficulty-based modifier for nitrogen accumulation speed.
+        /// </summary>
+        private static float GetDifficultyAccumulationModifier(Difficulty3 difficulty)
+        {
+            return difficulty switch
+            {
+                Difficulty3.Normal => 0f, // Should never even happen, nitrogen is disabled on Normal.
+                Difficulty3.Hard => 0.75f,
+                Difficulty3.Deathrun => 1f,
+                _ => throw new ArgumentOutOfRangeException(nameof(difficulty), difficulty, null)
+            };
+        }
+
+        /// <summary>
         /// Handle special circumstances which modify the ideal safe depth, such as decompression modules.
         /// </summary>
-        private float GetSafeDepthOverride(float safeDepth)
+        private float GetSafeDepthOverride(Player player, float safeDepth)
         {
-            Player player = Player.main;
             // Decompression module.
             if (player.IsInsidePoweredVehicle() 
                 && player.GetVehicle().modules.GetCount(DecompressionModule.s_TechType) > 0)
@@ -320,13 +334,15 @@ namespace DeathrunRemade.Handlers
         /// <summary>
         /// Calculate the nitrogen difference of the current timestep.
         /// </summary>
+        /// <param name="player">The player.</param>
+        /// <param name="save">The current save game.</param>
         /// <param name="depth">The player's current depth.</param>
         /// <param name="lastSafeDepth">The safe depth during the last timestep.</param>
-        private void UpdateNitrogen(float depth, float lastSafeDepth)
+        private void UpdateNitrogen(Player player, SaveData save, float depth, float lastSafeDepth)
         {
             // Calculate the ideal safe depth for the current depth.
             float safeDepth = CalculateSafeDepth(depth);
-            safeDepth = GetSafeDepthOverride(safeDepth);
+            safeDepth = GetSafeDepthOverride(player, safeDepth);
             bool dissipating = IsGoingUp(safeDepth, lastSafeDepth);
             // Don't adjust anything if we're already close enough.
             if (Mathf.Abs(safeDepth - lastSafeDepth) < 0.5f && !dissipating)
@@ -335,20 +351,28 @@ namespace DeathrunRemade.Handlers
                 _windupModifier = Mathf.Max(_windupModifier - WindupDelta, WindupMin);
                 return;
             }
-
-            // If we're going down, reduce accumulation based on equipment.
-            float equipMult = dissipating ? 1f : GetEquipmentModifier(Inventory.main);
+            
             // Use different speed modifiers for going up vs going down.
             AnimationCurve curve = dissipating ? _dissipationCurve : _accumulationCurve;
             float depthMult = curve.Evaluate(safeDepth / MaxDepth);
-            // If going down, add a windup modifier that makes the depth lower slowly and gradually adjusts to full speed.
-            float windupMult = dissipating ? 1f : GetWindupModifier();
             
-            float delta = equipMult * depthMult * windupMult * AccumulationScalar;
+            float delta = depthMult * AccumulationScalar;
             if (dissipating)
+            {
                 RemoveNitrogen(delta);
+            }
             else
+            {
+                // If we're going down, reduce accumulation based on equipment.
+                float equipMult = GetEquipmentModifier(Inventory.main);
+                // Make accumulation less punishing on lower difficulties.
+                float difficultyMult = GetDifficultyAccumulationModifier(save.Config.NitrogenBends);
+                // Add a windup modifier that makes the depth lower slowly and gradually adjusts to full speed.
+                float windupMult = GetWindupModifier();
+                
+                delta = delta * equipMult * difficultyMult * windupMult;
                 AddNitrogen(delta);
+            }
         }
 
         private void ShowDebugInfo()
