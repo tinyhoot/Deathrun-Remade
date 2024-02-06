@@ -276,9 +276,7 @@ namespace DeathrunRemade
                 ExplosionCountdown.Create(out GameObject go);
                 go.SetActive(true);
                 // Ensure we always know about the player's current radiation immunity.
-                RadiationPatcher.UpdateIsImmune(null, null);
-                Inventory.main.equipment.onEquip += RadiationPatcher.UpdateIsImmune;
-                Inventory.main.equipment.onUnequip += RadiationPatcher.UpdateIsImmune;
+                RadiationPatcher.Init();
                 // Here just to make sure that LeakingRadiation has properly readied and we can access the key.
                 StoryGoalHandler.RegisterCustomEvent(LeakingRadiation.main.leaksFixedGoal.key,
                     () => NotificationHandler.Main.AddMessage(NotificationHandler.Centre, "dr_auroraRepairedBreathable"));

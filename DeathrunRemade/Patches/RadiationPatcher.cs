@@ -44,6 +44,14 @@ namespace DeathrunRemade.Patches
             TechType.RadiationHelmet, TechType.RadiationSuit, TechType.RadiationGloves
         };
 
+        public static void Init()
+        {
+            UpdateIsImmune(null, null);
+            // No need to unregister these listeners as the sender gets destroyed on return to main menu.
+            Inventory.main.equipment.onEquip += UpdateIsImmune;
+            Inventory.main.equipment.onUnequip += UpdateIsImmune;
+        }
+
         /// <summary>
         /// Replace the hardcoded distance value in radiation damage with the more dynamic distance calculation function
         /// from this mod.
@@ -200,12 +208,12 @@ namespace DeathrunRemade.Patches
         {
             CodeMatcher matcher = new CodeMatcher(instructions);
             // Ensure we get an extra local variable to work with.
-            generator.DeclareLocal(typeof(float));
+            LocalBuilder local = generator.DeclareLocal(typeof(float));
             // Insert our helper method at the very beginning.
             matcher.Start()
                 .Insert(
                     CodeInstruction.Call(typeof(RadiationPatcher), nameof(CalculateRadiationFX)),
-                    new CodeInstruction(OpCodes.Stloc_0))
+                    new CodeInstruction(OpCodes.Stloc_S, local))
                 // Match for the vanilla variable of the player's current radiation amount.
                 .MatchForward(false,
                     new CodeMatch(i => i.opcode == OpCodes.Ldsfld && ((MemberInfo)i.operand).Name.Equals("main")),
@@ -214,7 +222,7 @@ namespace DeathrunRemade.Patches
                 .Repeat(match =>
                 {
                     // Load the variable we prepared with the helper method.
-                    match.SetInstructionAndAdvance(new CodeInstruction(OpCodes.Ldloc_0));
+                    match.SetInstructionAndAdvance(new CodeInstruction(OpCodes.Ldloc_S, local));
                     match.SetInstruction(new CodeInstruction(OpCodes.Nop));
                 });
             return matcher.InstructionEnumeration();
@@ -383,8 +391,8 @@ namespace DeathrunRemade.Patches
             return difficulty switch
             {
                 Difficulty4.Hard => 30f,
-                Difficulty4.Deathrun => 60,
-                Difficulty4.Kharaa => 200,
+                Difficulty4.Deathrun => 60f,
+                Difficulty4.Kharaa => 200f,
                 _ => 0f
             };
         }
