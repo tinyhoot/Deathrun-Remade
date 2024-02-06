@@ -89,6 +89,7 @@
         <Compile Include="Objects\Enums\RunAchievements.cs" />
         <Compile Include="Objects\Enums\SafeDepthStatus.cs" />
         <Compile Include="Objects\Exceptions\DeathrunException.cs" />
+        <Compile Include="Objects\Exceptions\SmlHelperIsPresentException.cs" />
         <Compile Include="Objects\GadgetExtensions.cs" />
         <Compile Include="Objects\LegacyStats.cs" />
         <Compile Include="Objects\Message.cs" />

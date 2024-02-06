@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using BepInEx;
+using BepInEx.Bootstrap;
 using DeathrunRemade.Components;
 using DeathrunRemade.Components.NitrogenUI;
 using DeathrunRemade.Configuration;
@@ -12,6 +13,7 @@ using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Attributes;
 using DeathrunRemade.Objects.Enums;
+using DeathrunRemade.Objects.Exceptions;
 using DeathrunRemade.Patches;
 using HarmonyLib;
 using HootLib;
@@ -54,6 +56,7 @@ namespace DeathrunRemade
         {
             _Log = new HootLogger(NAME);
             _Log.Info($"{NAME} v{VERSION} starting up.");
+            CrashIfSmlHelper();
 
             // Create a holding GameObject under BepInEx's for data which should persist in both main menu and ingame.
             // Will not actually persist if the BepInEx manager object is not tagged with SceneCleanerPreserve.
@@ -89,6 +92,22 @@ namespace DeathrunRemade
             }
 
             _Log.Info("Finished loading.");
+        }
+
+        /// <summary>
+        /// SMLHelper clashes with Nautilus in a multitude of ways and having both of them active is asking for
+        /// anything from invisible player models over unbearable lag to save corruption. If SMLHelper is present,
+        /// refuse to load.
+        /// </summary>
+        private void CrashIfSmlHelper()
+        {
+            if (!Chainloader.PluginInfos.ContainsKey("com.ahk1221.smlhelper"))
+                return;
+            
+            _Log.InGameMessage($"{NAME} is incompatible with SMLHelper and has refused to load. Uninstall SMLHelper if "
+                               + $"you want to play {NAME}.", true);
+            DestroyImmediate(this);
+            throw new SmlHelperIsPresentException();
         }
 
         /// <summary>
