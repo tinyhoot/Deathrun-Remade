@@ -70,6 +70,10 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(CrafterLogic), nameof(CrafterLogic.ConsumeEnergy))]
         private static bool PreventFabricatorConsumption(PowerRelay powerRelay, float amount, ref bool __result)
         {
+            // Don't do anything when NoCost cheat is active.
+            if (GameModeUtils.IsCheatActive(GameModeOption.NoCost))
+                return true;
+            
             amount = ModifyConsumeEnergy(amount, IsInRadiation(powerRelay));
             if (powerRelay.GetPower() < amount)
             {
@@ -118,6 +122,10 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(Player), nameof(Player.TryEject))]
         private static void ConsumeVehicleExitPower(Player __instance)
         {
+            // Don't do anything when NoCost cheat is active.
+            if (GameModeUtils.IsCheatActive(GameModeOption.NoCost))
+                return;
+            
             Difficulty4 difficulty = SaveData.Main.Config.VehicleExitPowerLoss;
             // If the vehicle is a Cyclops or the config says no, stop.
             if (_ejectedVehicle == null || difficulty == Difficulty4.Normal)

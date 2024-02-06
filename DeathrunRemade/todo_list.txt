@@ -28,7 +28,6 @@ Reworks before release
   - Add breathable air explainer which unlocks when you fix the aurora. Should also include hint on
     why outside air is still not breathable (especially on Hard!).
 - Be consistent with which places accumulate nitrogen and which do not. Add config option for e.g. bases.
-- Respect cheats everywhere. Pay special attention to damage, oxygen, and power.
 - Replace the names of starts with more inventive ones. Add new ones.
   - Remove 'Dramatic View' and other non-terrain starts entirely due to collision check issues.
 - Sanitise startup sequence and the exact timing of mod components. Lots of things could be moved or consolidated.
