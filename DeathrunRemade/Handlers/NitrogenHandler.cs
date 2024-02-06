@@ -92,9 +92,7 @@ namespace DeathrunRemade.Handlers
             float currentDepth = player.GetDepth();
             UpdateNitrogen(player, save, currentDepth, save.Nitrogen.safeDepth);
             CheckForBendsDamage(player, save, currentDepth, save.Nitrogen.safeDepth, save.Nitrogen.nitrogen);
-#if DEBUG
-            ShowDebugInfo();
-#endif
+            // ShowDebugInfo();
         }
 
         /// <summary>

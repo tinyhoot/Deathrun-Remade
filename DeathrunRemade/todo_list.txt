@@ -25,6 +25,8 @@ Checks at the very end
 Reworks before release
 - Have more than one tutorial message.
 - Move encyclopedia to localisation system.
+  - Add breathable air explainer which unlocks when you fix the aurora. Should also include hint on
+    why outside air is still not breathable (especially on Hard!).
 - Be consistent with which places accumulate nitrogen and which do not. Add config option for e.g. bases.
 - Respect cheats everywhere. Pay special attention to damage, oxygen, and power.
 - Replace the names of starts with more inventive ones. Add new ones.
@@ -47,7 +49,3 @@ Substantial changes from the original
 - Scoring system is reworked. Legacy runs can be imported, but will show different scores.
 - The scanner room does not passively drain power.
 - The mod can now be translated simply by adding a localisation file to the Assets/Localization folder.
-
-Things that block the mod from loading into the game for a second time without issues
-- There is no way to undo recipe and fragment changes once registered. The original, vanilla state is no longer accessible
-  and may not even be desirable (in case of other mods modifying the same recipe).

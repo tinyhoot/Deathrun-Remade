@@ -1,7 +1,6 @@
 using System.Collections;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Objects;
-using HootLib;
 using Nautilus.Utility;
 using UnityEngine;
 
@@ -14,6 +13,14 @@ namespace DeathrunRemade.Components
         private Rigidbody _rigidbody;
         private WorldForces _wf;
         private SaveData _saveData;
+
+        private const float ToppleDuration = 1f;
+        private readonly AnimationCurve _toppleRotation = new AnimationCurve
+        (
+            new Keyframe(0f, 0f),
+            new Keyframe(0.15f, 0.5f),
+            new Keyframe(1f, 1f)
+        );
         
         public float freezeDistance = 75f;
         public bool IsAnchored { get; private set; }
@@ -147,17 +154,15 @@ namespace DeathrunRemade.Components
         {
             Quaternion upright = transform.rotation;
             float timePassed = 0f;
-            while (!Hootils.RotationsApproximately(transform.rotation, targetRotation, 1e-6f))
+            while (timePassed < ToppleDuration)
             {
-                timePassed += Time.fixedDeltaTime;
-                // This function starts at 0 and reaches 1 in roughly one second. It is fast at the start and then
-                // tails off more slowly towards the end.
-                float progress = Mathf.Log(timePassed, 30f) + 1;
+                timePassed += Time.deltaTime;
+                // This animation curve is fast at the start and then tails off towards the end.
+                float progress = _toppleRotation.Evaluate(timePassed / ToppleDuration);
                 transform.rotation = Quaternion.Lerp(upright, targetRotation, progress);
                 
-                // Doing it every frame is smooth, but can slingshot the player depending on position.
-                // Doing it on fixed update is safe, but looks jittery due to low update rate.
-                yield return new WaitForFixedUpdate();
+                // Wait for the next frame.
+                yield return null;
             }
             DeathrunInit._Log.Debug("Lifepod topple has finished rotating.");
         }
