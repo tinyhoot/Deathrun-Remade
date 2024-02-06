@@ -10,22 +10,48 @@ namespace DeathrunRemade.Handlers
 {
     internal static class TooltipHandler
     {
+        private static NautilusShell<TechType, string> _nameCache;
+        private static NautilusShell<TechType, string> _tooltipCache;
+        
         /// <summary>
         /// Replace or add extra information to vanilla items.
         /// </summary>
         /// <param name="config">The config active in the current game.</param>
         public static void OverrideVanillaTooltips(ConfigSave config)
         {
-            LanguageHandler.SetTechTypeName(TechType.Battery, "Lithium Battery");
-            LanguageHandler.SetTechTypeName(TechType.PowerCell, "Lithium Power Cell");
-            LanguageHandler.SetTechTypeTooltip(TechType.Battery, "Advanced rechargeable mobile power source.");
-            LanguageHandler.SetTechTypeTooltip(TechType.PowerCell, "High-capacity rechargeable mobile power source.");
+            _nameCache = new NautilusShell<TechType, string>(
+                (techType, str) => LanguageHandler.SetTechTypeName(techType, str),
+                techType => Language.main.Get(techType.AsString()));
+            _tooltipCache = new NautilusShell<TechType, string>(
+                (techType, str) => LanguageHandler.SetTechTypeTooltip(techType, str),
+                techType => Language.main.Get($"Tooltip_{techType}"));
+            
+            _nameCache.SendChanges(TechType.Battery, GetLocalised("deathrunremade_battery"));
+            _nameCache.SendChanges(TechType.PowerCell, GetLocalised("deathrunremade_powercell"));
+            _tooltipCache.SendChanges(TechType.Battery, GetLocalised("Tooltip_deathrunremade_battery"));
+            _tooltipCache.SendChanges(TechType.PowerCell, GetLocalised("Tooltip_deathrunremade_powercell"));
             
             // Set this hint here so that nitrogen hints can then add on to it.
             if (config.SurfaceAir != Difficulty3.Normal)
-                AddToTooltip(TechType.PipeSurfaceFloater, "Makes surface air breathable.");
+                AddToTooltip(TechType.PipeSurfaceFloater, GetLocalised("Tooltip_deathrunremade_pipesurfacefloater1"));
             if (config.NitrogenBends != Difficulty3.Normal)
                 AddNitrogenHints();
+        }
+
+        public static void OnReset()
+        {
+            _nameCache.UndoChanges();
+            _tooltipCache.UndoChanges();
+        }
+
+        private static string GetLocalised(string key)
+        {
+            return Language.main.Get(key);
+        }
+
+        private static string GetLocalisedFormat(string key, params object[] formatArgs)
+        {
+            return Language.main.GetFormat(key, formatArgs);
         }
 
         /// <summary>
@@ -33,21 +59,22 @@ namespace DeathrunRemade.Handlers
         /// </summary>
         private static void AddNitrogenHints()
         {
-            AddToTooltip(TechType.FirstAidKit, "Also purges nitrogen from the bloodstream.");
-            AddToTooltip(TechType.Boomerang, "Seems to have unusual nitrogen-neutralising blood chemistry.");
-            AddToTooltip(TechType.LavaBoomerang, "Seems to have unusual nitrogen-neutralising blood chemistry.");
+            _tooltipCache.SendChanges(TechType.FirstAidKit, "");
+            
+            AddToTooltip(TechType.FirstAidKit, GetLocalised("Tooltip_deathrunremade_firstaidkit"));
+            AddToTooltip(TechType.Boomerang, GetLocalised("Tooltip_deathrunremade_boomerang"));
+            AddToTooltip(TechType.LavaBoomerang, GetLocalised("Tooltip_deathrunremade_boomerang"));
 
-            string pipeText = "Supplies diving gas mixtures to help purge nitrogen from the bloodstream.";
+            string pipeText = GetLocalised("Tooltip_deathrunremade_pipesurfacefloater2");
             AddToTooltip(TechType.PipeSurfaceFloater, pipeText);
             AddToTooltip(TechType.BasePipeConnector, pipeText);
-            AddToTooltip(TechType.Pipe,
-                $"{pipeText} Your Safe Depth decreases more quickly while breathing at a pipe.");
+            AddToTooltip(TechType.Pipe, $"{pipeText} {GetLocalised("Tooltip_deathrunremade_pipe")}");
         }
 
         private static void AddToTooltip(TechType techType, string textToAdd)
         {
             string old = Language.main.Get($"Tooltip_{techType}");
-            LanguageHandler.SetTechTypeTooltip(techType, $"{old} {textToAdd}");
+            _tooltipCache.SendChanges(techType, $"{old} {textToAdd}");
         }
 
         /// <summary>
@@ -56,8 +83,8 @@ namespace DeathrunRemade.Handlers
         private static string GetDepthToolTip(float depth)
         {
             if (Mathf.Approximately(depth, CrushDepthHandler.InfiniteCrushDepth))
-                return "Unlimited";
-            return $"{depth}m";
+                return GetLocalised("dr_crushdepth_infinite");
+            return $"{depth}{GetLocalised("MeterSuffix")}";
         }
 
         private static string GetTooltipFormat()
@@ -77,7 +104,7 @@ namespace DeathrunRemade.Handlers
             float crushDepth = CrushDepthHandler.GetCrushDepth(techType, config);
             if (crushDepth <= CrushDepthHandler.SuitlessCrushDepth)
                 return;
-            sb.AppendFormat(GetTooltipFormat(), $"CRUSH DEPTH: {GetDepthToolTip(crushDepth)}");
+            sb.AppendFormat(GetTooltipFormat(), GetLocalisedFormat("dr_crushdepthaddon", GetDepthToolTip(crushDepth)));
         }
         
         /// <summary>
@@ -89,7 +116,7 @@ namespace DeathrunRemade.Handlers
                 return;
             if (!SurvivalPatcher.TryGetNitrogenValue(eatable, out float nitrogen))
                 return;
-            sb.AppendFormat(GetTooltipFormat(), $"NITROGEN: {nitrogen:F0}");
+            sb.AppendFormat(GetTooltipFormat(), GetLocalisedFormat("dr_nitrogenaddon", $"{nitrogen:F0}"));
         }
     }
 }

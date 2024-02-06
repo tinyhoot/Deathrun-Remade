@@ -157,6 +157,9 @@ namespace DeathrunRemade
             _ = new WarningHandler(_Config, _Log, notifications, SaveData.Main);
             _encyclopediaHandler = new EncyclopediaHandler();
             _encyclopediaHandler.RegisterPdaEntries();
+            // Ensure tooltips will be overwritten properly.
+            Language.OnLanguageChanged += () => TooltipHandler.OverrideVanillaTooltips(SaveData.Main.Config);
+            OnReset += TooltipHandler.OnReset;
         }
 
         /// <summary>

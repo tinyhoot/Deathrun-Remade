@@ -1,4 +1,17 @@
 {
+  "deathrunremade_battery": "Lithium Battery",
+  "Tooltip_deathrunremade_battery": "Advanced rechargeable mobile power source.",
+  "deathrunremade_powercell": "Lithium Power Cell",
+  "Tooltip_deathrunremade_powercell": "High-capacity rechargeable mobile power source.",
+  "Tooltip_deathrunremade_pipesurfacefloater1": "Makes surface air breathable.",
+  "Tooltip_deathrunremade_pipesurfacefloater2": "Supplies diving gas mixtures to help purge nitrogen from the bloodstream.",
+  "Tooltip_deathrunremade_pipe": "Your nitrogen dissipates more quickly while breathing at a pipe.",
+  "Tooltip_deathrunremade_firstaidkit": "Also purges nitrogen from the bloodstream.",
+  "Tooltip_deathrunremade_boomerang": "Seems to have unusual nitrogen-neutralising blood chemistry.",
+  "dr_crushdepthaddon": "CRUSH DEPTH: {0}",
+  "dr_crushdepth_infinite": "Unlimited",
+  "dr_nitrogenaddon": "NITROGEN: {0}",
+  
   "deathrunremade_acidbattery": "Copper/Zinc Battery",
   "Tooltip_deathrunremade_acidbattery": "A very basic mobile power source, and NOT rechargeable. Please dispose of safely.",
   "deathrunremade_acidpowercell": "Lead Acid Power Cell",
