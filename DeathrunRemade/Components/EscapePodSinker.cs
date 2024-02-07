@@ -56,7 +56,7 @@ namespace DeathrunRemade.Components
             SetKinematic(false);
             // Sinking works by setting the gravity values super high.
             _wf.aboveWaterGravity = 50f;
-            _wf.underwaterGravity = 30f;
+            _wf.underwaterGravity = 40f;
             // Temporarily disable interpolation to enable precision movement and prevent jitter while sinking.
             _rigidbody.interpolation = RigidbodyInterpolation.None;
             IsSinking = true;
@@ -75,7 +75,7 @@ namespace DeathrunRemade.Components
                 FreezeIfTooFar();
                 
                 // Check for terrain underneath the pod while leaving enough space for the pod to fall over.
-                float distance = _saveData.Config.ToppleLifepod ? 6.5f : 4f;
+                float distance = _saveData.Config.ToppleLifepod ? 7f : 4f;
                 if (!Physics.Raycast(_pod.transform.position, Vector3.down, distance, terrain))
                     continue;
                 // DeathrunInit._Log.InGameMessage($"Hit '{hitInfo.collider.name}' in {hitInfo.distance:F1}m");
