@@ -53,12 +53,15 @@ namespace DeathrunRemade.Items
         protected override void Register()
         {
             base.Register();
+            // Make sure this battery is always available.
+            KnownTechHandler.UnlockOnStart(TechType);
             AddRecyclingRecipe();
         }
 
         public override void Unregister()
         {
             base.Unregister();
+            KnownTechHandler.RemoveDefaultUnlock(TechType);
             // Also remove the recycling recipe.
             CraftDataHandler.SetRecipeData(TechType.Copper, null);
             CraftTreeHandler.RemoveNode(CraftTree.Type.Fabricator,
