@@ -184,7 +184,7 @@ namespace DeathrunRemade.Configuration
             CreatureAggression = RegisterEntry(
                 section: SectionEnvironment,
                 key: nameof(CreatureAggression),
-                defaultValue: Difficulty4.Deathrun,
+                defaultValue: Difficulty4.Hard,
                 description: "Creatures become more aggressive after 20 and 40 minutes and receive buffs to their vision. \n"
                              + "Normal: No changes. \n"
                              + "Hard: Creatures see you from further away. \n"
