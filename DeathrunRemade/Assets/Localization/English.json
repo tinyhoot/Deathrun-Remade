@@ -64,6 +64,8 @@
   "EncyDesc_Deathrun_Radiation": "In the aftermath of a quantum drive explosion large amounts of radiation is known to seep into the immediate area. Radioactive particles commonly settle on the surface as well as any bodies of water up to a depth of around {0}m until trained staff seals the drive core and prevents further radiation leakage.\n\n1. Radiation affects the surface.\n2. Radiation penetrates up to {0}m below the surface.\n3. Repair any leaks to ameliorate effects.",
   "Ency_Deathrun_VehicleDecompression": "Vehicle Decompression",
   "EncyDesc_Deathrun_VehicleDecompression": "The Seamoth and Prawn Suit provide a sealed pressure environment for their pilots, preventing decompression sickness while they are being used. This does however result in significant power drain whenever the pilot exits the vehicle at depth — the deeper the exit, the higher the cost. Disembarking at a Moon Pool or directly into a Cyclops does not incur this cost. The Cyclops itself features a more sophisticated airlock system and can always be exited without any energy drain.",
+  "Ency_Deathrun_AuroraFiltration": "Aurora Filtration Systems",
+  "EncyDesc_Deathrun_AuroraFiltration": "The Aurora features a sophisticated air filtration system. Based on patented Alterra technology, it provides a clean and safe atmosphere onboard the vessel even on long distance journeys, ensuring optimal productivity of Alterra staff.\n\nAlterra advises staff not to pay attention to jealous detractors criticising the supposedly immense power draw of the system.",
   
   "dr_auroraRepairedBreathable": "The air filtration system roars to life!",
   "dr_lifepodHitBottom": "The lifepod has hit bottom!",

@@ -20,13 +20,9 @@ Checks at the very end
 - Do one huge sweep through all the Patcher classes and ensure nothing was forgotten
 - Do bases really get damaged by the explosion?
 - Are all relevant config settings contributing to the score?
-- Are all the encyclopedia tutorials accurate and up to date?
 
 Reworks before release
 - Have more than one tutorial message.
-- Move encyclopedia to localisation system.
-  - Add breathable air explainer which unlocks when you fix the aurora. Should also include hint on
-    why outside air is still not breathable (especially on Hard!).
 - Be consistent with which places accumulate nitrogen and which do not. Add config option for e.g. bases.
 - Replace the names of starts with more inventive ones. Add new ones.
   - Remove 'Dramatic View' and other non-terrain starts entirely due to collision check issues.

@@ -17,6 +17,7 @@ namespace DeathrunRemade.Handlers
             EncyPrefix + "Intro",
             EncyPrefix + "Aggression",
             EncyPrefix + "Atmosphere",
+            EncyPrefix + "AuroraFiltration",
             EncyPrefix + "CrushDepth",
             EncyPrefix + "Explosion",
             EncyPrefix + "Lifepod",
@@ -52,8 +53,9 @@ namespace DeathrunRemade.Handlers
         /// </summary>
         private static void RegisterStoryGoals()
         {
-            // Add an explainer for why the Aurora is breathable now.
+            // Add an explainer for why the Aurora is breathable after fixing the generator.
             StoryGoalHandler.RegisterCustomEvent("AuroraRadiationFixed", () => NotificationHandler.Main.AddMessage(NotificationHandler.Centre, "dr_auroraRepairedBreathable"));
+            StoryGoalHandler.RegisterCompoundGoal(EncyPrefix + "AuroraFiltration", Story.GoalType.Encyclopedia, 1f, "AuroraRadiationFixed");
         }
 
         /// <summary>
