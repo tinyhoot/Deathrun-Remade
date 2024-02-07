@@ -21,7 +21,6 @@ namespace DeathrunRemade.Handlers
                 _language.Get);
             Language.OnLanguageChanged += OnLanguageChanged;
             DeathrunInit.OnReset += OnReset;
-            // TODO: Also use this for tooltiphandler
         }
 
         private static void OnLanguageChanged()
@@ -31,7 +30,27 @@ namespace DeathrunRemade.Handlers
         
         public static void FormatExistingLine(string key, params object[] formatArgs)
         {
-            LanguageHandler.SetLanguageLine(key, _language.GetFormat(key, formatArgs), _currentLanguage);
+            _languageCache.SendChanges(key, _language.GetFormat(key, formatArgs));
+        }
+
+        public static string Get(string key)
+        {
+            return _language.Get(key);
+        }
+
+        public static string GetFormatted(string key, params object[] formatArgs)
+        {
+            return Language.main.GetFormat(key, formatArgs);
+        }
+
+        public static void SetTechTypeName(TechType techType, string name)
+        {
+            _languageCache.SendChanges(techType.AsString(), name);
+        }
+
+        public static void SetTooltip(TechType techType, string text)
+        {
+            _languageCache.SendChanges($"Tooltip_{techType}", text);
         }
 
         public static void OnReset()

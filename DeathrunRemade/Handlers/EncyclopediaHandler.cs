@@ -31,6 +31,8 @@ namespace DeathrunRemade.Handlers
             RegisterPdaEntries();
             RegisterCustomItemEntries();
             RegisterStoryGoals();
+            // No need to register an OnReset event, the LocalisationHandler will see to it.
+            SaveData.OnSaveDataLoaded += save => FormatEncyEntries(save.Config);
         }
         
         /// <summary>
@@ -87,7 +89,7 @@ namespace DeathrunRemade.Handlers
         /// <summary>
         /// Patch any encyclopedia entries containing placeholders and replace them with values based on settings.
         /// </summary>
-        private static void FormatEncyEntries(ConfigSave config)
+        public static void FormatEncyEntries(ConfigSave config)
         {
             LocalisationHandler.FormatExistingLine("EncyDesc_Deathrun_CrushDepth",
                 CrushDepthHandler.SuitlessCrushDepth);
@@ -111,7 +113,6 @@ namespace DeathrunRemade.Handlers
                 // Create a notification icon in the encyclopedia without causing an on-screen popup.
                 NotificationManager.main.Add(NotificationManager.Group.Encyclopedia, encyKey, 0f);
             }
-            FormatEncyEntries(SaveData.Main.Config);
         }
     }
 }

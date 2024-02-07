@@ -176,9 +176,10 @@ namespace DeathrunRemade
             var notifications = _persistentObject.AddComponent<NotificationHandler>();
             _ = new WarningHandler(_Config, _Log, notifications, SaveData.Main);
             EncyclopediaHandler.Init();
-            // Ensure tooltips will be overwritten properly.
+            
+            // Ensure that any variables are re-inserted into text when the language changes.
+            Language.OnLanguageChanged += () => EncyclopediaHandler.FormatEncyEntries(SaveData.Main.Config);
             Language.OnLanguageChanged += () => TooltipHandler.OverrideVanillaTooltips(SaveData.Main.Config);
-            OnReset += TooltipHandler.OnReset;
         }
 
         /// <summary>
