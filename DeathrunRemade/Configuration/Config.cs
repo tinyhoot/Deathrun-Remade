@@ -83,7 +83,7 @@ namespace DeathrunRemade.Configuration
             using CsvParser parser = new CsvParser(Hootils.GetAssetHandle("DeathrunStarts.csv"));
             _startLocations = parser.ParseAllLines<StartLocation>().ToList();
             // Add two extra options which aren't explicit spawn locations. They'll need special handling later on.
-            _startLocations.Insert(0, new StartLocation("Vanilla", 0, 0, 0));
+            // _startLocations.Insert(0, new StartLocation("Vanilla", 0, 0, 0));
             _startLocations.Insert(1, new StartLocation("Random", 0, 0, 0));
             
             Setup();
