@@ -259,7 +259,7 @@ namespace DeathrunRemade.Handlers
         /// <summary>
         /// Handle special circumstances which modify the ideal safe depth, such as decompression modules.
         /// </summary>
-        private float GetSafeDepthOverride(Player player, float safeDepth)
+        private float GetSafeDepthOverride(Player player, SaveData save, float safeDepth)
         {
             // Decompression module.
             if (player.IsInsidePoweredVehicle() 
@@ -268,6 +268,9 @@ namespace DeathrunRemade.Handlers
             // Filterchip.
             if ((player.IsInsideWalkable() || player.precursorOutOfWater) 
                 && Inventory.main.equipment.GetCount(FilterChip.s_TechType) > 0)
+                return 0f;
+            // Alien bases dissipate nitrogen if that setting is enabled.
+            if (save.Config.AlienBaseSafety && player.precursorOutOfWater)
                 return 0f;
             
             return safeDepth;
@@ -334,7 +337,7 @@ namespace DeathrunRemade.Handlers
         {
             // Calculate the ideal safe depth for the current depth.
             float safeDepth = CalculateSafeDepth(depth);
-            safeDepth = GetSafeDepthOverride(player, safeDepth);
+            safeDepth = GetSafeDepthOverride(player, save, safeDepth);
             bool dissipating = IsGoingUp(safeDepth, lastSafeDepth);
             // Don't adjust anything if we're already close enough.
             if (Mathf.Abs(safeDepth - lastSafeDepth) < 0.5f && !dissipating)

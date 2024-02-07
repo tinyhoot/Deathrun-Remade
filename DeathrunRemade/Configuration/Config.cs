@@ -32,6 +32,7 @@ namespace DeathrunRemade.Configuration
         public ConfigEntryWrapper<Difficulty3> PersonalCrushDepth;
         public ConfigEntryWrapper<DamageDifficulty> DamageTaken;
         public ConfigEntryWrapper<Difficulty3> NitrogenBends;
+        public ConfigEntryWrapper<bool> AlienBaseSafety;
         public ConfigEntryWrapper<bool> SpecialAirTanks;
         public ConfigEntryWrapper<Difficulty3> SurfaceAir;
         public ConfigEntryWrapper<string> StartLocation;
@@ -144,6 +145,12 @@ namespace DeathrunRemade.Configuration
                 "Hard (While Aurora not fixed)",
                 "Deathrun (Always)"
             ).WithDescription("Surface Air Poisoning");
+            AlienBaseSafety = RegisterEntry(
+                section: SectionSurvival,
+                key: nameof(AlienBaseSafety),
+                defaultValue: false,
+                description: "Alien bases are considered safe areas and actively lower your nitrogen levels."
+            ).WithDescription("Alien Structures lower Nitrogen");
             SpecialAirTanks = RegisterEntry(
                 section: SectionSurvival,
                 key: nameof(SpecialAirTanks),
@@ -454,6 +461,7 @@ namespace DeathrunRemade.Configuration
             ModOptions.AddItem(DamageTaken.ToModChoiceOption());
             ModOptions.AddItem(NitrogenBends.ToModChoiceOption());
             ModOptions.AddItem(SurfaceAir.ToModChoiceOption());
+            ModOptions.AddItem(AlienBaseSafety.ToModToggleOption());
             ModOptions.AddItem(SpecialAirTanks.ToModToggleOption());
             ModOptions.AddItem(StartLocation.ToModChoiceOption());
             ModOptions.AddItem(SinkLifepod.ToModToggleOption());

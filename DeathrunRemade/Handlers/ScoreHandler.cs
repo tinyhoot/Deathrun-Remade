@@ -214,6 +214,7 @@ namespace DeathrunRemade.Handlers
             // The bends are super impactful. Reflect that in the scoring.
             total += GetStandardMult(config.NitrogenBends) * 2f;
             total += GetStandardMult(config.SurfaceAir);
+            total += config.AlienBaseSafety ? 0f : DeathrunMult ;
             total += config.StartLocation.Equals("Vanilla") ? 0f : DeathrunMult;
             total += config.SinkLifepod ? DeathrunMult : 0f;
             total += GetStandardMult(config.CreatureAggression);

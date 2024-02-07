@@ -22,6 +22,7 @@ namespace DeathrunRemade.Configuration
         [JsonProperty] public readonly Difficulty3 NitrogenBends;
         [JsonProperty] public readonly bool SpecialAirTanks;
         [JsonProperty] public readonly Difficulty3 SurfaceAir;
+        [JsonProperty] public readonly bool AlienBaseSafety;
         [JsonProperty] public readonly string StartLocation;
         [JsonProperty] public readonly bool SinkLifepod;
         [JsonProperty] public readonly bool ToppleLifepod;
@@ -62,6 +63,7 @@ namespace DeathrunRemade.Configuration
             NitrogenBends = config.NitrogenBends.Value;
             SpecialAirTanks = config.SpecialAirTanks.Value;
             SurfaceAir = config.SurfaceAir.Value;
+            AlienBaseSafety = config.AlienBaseSafety.Value;
             StartLocation = config.StartLocation.Value;
             SinkLifepod = config.SinkLifepod.Value;
             ToppleLifepod = config.ToppleLifepod.Value;
