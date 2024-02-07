@@ -24,8 +24,6 @@ Checks at the very end
 Reworks before release
 - Have more than one tutorial message.
 - Be consistent with which places accumulate nitrogen and which do not. Add config option for e.g. bases.
-- Replace the names of starts with more inventive ones. Add new ones.
-  - Remove 'Dramatic View' and other non-terrain starts entirely due to collision check issues.
 
 Substantial changes from the original
 - Photosynthetic tanks always work in sunlight, including the surface
