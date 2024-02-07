@@ -11,11 +11,12 @@ namespace DeathrunRemade.Items
     internal class FilterChip : DeathrunPrefabBase
     {
         public static TechType s_TechType;
+        public new const string ClassId = ClassIdPrefix + "filterchip";
 
         protected override PrefabInfo CreatePrefabInfo()
         {
             var sprite = SpriteManager.Get(TechType.ComputerChip);
-            PrefabInfo info = Hootils.CreatePrefabInfo(ClassIdPrefix + "filterchip", sprite);
+            PrefabInfo info = Hootils.CreatePrefabInfo(ClassId, sprite);
             s_TechType = info.TechType;
             return info;
         }
@@ -31,7 +32,8 @@ namespace DeathrunRemade.Items
                 ))
                 .WithFabricatorType(CraftTree.Type.Fabricator)
                 .WithStepsToFabricatorTab(CraftTreeHandler.Paths.FabricatorEquipment);
-            prefab.SetPdaGroupCategory(TechGroup.Personal, TechCategory.Equipment);
+            prefab.SetPdaGroupCategory(TechGroup.Personal, TechCategory.Equipment)
+                .WithEncyclopediaEntry("Tech/Equipment", null, unlockSound: PDAHandler.UnlockImportant);
             prefab.SetEquipment(EquipmentType.Chip)
                 .WithQuickSlotType(QuickSlotType.None);
 

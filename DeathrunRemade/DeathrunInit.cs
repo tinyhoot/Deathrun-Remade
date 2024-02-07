@@ -19,6 +19,7 @@ using HarmonyLib;
 using HootLib;
 using HootLib.Components;
 using Nautilus.Handlers;
+using Story;
 using UnityEngine;
 using ILogHandler = HootLib.Interfaces.ILogHandler;
 
@@ -35,7 +36,6 @@ namespace DeathrunRemade
         internal static Config _Config;
         internal static ILogHandler _Log;
         internal static RunHandler _RunHandler;
-        private EncyclopediaHandler _encyclopediaHandler;
         internal static VanillaRecipeChanges _recipeChanges;
 
         // Persists across scenes, holds vital components.
@@ -169,13 +169,13 @@ namespace DeathrunRemade
 
         private void InitHandlers()
         {
+            LocalisationHandler.Init();
             // Load statistics of all runs ever played.
             _RunHandler = new RunHandler(_Log);
             // Prepare in-game messaging.
             var notifications = _persistentObject.AddComponent<NotificationHandler>();
             _ = new WarningHandler(_Config, _Log, notifications, SaveData.Main);
-            _encyclopediaHandler = new EncyclopediaHandler();
-            _encyclopediaHandler.RegisterPdaEntries();
+            EncyclopediaHandler.Init();
             // Ensure tooltips will be overwritten properly.
             Language.OnLanguageChanged += () => TooltipHandler.OverrideVanillaTooltips(SaveData.Main.Config);
             OnReset += TooltipHandler.OnReset;
@@ -257,10 +257,6 @@ namespace DeathrunRemade
                 player.gameObject.AddComponent<RunStatsTracker>();
                 // Set up GUI components.
                 RadiationPatcher.CalculateGuiPosition();
-                // Register custom story goals relying on custom items.
-                _encyclopediaHandler.RegisterStoryGoals();
-                // Unlock all encyclopedia entries with Deathrun tutorials.
-                _encyclopediaHandler.UnlockPdaIntroEntries();
                 TooltipHandler.OverrideVanillaTooltips(config);
             
                 // Enable crush depth if the player needs to breathe, i.e. is not in creative mode.
@@ -294,11 +290,11 @@ namespace DeathrunRemade
                 EscapePod.main.gameObject.AddComponent<EscapePodStatusScreen>();
                 ExplosionCountdown.Create(out GameObject go);
                 go.SetActive(true);
+                // Unlock all encyclopedia entries with Deathrun tutorials, but only on a freshly started game.
+                if (EscapePod.main.isNewBorn)
+                    EncyclopediaHandler.UnlockPdaIntroEntries();
                 // Ensure we always know about the player's current radiation immunity.
                 RadiationPatcher.Init();
-                // Here just to make sure that LeakingRadiation has properly readied and we can access the key.
-                StoryGoalHandler.RegisterCustomEvent(LeakingRadiation.main.leaksFixedGoal.key,
-                    () => NotificationHandler.Main.AddMessage(NotificationHandler.Centre, "dr_auroraRepairedBreathable"));
             }
             catch (Exception ex)
             {
@@ -372,10 +368,7 @@ namespace DeathrunRemade
             {
                 _Log.Debug($"Layer {i} - '{LayerMask.LayerToName(i)}'");
             }
-            // StoryGoalManager.main.OnGoalComplete("Story_AuroraWarning3");
-            SaveData.Main.Config = default;
-            SaveData.Main.EscapePod = default;
-            SaveData.Main.Nitrogen = default;
+            StoryGoalManager.main.OnGoalComplete("Story_AuroraWarning3");
         }
     }
 }

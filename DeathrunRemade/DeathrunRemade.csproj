@@ -57,6 +57,7 @@
         <Compile Include="Handlers\CrushDepthHandler.cs" />
         <Compile Include="Handlers\EncyclopediaHandler.cs" />
         <Compile Include="Handlers\GameEventHandler.cs" />
+        <Compile Include="Handlers\LocalisationHandler.cs" />
         <Compile Include="Handlers\RunHandler.cs" />
         <Compile Include="Handlers\ScoreHandler.cs" />
         <Compile Include="Handlers\NitrogenHandler.cs" />

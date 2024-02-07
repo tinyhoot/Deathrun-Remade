@@ -13,11 +13,12 @@ namespace DeathrunRemade.Items
     {
         public static TechType s_TechType;
         public const TechType UnlockTechType = TechType.Cyclops;
+        public new const string ClassId = ClassIdPrefix + "decompressionmodule";
 
         protected override PrefabInfo CreatePrefabInfo()
         {
             var sprite = SpriteManager.Get(TechType.PowerUpgradeModule);
-            PrefabInfo info = Hootils.CreatePrefabInfo(ClassIdPrefix + "decompressionmodule", sprite);
+            PrefabInfo info = Hootils.CreatePrefabInfo(ClassId, sprite);
             s_TechType = info.TechType;
             return info;
         }
@@ -34,8 +35,8 @@ namespace DeathrunRemade.Items
                 ))
                 .WithFabricatorType(CraftTree.Type.SeamothUpgrades)
                 .WithStepsToFabricatorTab(CraftTreeHandler.Paths.VehicleUpgradesCommonModules);
-            prefab.SetPdaGroupCategory(TechGroup.VehicleUpgrades, TechCategory.VehicleUpgrades);
-            prefab.SetUnlock(UnlockTechType);
+            prefab.SetPdaGroupCategory(TechGroup.VehicleUpgrades, TechCategory.VehicleUpgrades)
+                .WithEncyclopediaEntry("Tech/Vehicles", null, unlockSound: PDAHandler.UnlockImportant);
             prefab.SetEquipment(EquipmentType.VehicleModule)
                 .WithQuickSlotType(QuickSlotType.Passive);
 

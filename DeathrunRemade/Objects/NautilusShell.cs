@@ -42,7 +42,7 @@ namespace DeathrunRemade.Objects
         }
 
         /// <summary>
-        /// Undo all changes by resetting to the cached state.
+        /// Undo all changes by resetting to the cached state. Clears the contents of the cache after reset.
         /// </summary>
         public void UndoChanges()
         {
