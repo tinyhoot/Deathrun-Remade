@@ -10,7 +10,7 @@ and the latest version of Subnautica.
 
 - Install [BepInEx](https://submodica.xyz/mods/sn1/141).
 - Install [Nautilus](https://submodica.xyz/mods/sn1/250).
-- Unzip this mod into your `Subnautica/BepInEx/plugins` directory.
+- Unzip this mod into your `Subnautica/BepInEx` directory.
 - Enjoy!
 
 ## Compatibility
