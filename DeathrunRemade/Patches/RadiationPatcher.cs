@@ -36,7 +36,7 @@ namespace DeathrunRemade.Patches
             ("THallway", 0.5f),
             ("Entrance", 0.5f),
             ("CrashedShip", 0.4f),
-            ("GeneratorRoom", 0.4f),
+            ("GeneratorRoom", 1.6f),
             ("CrashZone", 0.3f)
         };
         private static readonly List<TechType> RadSafeEquipment = new List<TechType>
@@ -291,6 +291,9 @@ namespace DeathrunRemade.Patches
         /// </summary>
         private static float GetChernobylRadiation(Player player)
         {
+            if (CrashedShipAmbientSound.main == null || !CrashedShipAmbientSound.main.isPlayerInside)
+                return 0f;
+            
             const StringComparison culture = StringComparison.InvariantCultureIgnoreCase;
             string biome = DeathrunUtils.GetDetailedPlayerBiome();
             float distance = LeakingRadiation.main.playerDistanceTracker.distanceToPlayer;
@@ -328,6 +331,9 @@ namespace DeathrunRemade.Patches
         /// </summary>
         private static float GetDeathrunRadiation(Player player)
         {
+            if (CrashedShipAmbientSound.main == null || !CrashedShipAmbientSound.main.isPlayerInside)
+                return 0f;
+            
             const StringComparison culture = StringComparison.InvariantCultureIgnoreCase;
             float rads = 0f;
             
