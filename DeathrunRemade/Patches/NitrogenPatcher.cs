@@ -39,33 +39,47 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(VFXPrecursorGunElevator), nameof(VFXPrecursorGunElevator.OnGunElevatorDecendStart))]
         private static void PauseNitrogenOnElevatorUse()
         {
+            PauseNitrogen();
+        }
+        
+        /// <summary>
+        /// Restore nitrogen functionality after the elevator/teleport animation has ended.
+        /// </summary>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(VFXPrecursorGunElevator), nameof(VFXPrecursorGunElevator.OnPlayerCinematicModeEnd))]
+        [HarmonyPatch(typeof(Player), nameof(Player.CompleteTeleportation))]
+        private static void RestoreNitrogenAfterCinematic()
+        {
+            EnableNitrogen();
+        }
+
+        /// <summary>
+        /// Pause and reset nitrogen on teleporter use so the player doesn't die teleporting up from the prison.
+        /// </summary>
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(PrecursorTeleporter), nameof(PrecursorTeleporter.BeginTeleportPlayer))]
+        private static void PauseNitrogenOnTeleport(GameObject teleportObject)
+        {
+            // Run for players and players in vehicles, but not e.g. juvenile sea emperors.
+            if (teleportObject.GetComponent<Player>() || (teleportObject.GetComponent<Vehicle>()
+                                                          && Player.main.GetVehicle()))
+                PauseNitrogen();
+        }
+
+        private static void PauseNitrogen()
+        {
             Player player = Player.main;
             player.GetComponent<FastAscent>().enabled = false;
             var nitrogen = player.GetComponent<NitrogenHandler>();
             nitrogen.ResetNitrogen();
             nitrogen.enabled = false;
         }
-        
-        /// <summary>
-        /// Restore nitrogen functionality after the elevator animation has ended.
-        /// </summary>
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(VFXPrecursorGunElevator), nameof(VFXPrecursorGunElevator.OnPlayerCinematicModeEnd))]
-        private static void RestoreNitrogenAfterElevatorUse()
+
+        private static void EnableNitrogen()
         {
             Player player = Player.main;
             player.GetComponent<FastAscent>().enabled = true;
             player.GetComponent<NitrogenHandler>().enabled = true;
-        }
-        
-        /// <summary>
-        /// Reset safe depth when a teleporter is used so that the player does not get the bends.
-        /// </summary>
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(PrecursorTeleporter), nameof(PrecursorTeleporter.OnActivateTeleporter))]
-        private static void ResetNitrogenOnTeleporterUse()
-        {
-            Player.main.GetComponent<NitrogenHandler>().ResetNitrogen();
         }
     }
 }
