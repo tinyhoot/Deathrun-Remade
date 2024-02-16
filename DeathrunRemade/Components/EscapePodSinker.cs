@@ -190,6 +190,8 @@ namespace DeathrunRemade.Components
         /// </summary>
         private void OnSavedGameLoaded()
         {
+            // For some reason the RigidBody component does not exist during Awake() of a previously saved lifepod.
+            _rigidbody ??= GetComponent<Rigidbody>();
             if (!_saveData.EscapePod.isAnchored)
             {
                 DeathrunInit._Log.Debug("Re-sinking life pod.");
