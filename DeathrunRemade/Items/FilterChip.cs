@@ -5,6 +5,7 @@ using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
 using Nautilus.Crafting;
 using Nautilus.Handlers;
+using Story;
 
 namespace DeathrunRemade.Items
 {
@@ -40,12 +41,32 @@ namespace DeathrunRemade.Items
             var template = new CloneTemplate(info, TechType.Compass);
             prefab.SetGameObject(template);
 
+            RegisterUnlockData(info.TechType);
             return prefab;
         }
         
         protected override bool ShouldActivateForConfig(ConfigSave config)
         {
             return true;
+        }
+
+        /// <summary>
+        /// Register story goals to unlock this item. Because the handler has no way to undo its changes this must
+        /// only be triggered once.
+        /// </summary>
+        private void RegisterUnlockData(TechType techType)
+        {
+            // Add our own custom goal on top of the goal triggered when all leaks are fixed and use it to unlock
+            // both the filterchip blueprint and encyclopedia entry.
+            StoryGoalHandler.RegisterCompoundGoal(ClassId, Story.GoalType.Encyclopedia, 5f, "AuroraRadiationFixed");
+            StoryGoalHandler.RegisterOnGoalUnlockData(ClassId, new[]
+            {
+                new UnlockBlueprintData
+                {
+                    unlockType = UnlockBlueprintData.UnlockType.Available,
+                    techType = techType
+                }
+            });
         }
     }
 }

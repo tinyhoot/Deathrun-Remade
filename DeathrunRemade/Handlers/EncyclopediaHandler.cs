@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using DeathrunRemade.Configuration;
-using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Patches;
 using Nautilus.Handlers;
-using Story;
 
 namespace DeathrunRemade.Handlers
 {
@@ -30,7 +28,6 @@ namespace DeathrunRemade.Handlers
         public static void Init()
         {
             RegisterPdaEntries();
-            RegisterCustomItemEntries();
             RegisterStoryGoals();
             // No need to register an OnReset event, the LocalisationHandler will see to it.
             SaveData.OnSaveDataLoaded += save => FormatEncyEntries(save.Config);
@@ -56,36 +53,6 @@ namespace DeathrunRemade.Handlers
             // Add an explainer for why the Aurora is breathable after fixing the generator.
             StoryGoalHandler.RegisterCustomEvent("AuroraRadiationFixed", () => NotificationHandler.Main.AddMessage(NotificationHandler.Centre, "dr_auroraRepairedBreathable"));
             StoryGoalHandler.RegisterCompoundGoal(EncyPrefix + "AuroraFiltration", Story.GoalType.Encyclopedia, 1f, "AuroraRadiationFixed");
-        }
-
-        /// <summary>
-        /// Ensure that custom items with unique unlock requirements unlock at the correct time via story goals.
-        /// </summary>
-        private static void RegisterCustomItemEntries()
-        {
-            // Unlock the decompression module when a Cyclops is first constructed.
-            StoryGoalHandler.RegisterItemGoal(DecompressionModule.ClassId, Story.GoalType.Encyclopedia,
-                DecompressionModule.UnlockTechType);
-            StoryGoalHandler.RegisterOnGoalUnlockData(DecompressionModule.ClassId, new[]
-            {
-                new UnlockBlueprintData
-                {
-                    unlockType = UnlockBlueprintData.UnlockType.Available,
-                    techType = DecompressionModule.s_TechType
-                }
-            });
-            // Add our own custom goal on top of the goal triggered when all leaks are fixed and use it to unlock
-            // both the filterchip blueprint and encyclopedia entry.
-            StoryGoalHandler.RegisterCompoundGoal(FilterChip.ClassId, Story.GoalType.Encyclopedia, 5f, 
-                "AuroraRadiationFixed");
-            StoryGoalHandler.RegisterOnGoalUnlockData(FilterChip.ClassId, new[]
-            {
-                new UnlockBlueprintData
-                {
-                    unlockType = UnlockBlueprintData.UnlockType.Available,
-                    techType = FilterChip.s_TechType
-                }
-            });
         }
 
         /// <summary>
