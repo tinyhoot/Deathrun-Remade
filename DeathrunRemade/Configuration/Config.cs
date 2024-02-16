@@ -73,6 +73,7 @@ namespace DeathrunRemade.Configuration
         public ConfigEntryWrapper<bool> MoveSunbeamWindow;
         public ConfigEntryWrapper<float> NitrogenUiPosX;
         public ConfigEntryWrapper<float> NitrogenUiPosY;
+        public ConfigEntryWrapper<bool> HideNitrogenUiInPda;
 
         internal readonly List<StartLocation> _startLocations;
         private Color _disabledOptionTint = new Color(1f, 0.4f, 0.4f, 0.15f);
@@ -440,6 +441,13 @@ namespace DeathrunRemade.Configuration
                 defaultValue: 0.07f,
                 description: "Sets the distance of the nitrogen UI from the top edge of the screen."
             ).WithDescription("Nitrogen UI Vert. Position");
+            HideNitrogenUiInPda = RegisterEntry(
+                section: SectionUI,
+                key: nameof(HideNitrogenUiInPda),
+                defaultValue: true,
+                description: "Matches the behaviour of the vanilla depth compass and hides the nitrogen UI while the "
+                             + "PDA is open."
+            ).WithDescription("Hide Nitrogen UI in PDA");
         }
 
         protected override void RegisterControllingOptions() { }
@@ -510,6 +518,7 @@ namespace DeathrunRemade.Configuration
             ModOptions.AddItem(MoveSunbeamWindow.ToModToggleOption());
             ModOptions.AddItem(NitrogenUiPosX.ToModSliderOption(0f, 1f, stepSize: 0.01f));
             ModOptions.AddItem(NitrogenUiPosY.ToModSliderOption(0f, 1f, stepSize: 0.01f));
+            ModOptions.AddItem(HideNitrogenUiInPda.ToModToggleOption());
 
             OptionsPanelHandler.RegisterModOptions(ModOptions);
         }

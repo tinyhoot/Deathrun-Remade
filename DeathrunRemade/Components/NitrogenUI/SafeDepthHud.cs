@@ -118,6 +118,10 @@ namespace DeathrunRemade.Components.NitrogenUI
         /// </summary>
         private void OnPdaStateChanged(bool open)
         {
+            // Only check config on open (hiding the UI) so the player does not get stuck with a permanently hidden UI.
+            if (open && !DeathrunInit._Config.HideNitrogenUiInPda.Value)
+                return;
+            
             // Not visible when the pda is open.
             SetVisible(!open);
         }
