@@ -4,41 +4,68 @@ using UnityEngine;
 namespace DeathrunRemade.Components
 {
     /// <summary>
-    /// This component is added to the player and from there controls the special tanks' unique behaviour.
-    /// Due to the check of whether the tank is currently equipped it ends up more efficient than putting this
-    /// component on every tank added by Deathrun.
+    /// This component is added to custom deathrun tanks and controls their unique behaviour.
     /// </summary>
+    /// <seealso cref="DeathrunRemade.Items.TankBase"/>
     internal class DeathrunTank : MonoBehaviour
     {
         // Do not update every frame, only every so often.
         private const float UpdateInterval = 3.0f;
         private const float MinLight = 0.3f;
         private const float MinTemp = 30f;
-        private float _nextUpdate;
+        private const float UnequippedMult = 0.33f;
         private Equipment _equipment;
 
         private DayNightCycle _dayNightCycle;
-        private OxygenManager _oxygenManager;
+        private Oxygen _oxygen;
         private WaterTemperatureSimulation _waterTemperature;
+        private TechType _techType;
+        private bool _isEquipped;
 
-        private void Start()
+        private void Awake()
         {
             _equipment = Inventory.main.equipment;
-            _oxygenManager = Player.main.oxygenMgr;
+            _oxygen = GetComponent<Oxygen>();
+            _techType = GetComponent<Pickupable>().GetTechType();
+
+            _equipment.onEquip += OnEquip;
+            _equipment.onUnequip += OnUnequip;
+            // Items in the player's inventory have their GameObjects set to inactive. Invoke runs regardless.
+            InvokeRepeating(nameof(UpdateOxygen), 0f, UpdateInterval);
         }
 
-        private void Update()
+        private void OnDestroy()
         {
-            // Don't check every single frame.
-            if (Time.time < _nextUpdate)
+            // It is possible that this happens during scene clean back to main menu and the inventory is already gone.
+            if (_equipment != null)
+            {
+                _equipment.onEquip -= OnEquip;
+                _equipment.onUnequip -= OnUnequip;
+            }
+            CancelInvoke();
+        }
+
+        private void OnEquip(string slot, InventoryItem item)
+        {
+            if (item.item.gameObject != gameObject)
                 return;
             
-            _nextUpdate = Time.time + UpdateInterval;
-            // Unequipped tanks do not fill up.
-            TechType techType = _equipment.GetItemInSlot("Tank")?.techType ?? TechType.None;
-            if (techType == ChemosynthesisTank.s_TechType)
+            _isEquipped = true;
+        }
+
+        private void OnUnequip(string slot, InventoryItem item)
+        {
+            if (item.item.gameObject != gameObject)
+                return;
+            
+            _isEquipped = false;
+        }
+
+        private void UpdateOxygen()
+        {
+            if (_techType == ChemosynthesisTank.s_TechType)
                 UpdateChemosynthesisTank();
-            if (techType == PhotosynthesisTank.s_TechType || techType == PhotosynthesisTankSmall.s_TechType)
+            if (_techType == PhotosynthesisTank.s_TechType || _techType == PhotosynthesisTankSmall.s_TechType)
                 UpdatePhotoSynthesisTank();
         }
 
@@ -57,9 +84,10 @@ namespace DeathrunRemade.Components
             float temperature = _waterTemperature.GetTemperature(Player.main.transform.position);
             if (temperature < MinTemp)
                 return;
+            float equippedMult = _isEquipped ? 1f : UnequippedMult;
             
-            // Works out to around 1/s at 90C.
-            _oxygenManager.AddOxygen(UpdateInterval * temperature * 0.01f);
+            // Works out to around 1/s at 90C if equipped.
+            _oxygen.AddOxygen(UpdateInterval * temperature * 0.01f * equippedMult);
         }
 
         /// <summary>
@@ -79,9 +107,10 @@ namespace DeathrunRemade.Components
             float depth = Player.main.GetDepth();
             if (brightness < MinLight || depth > 200f)
                 return;
+            float equippedMult = _isEquipped ? 1f : UnequippedMult;
             
-            // Works out to around 1/s in full daylight at sea level.
-            _oxygenManager.AddOxygen(UpdateInterval * brightness * ((200f - depth) / 200f));
+            // Works out to around 1/s in full daylight at sea level if equipped.
+            _oxygen.AddOxygen(UpdateInterval * brightness * ((200f - depth) / 200f) * equippedMult);
         }
     }
 }

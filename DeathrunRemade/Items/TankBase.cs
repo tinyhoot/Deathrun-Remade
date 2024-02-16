@@ -1,11 +1,11 @@
 using DeathrunRemade.Components;
 using DeathrunRemade.Configuration;
-using DeathrunRemade.Handlers;
 using HootLib;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
 using Nautilus.Crafting;
+using UnityEngine;
 
 namespace DeathrunRemade.Items
 {
@@ -35,6 +35,7 @@ namespace DeathrunRemade.Items
             prefab.SetUnlock(GetUnlock());
 
             var template = new CloneTemplate(info, GetCloneType());
+            template.ModifyPrefab = AddSpecialTankComponent;
             prefab.SetGameObject(template);
 
             return prefab;
@@ -43,18 +44,6 @@ namespace DeathrunRemade.Items
         protected override bool ShouldActivateForConfig(ConfigSave config)
         {
             return config.SpecialAirTanks;
-        }
-
-        protected override void Register()
-        {
-            base.Register();
-            GameEventHandler.OnPlayerAwake += EnsureSpecialTankComponent;
-        }
-
-        public override void Unregister()
-        {
-            base.Unregister();
-            GameEventHandler.OnPlayerAwake -= EnsureSpecialTankComponent;
         }
 
         protected abstract void AssignTechType(PrefabInfo info);
@@ -81,9 +70,12 @@ namespace DeathrunRemade.Items
         /// </summary>
         protected abstract TechType GetUnlock();
 
-        private void EnsureSpecialTankComponent(Player player)
+        /// <summary>
+        /// Add the component responsible for special behaviour to every custom tank.
+        /// </summary>
+        private void AddSpecialTankComponent(GameObject gameObject)
         {
-            player.gameObject.EnsureComponent<DeathrunTank>();
+            gameObject.EnsureComponent<DeathrunTank>();
         }
     }
 }
