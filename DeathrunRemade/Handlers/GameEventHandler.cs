@@ -31,6 +31,11 @@ namespace DeathrunRemade.Handlers
         /// to the loading screen.
         /// </summary>
         public static event Action OnMainMenuPressPlay;
+
+        /// <summary>
+        /// Invoked whenever the PDA is opened/closed. The parameter is true if the PDA is currently open.
+        /// </summary>
+        public static event Action<bool> OnPdaStateChanged;
         
         /// <summary>
         /// Invoked as a postfix to Player.Awake().
@@ -85,6 +90,13 @@ namespace DeathrunRemade.Handlers
         {
             if (id == FreezeTime.Id.WaitScreen && Player.main != null)
                 OnPlayerGainControl?.Invoke(Player.main);
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(uGUI_PDA), nameof(uGUI_PDA.SetCanvasVisible))]
+        private static void TriggerPdaStateChanged(bool visible)
+        {
+            OnPdaStateChanged?.Invoke(visible);
         }
         
         [HarmonyPostfix]

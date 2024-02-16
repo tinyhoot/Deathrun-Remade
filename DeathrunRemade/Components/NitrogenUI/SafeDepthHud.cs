@@ -41,6 +41,7 @@ namespace DeathrunRemade.Components.NitrogenUI
             transform.localScale *= HudScale;
             
             GameEventHandler.OnHudUpdate += OnHudUpdate;
+            GameEventHandler.OnPdaStateChanged += OnPdaStateChanged;
             DeathrunInit._Config.ModOptions.OnChanged += OnSettingChanged;
 
             StartCoroutine(CreateChildren());
@@ -92,6 +93,7 @@ namespace DeathrunRemade.Components.NitrogenUI
         private void OnDestroy()
         {
             GameEventHandler.OnHudUpdate -= OnHudUpdate;
+            GameEventHandler.OnPdaStateChanged -= OnPdaStateChanged;
             DeathrunInit._Config.ModOptions.OnChanged -= OnSettingChanged;
         }
 
@@ -109,6 +111,15 @@ namespace DeathrunRemade.Components.NitrogenUI
         private void OnHudUpdate(uGUI_SceneHUD hud)
         {
             SetVisible(hud._active);
+        }
+        
+        /// <summary>
+        /// When the PDA is opened make sure the hud disappears just like the vanilla depth compass.
+        /// </summary>
+        private void OnPdaStateChanged(bool open)
+        {
+            // Not visible when the pda is open.
+            SetVisible(!open);
         }
 
         /// <summary>
