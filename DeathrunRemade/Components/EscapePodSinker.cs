@@ -3,6 +3,7 @@ using DeathrunRemade.Handlers;
 using DeathrunRemade.Objects;
 using Nautilus.Utility;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace DeathrunRemade.Components
 {
@@ -38,7 +39,12 @@ namespace DeathrunRemade.Components
             // Only handles existing save games. A harmony patch initiates sinking for new games.
             GameEventHandler.OnSavedGameLoaded += OnSavedGameLoaded;
         }
-        
+
+        private void OnDestroy()
+        {
+            GameEventHandler.OnSavedGameLoaded -= OnSavedGameLoaded;
+        }
+
         private void FixedUpdate()
         {
             // Make the pod sink smoothly if the player is inside it. Something else keeps resetting this and I can't
