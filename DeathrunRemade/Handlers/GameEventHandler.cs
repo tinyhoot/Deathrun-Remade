@@ -55,11 +55,6 @@ namespace DeathrunRemade.Handlers
         public static event Action<Player> OnPlayerVictory;
 
         /// <summary>
-        /// Invoked when the loading screen for a previously saved game is done and the player gains control.
-        /// </summary>
-        public static event Action OnSavedGameLoaded;
-
-        /// <summary>
         /// Register all events for the handler to propagate to the rest of the mod.
         /// </summary>
         public static void RegisterEvents()
@@ -89,11 +84,7 @@ namespace DeathrunRemade.Handlers
         private static void TriggerSaveGameLoaded(FreezeTime.Id id)
         {
             if (id == FreezeTime.Id.WaitScreen && Player.main != null)
-            {
                 OnPlayerGainControl?.Invoke(Player.main);
-                if (!EscapePod.main.isNewBorn)
-                    OnSavedGameLoaded?.Invoke();
-            }
         }
         
         [HarmonyPostfix]

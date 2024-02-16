@@ -37,12 +37,12 @@ namespace DeathrunRemade.Components
             // Ensure the lifepod does not move anywhere until the game has loaded in far enough for us to decide what to do.
             SetKinematic(true);
             // Only handles existing save games. A harmony patch initiates sinking for new games.
-            GameEventHandler.OnSavedGameLoaded += OnSavedGameLoaded;
+            GameEventHandler.OnPlayerGainControl += OnSavedGameLoaded;
         }
 
         private void OnDestroy()
         {
-            GameEventHandler.OnSavedGameLoaded -= OnSavedGameLoaded;
+            GameEventHandler.OnPlayerGainControl -= OnSavedGameLoaded;
         }
 
         private void FixedUpdate()
@@ -194,8 +194,12 @@ namespace DeathrunRemade.Components
         /// <summary>
         /// Do the setup for an escape pod that isn't newborn but rather loaded from an existing save.
         /// </summary>
-        private void OnSavedGameLoaded()
+        private void OnSavedGameLoaded(Player _)
         {
+            // Do not do anything if this is a fresh game.
+            if (_pod.isNewBorn)
+                return;
+            
             // For some reason the RigidBody component does not exist during Awake() of a previously saved lifepod.
             _rigidbody ??= GetComponent<Rigidbody>();
             if (!_saveData.EscapePod.isAnchored)
