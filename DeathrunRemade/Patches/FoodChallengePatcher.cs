@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DeathrunRemade.Handlers;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Attributes;
 using DeathrunRemade.Objects.Enums;
@@ -83,7 +84,9 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(Knife), nameof(Knife.GiveResourceOnDamage))]
         private static bool CancelKnifeHarvest(GameObject target)
         {
-            bool allowed = AllowPickup(target);
+            bool allowed = AllowPickup(target, out string explainerKey);
+            if (!allowed)
+                NotificationHandler.VanillaMessage(explainerKey);
             return allowed;
         }
         
@@ -96,7 +99,8 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(PickPrefab), nameof(PickPrefab.OnHandClick))]
         private static bool CancelHandPickup(PickPrefab __instance)
         {
-            return AllowPickup(__instance.gameObject);
+            // No explainer here since that would happen every single time you look at the plant.
+            return AllowPickup(__instance.gameObject, out string _);
         }
         
         /// <summary>
@@ -106,7 +110,9 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(PropulsionCannon), nameof(PropulsionCannon.ValidateObject))]
         private static bool CancelPropulsionPickup(GameObject go, ref bool __result)
         {
-            __result = AllowPickup(go);
+            __result = AllowPickup(go, out string explainerKey);
+            if (!__result)
+                NotificationHandler.VanillaMessage(explainerKey);
             return __result;
         }
         
@@ -117,30 +123,48 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(RepulsionCannon), nameof(RepulsionCannon.ShootObject))]
         private static bool CancelRepulsionShoot(Rigidbody rb)
         {
-            return AllowPickup(rb.gameObject);
+            return AllowPickup(rb.gameObject, out string _);
         }
 
         /// <summary>
         /// Check whether the player is allowed to pick up food from the island.
         /// </summary>
-        private static bool AllowPickup(GameObject gameObject)
+        private static bool AllowPickup(GameObject gameObject, out string explainerKey)
         {
             RelativeToExplosion difficulty = SaveData.Main.Config.IslandFoodChallenge;
+            explainerKey = "";
             if (difficulty == RelativeToExplosion.Always)
                 return true;
             // These changes only apply to surface plants, so allow any other food. Surface bases are also alright.
             if (Ocean.GetDepthOf(gameObject) > 1f || !Plants.Contains(CraftData.GetTechType(gameObject)) || Player.main.IsInsideWalkable())
                 return true;
             if (difficulty == RelativeToExplosion.Never)
+            {
+                explainerKey = "dr_foodChallengeNever";
                 return false;
+            }
 
             // The Aurora has not exploded yet, so we can rule out this specific case.
             if (difficulty == RelativeToExplosion.After
                 && (CrashedShipExploder.main == null || !CrashedShipExploder.main.IsExploded()))
+            {
+                explainerKey = "dr_foodChallengeNever";
                 return false;
+            }
 
             // Both remaining config options are covered with this check.
-            return !RadiationPatcher.IsSurfaceIrradiated();
+            bool allowed = !RadiationPatcher.IsSurfaceIrradiated();
+            if (!RadiationPatcher.IsRadiationFixed())
+            {
+                explainerKey = "dr_foodChallengeNever";
+            }
+            else
+            {
+                // Display a different explainer depending on how much time is left until radiation is completely gone.
+                float seconds = LeakingRadiation.main.currentRadius / LeakingRadiation.main.kNaturalDissipation;
+                explainerKey = seconds > 600f ? "dr_foodChallengeAfter" : "dr_foodChallengeAfterSoon";
+            }
+            return allowed;
         }
     }
 }

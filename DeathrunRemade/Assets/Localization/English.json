@@ -68,6 +68,9 @@
   "EncyDesc_Deathrun_AuroraFiltration": "The Aurora features a sophisticated air filtration system. Based on patented Alterra technology, it provides a clean and safe atmosphere onboard the vessel even on long distance journeys, ensuring optimal productivity of Alterra staff.\n\nAlterra advises staff not to pay attention to jealous detractors criticising the supposedly immense power draw of the system.",
   
   "dr_auroraRepairedBreathable": "The air filtration system roars to life!",
+  "dr_foodChallengeAfter": "The plant is working hard to expel any poison. Check back later.",
+  "dr_foodChallengeAfterSoon": "The plant is working hard to expel any poison. It is almost done!",
+  "dr_foodChallengeNever": "The irradiated plant decays at your touch!",
   "dr_lifepodHitBottom": "The lifepod has hit bottom!",
   "dr_notEnoughCraftPower": "Not enough power (need {0}).",
   "dr_vehicleExitPowerLoss": "{0} drained of {1} energy for exiting at {2} depth.",
