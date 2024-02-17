@@ -83,7 +83,8 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(Knife), nameof(Knife.GiveResourceOnDamage))]
         private static bool CancelKnifeHarvest(GameObject target)
         {
-            return AllowPickup(target);
+            bool allowed = AllowPickup(target);
+            return allowed;
         }
         
         /// <summary>
@@ -139,7 +140,7 @@ namespace DeathrunRemade.Patches
                 return false;
 
             // Both remaining config options are covered with this check.
-            return RadiationPatcher.IsSurfaceIrradiated();
+            return !RadiationPatcher.IsSurfaceIrradiated();
         }
     }
 }
