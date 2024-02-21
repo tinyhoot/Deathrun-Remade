@@ -31,7 +31,7 @@ namespace DeathrunRemade
     {
         public const string GUID = "com.github.tinyhoot.DeathrunRemade";
         public const string NAME = "Deathrun Remade";
-        public const string VERSION = "1.0.2";
+        public const string VERSION = "1.0.3";
 
         internal static Config _Config;
         internal static ILogHandler _Log;
