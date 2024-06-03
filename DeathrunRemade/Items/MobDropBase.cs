@@ -27,11 +27,6 @@ namespace DeathrunRemade.Items
 
             return prefab;
         }
-        
-        protected override bool ShouldActivateForConfig(ConfigSave config)
-        {
-            return true;
-        }
 
         protected override void Register()
         {
