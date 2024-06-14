@@ -69,22 +69,22 @@ namespace DeathrunRemade.Patches
                 return;
             }
 
-            // The default name for textures.
-            string textureName = "_MainTex";
+            string defaultTextureName = "_MainTex";
+
             // Get GameObjects for the default suit and the suit we want to clone.
             Transform geo = Player.main.transform.Find("body/player_view/male_geo");
-            GameObject suitClone = geo.Find(suitClonePath).gameObject;
-            GameObject suitDefault = geo.Find("diveSuit/diveSuit_body_geo").gameObject;
+            GameObject cloneSuit = geo.Find(suitClonePath).gameObject;
+            GameObject defaultSuit = geo.Find("diveSuit/diveSuit_body_geo").gameObject;
             // Get renderer and texture for the clone suit.
-            Renderer renderer = suitClone.GetComponent<Renderer>();
-            Texture texture = renderer.material.GetTexture(textureName);
+            Renderer renderer = cloneSuit.GetComponent<Renderer>();
+            Texture texture = renderer.material.GetTexture(defaultTextureName);
 
             // Activate the model for the clone suit, and deactivate the default suit model.
-            suitClone.SetActive(true);
-            suitDefault.SetActive(false);
+            cloneSuit.SetActive(true);
+            defaultSuit.SetActive(false);
 
             // Set the suit texture.
-            renderer.materials[0].SetTexture(textureName, (Texture2D)texture);
+            renderer.materials[0].SetTexture(defaultTextureName, (Texture2D)texture);
         }
     }
 
