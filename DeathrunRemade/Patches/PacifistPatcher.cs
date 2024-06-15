@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using DeathrunRemade.Items;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Attributes;
 using DeathrunRemade.Objects.Enums;
@@ -25,8 +27,34 @@ namespace DeathrunRemade.Patches
                 return;
             // If the target is a creature, deny.
             Creature creature = liveMixin.GetComponent<Creature>();
-            if (creature != null)
+            if (creature != null) {
+                // Since since the player can't damage creatures to get their scales,
+                // we need to manually give them the scales when the appropriate conditions are met
+                TechType creatureType = CraftData.GetTechType(creature.gameObject);
+                bool crushDepthDropsEnabled = SaveData.Main.Config.PersonalCrushDepth > Difficulty3.Hard;
+                bool specialAirTanksDropsEnabled = SaveData.Main.Config.SpecialAirTanks;
+                TechType? dropType = null;
+
+                switch (creatureType) {
+                    case TechType.SpineEel:
+                        if (crushDepthDropsEnabled) dropType = SpineEelScale.s_TechType;
+                        break;
+                    case TechType.LavaLizard:
+                        if (crushDepthDropsEnabled) dropType = LavaLizardScale.s_TechType;
+                        break;
+                    case TechType.LavaLarva:
+                        if (specialAirTanksDropsEnabled) dropType = ThermophileSample.s_TechType;
+                        break;
+                    default:
+                        break;
+                }
+
+                if (dropType != null)
+                    CraftData.AddToInventory((TechType)dropType,1,false,false);
+
+                // Now, actually cancel the knife damage.
                 __result = false;
+            }
         }
         
         /// <summary>
