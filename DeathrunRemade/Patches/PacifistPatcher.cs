@@ -29,7 +29,7 @@ namespace DeathrunRemade.Patches
             Creature creature = liveMixin.GetComponent<Creature>();
             if (creature != null) {
                 // Since since the player can't damage creatures to get their scales,
-                // we need to manually give them the scales when the appropriate conditions are met
+                // we need to manually give them the scales when the appropriate conditions are met.
                 TechType creatureType = CraftData.GetTechType(creature.gameObject);
                 bool crushDepthDropsEnabled = SaveData.Main.Config.PersonalCrushDepth > Difficulty3.Hard;
                 bool specialAirTanksDropsEnabled = SaveData.Main.Config.SpecialAirTanks;
