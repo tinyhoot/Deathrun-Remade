@@ -87,5 +87,4 @@ namespace DeathrunRemade.Patches
             renderer.materials[0].SetTexture(defaultTextureName, (Texture2D)texture);
         }
     }
-
 }
