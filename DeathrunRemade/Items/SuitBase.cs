@@ -1,5 +1,6 @@
 using System.Linq;
 using DeathrunRemade.Configuration;
+using DeathrunRemade.Objects.Enums;
 using HootLib;
 using Nautilus.Assets;
 using Nautilus.Assets.Gadgets;
@@ -46,7 +47,7 @@ namespace DeathrunRemade.Items
         
         protected override bool ShouldActivateForConfig(ConfigSave config)
         {
-            return true;
+            return config.PersonalCrushDepth > Difficulty3.Hard;
         }
 
         protected override void Register()

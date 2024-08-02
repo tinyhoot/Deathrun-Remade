@@ -1,3 +1,4 @@
+using DeathrunRemade.Configuration;
 using HootLib;
 using Nautilus.Assets;
 using Nautilus.Handlers;
@@ -21,6 +22,11 @@ namespace DeathrunRemade.Items
         protected override Atlas.Sprite GetSprite()
         {
             return Hootils.LoadSprite("thermophilesample.png", true);
+        }
+
+        protected override bool ShouldActivateForConfig(ConfigSave config)
+        {
+            return config.SpecialAirTanks;
         }
 
         protected override void RegisterHarvestData()

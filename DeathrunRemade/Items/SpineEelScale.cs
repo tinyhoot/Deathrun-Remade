@@ -1,3 +1,5 @@
+using DeathrunRemade.Configuration;
+using DeathrunRemade.Objects.Enums;
 using HootLib;
 using Nautilus.Assets;
 using Nautilus.Handlers;
@@ -21,6 +23,11 @@ namespace DeathrunRemade.Items
         protected override Atlas.Sprite GetSprite()
         {
             return Hootils.LoadSprite("rivereelscale.png", true);
+        }
+
+        protected override bool ShouldActivateForConfig(ConfigSave config)
+        {
+            return config.PersonalCrushDepth > Difficulty3.Hard;
         }
 
         protected override void RegisterHarvestData()
