@@ -70,8 +70,8 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(CrafterLogic), nameof(CrafterLogic.ConsumeEnergy))]
         private static bool PreventFabricatorConsumption(PowerRelay powerRelay, float amount, ref bool __result)
         {
-            // Don't do anything when NoCost cheat is active.
-            if (GameModeUtils.IsCheatActive(GameModeOption.NoCost))
+            // Don't do anything when NoCost cheat is active or game mode is creative.
+            if (GameModeUtils.IsCheatActive(GameModeOption.NoCost) || (GameModeUtils.currentGameMode == GameModeOption.Creative))
                 return true;
             
             amount = ModifyConsumeEnergy(amount, IsInRadiation(powerRelay));
