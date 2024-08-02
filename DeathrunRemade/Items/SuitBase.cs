@@ -1,5 +1,6 @@
 using System.Linq;
 using DeathrunRemade.Configuration;
+using DeathrunRemade.Handlers;
 using DeathrunRemade.Objects.Enums;
 using HootLib;
 using Nautilus.Assets;
@@ -7,6 +8,7 @@ using Nautilus.Assets.Gadgets;
 using Nautilus.Assets.PrefabTemplates;
 using Nautilus.Crafting;
 using Nautilus.Handlers;
+using UnityEngine;
 
 namespace DeathrunRemade.Items
 {
@@ -54,12 +56,44 @@ namespace DeathrunRemade.Items
         {
             base.Register();
             PDAScanner.onAdd += UnlockSuitOnScanFish;
+            GameEventHandler.OnPlayerAwake += CloneExistingSuitModel;
         }
 
         public override void Unregister()
         {
             base.Unregister();
             PDAScanner.onAdd -= UnlockSuitOnScanFish;
+            GameEventHandler.OnPlayerAwake -= CloneExistingSuitModel;
+        }
+
+        /// <summary>
+        /// Add model information to the game to ensure the correct player model shows up when wearing a suit.
+        /// </summary>
+        private void CloneExistingSuitModel(Player player)
+        {
+            TechType cloneType = GetCloneType();
+            for (var slotIdx = 0; slotIdx < player.equipmentModels.Length; slotIdx++)
+            {
+                Player.EquipmentType equipmentType = player.equipmentModels[slotIdx];
+                foreach (Player.EquipmentModel model in equipmentType.equipment)
+                {
+                    if (model.techType == cloneType)
+                    {
+                        DeathrunInit._Log.Debug($"Creating new model path entry for {TechType} based on {cloneType}");
+                        Player.EquipmentModel customSuitModel = new()
+                        {
+                            // Creating a copy is required, otherwise items using the same model will turn each other off.
+                            model = Object.Instantiate(model.model),
+                            techType = TechType
+                        };
+                        player.equipmentModels[slotIdx].equipment = equipmentType.equipment.Append(customSuitModel).ToArray();
+                        DeathrunInit._Log.Debug($"Model path: {customSuitModel.model}");
+                        return;
+                    }
+                }
+            }
+            
+            DeathrunInit._Log.Warn($"Failed to create model path entry for {TechType}");
         }
 
         protected abstract void AssignTechType(PrefabInfo info);
