@@ -65,7 +65,8 @@ namespace DeathrunRemade
             
             // Registering config.
             _Config = new Config(Hootils.GetConfigFilePath(NAME), Info.Metadata);
-            _Config.RegisterModOptions(NAME, _persistentObject.transform);
+            _Config.Setup();
+            _Config.CreateModMenu(NAME, _persistentObject.transform);
 
             // Register the in-game save game of the current run.
             SaveData.Main = SaveDataHandler.RegisterSaveDataCache<SaveData>();

@@ -19,7 +19,8 @@
         <PlatformTarget>x64</PlatformTarget>
         <DefineConstants>DEBUG;</DefineConstants>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <DebugType>full</DebugType>
+        <DebugType>portable</DebugType>
+        <DebugSymbols>true</DebugSymbols>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
         <OutputPath>bin\Release\</OutputPath>
