@@ -265,7 +265,7 @@ namespace DeathrunRemade.Patches
             // This is the vanilla value.
             float playerRads = player.radiationAmount;
             // Proceed as normal if we have nothing to do.
-            if (LeakingRadiation.main == null || fxConfig == RadiationVisuals.Normal)
+            if (!IsSurfaceIrradiated() || fxConfig == RadiationVisuals.Normal)
                 return playerRads;
             
             float environmentRads = 0f;
