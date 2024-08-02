@@ -26,7 +26,14 @@ namespace DeathrunRemade.Patches
             // If the target is a creature, deny.
             Creature creature = liveMixin.GetComponent<Creature>();
             if (creature != null)
+            {
                 __result = false;
+                // Without the damage, mob drops like river eel scales do not drop. Manually call the function that drops them.
+                // Patched function is static, have to take the detour.
+                Knife knife = Player.main.guiHand.GetTool() as Knife;
+                if (knife != null)
+                    knife.GiveResourceOnDamage(liveMixin.gameObject, true, true);
+            }
         }
         
         /// <summary>
