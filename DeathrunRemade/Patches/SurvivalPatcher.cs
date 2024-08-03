@@ -67,7 +67,6 @@ namespace DeathrunRemade.Patches
         /// <summary>
         /// Enable using first aid kits even if health is full (for the nitrogen benefits)
         /// </summary>
-        [HarmonyDebug]
         [HarmonyTranspiler]
         [HarmonyPatch(typeof(Survival), nameof(Survival.Use))]
         private static IEnumerable<CodeInstruction> AlwaysAllowUsingFirstAidKits(
