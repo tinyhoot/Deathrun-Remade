@@ -134,7 +134,7 @@ namespace DeathrunRemade.Configuration
             SurfaceAir = RegisterEntry(
                 section: SectionSurvival,
                 key: nameof(SurfaceAir),
-                defaultValue: Difficulty3.Hard,
+                defaultValue: Difficulty3.Deathrun,
                 description: "The surface air is unbreathable without a filter pump or an integrated filter chip."
             ).WithChoiceOptionStringsOverride(
                 "Normal (Inactive)",
