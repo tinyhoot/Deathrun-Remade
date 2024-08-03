@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Attributes;
@@ -14,6 +15,7 @@ namespace DeathrunRemade.Patches
     {
         // The worst things can get with severely rotten food.
         private const float MaxDecomposedNitrogenMalus = 25f;
+
         private static readonly Dictionary<TechType, float> NitrogenFood = new Dictionary<TechType, float>
         {
             { TechType.Boomerang, -50f },
@@ -36,7 +38,7 @@ namespace DeathrunRemade.Patches
             // Don't consider any food which doesn't even interact with nitrogen.
             if (!TryGetNitrogenValue(eatable, out float nitrogen))
                 return;
-            
+
             if (nitrogen >= 0)
                 Player.main.GetComponent<NitrogenHandler>().AddNitrogen(nitrogen);
             else
@@ -63,6 +65,35 @@ namespace DeathrunRemade.Patches
         }
 
         /// <summary>
+        /// Enable using first aid kits even if health is full (for the nitrogen benefits)
+        /// </summary>
+        [HarmonyDebug]
+        [HarmonyTranspiler]
+        [HarmonyPatch(typeof(Survival), nameof(Survival.Use))]
+        private static IEnumerable<CodeInstruction> AlwaysAllowUsingFirstAidKits(
+            IEnumerable<CodeInstruction> instructions)
+        {
+            CodeMatcher matcher = new CodeMatcher(instructions);
+
+            // The game tries to add 50 health to the player. If more than 0.1 was added, it "properly" uses the item.
+            matcher.MatchForward(false,
+                    // Find the check where the game adds the 50 health.
+                    new CodeMatch(OpCodes.Ldc_R4, 50f),
+                    new CodeMatch(OpCodes.Callvirt, AccessTools.Method(typeof(LiveMixin), nameof(LiveMixin.AddHealth))),
+                    new CodeMatch(OpCodes.Ldc_R4, 0.1f))
+                .ThrowIfInvalid("Failed to find first aid kit health check!")
+                // Advance to just after the health adding but before the 0.1 threshold it is compared against.
+                .Advance(2)
+                // Insert a pop to discard the result of the health adding and replace it with 1, which is always bigger
+                // than 0.1, thus always evaluates to true and therefore always enables using medkits at full health.
+                .Insert(
+                    new CodeInstruction(OpCodes.Pop),
+                    new CodeInstruction(OpCodes.Ldc_R4, 1.0f));
+
+            return matcher.InstructionEnumeration();
+        }
+
+        /// <summary>
         /// Make it possible to use a first aid kit from a quick slot.
         /// </summary>
         [HarmonyPrefix]
@@ -76,7 +107,7 @@ namespace DeathrunRemade.Patches
             Survival survival = Player.main.GetComponent<Survival>();
             if (survival == null || !survival.Use(__instance._heldItem.item.gameObject))
                 return false;
-            
+
             // This is duplicated from the original method but I was not about to transpile a whole mess into that for
             // just one type of item. Refills the quickslot if we have more first aid kits in the inventory.
             __instance.refillTechType = TechType.FirstAidKit;
