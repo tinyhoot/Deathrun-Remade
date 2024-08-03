@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Reflection.Emit;
 using DeathrunRemade.Configuration;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Items;
@@ -85,6 +87,92 @@ namespace DeathrunRemade.Patches
         private static void SwimToSurfaceText(ref HintSwimToSurface __instance)
         {
             __instance.message = "Out of Air!";
+        }
+
+        /// <summary>
+        /// For some reason all oxygen from other sources is ignored if the tool is currently drawn. Disabling this
+        /// behaviour makes the air bladder work with air bubbles from the bubble plants or filtration pumps.
+        /// </summary>
+        [HarmonyTranspiler]
+        [HarmonyPatch(typeof(AirBladder), nameof(AirBladder.AddOxygen))]
+        private static IEnumerable<CodeInstruction> EnableRefillWhenDrawn(IEnumerable<CodeInstruction> instructions)
+        {
+            CodeMatcher matcher = new CodeMatcher(instructions);
+
+            matcher.MatchForward(false,
+                    new CodeMatch(OpCodes.Ldarg_0),
+                new CodeMatch(OpCodes.Call, AccessTools.PropertyGetter(typeof(PlayerTool), nameof(PlayerTool.isDrawn))))
+                .ThrowIfInvalid("Failed to find AddOxygen isDrawn call!")
+                // Replace the call to the isDrawn property with a simple "false", which always allows oxygen to work.
+                .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Ldc_I4_0))
+                .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Nop));
+
+            return matcher.InstructionEnumeration();
+        }
+
+        /// <summary>
+        /// In vanilla, air bladders refill instantly when at the surface. Delete this behaviour and insert a call
+        /// to our own function to replace it.
+        /// </summary>
+        [HarmonyTranspiler]
+        [HarmonyPatch(typeof(AirBladder), nameof(AirBladder.UpdateInflateState))]
+        private static IEnumerable<CodeInstruction> ReplaceRefill(IEnumerable<CodeInstruction> instructions)
+        {
+            CodeMatcher matcher = new CodeMatcher(instructions);
+
+            // Find the if statement where an empty bladder should get refilled when not underwater.
+            matcher.MatchForward(false,
+                    new CodeMatch(OpCodes.Ldarg_0),
+                    new CodeMatch(CodeInstruction.LoadField(typeof(AirBladder), nameof(AirBladder.inflate))),
+                    new CodeMatch(OpCodes.Ldc_I4_0),
+                    new CodeMatch(OpCodes.Callvirt),
+                    new CodeMatch(OpCodes.Ldarg_0),
+                    new CodeMatch(CodeInstruction.LoadField(typeof(AirBladder), nameof(AirBladder.inflate))))
+                .ThrowIfInvalid("Failed to find airbladder refill instructions!");
+            
+            // Delete the entire branch of this if statement, wiping the current behaviour for refilling.
+            // Nop instructions are preferred over straight-up deleting to keep the length of the function the same
+            // in case other mods use that in some way.
+            while (matcher.Opcode != OpCodes.Ret)
+            {
+                matcher.SetInstruction(new CodeInstruction(OpCodes.Nop));
+                matcher.Advance(1);
+            }
+
+            // Get back to the start of these Nop instructions and replace the first two with a call to our own
+            // refilling logic.
+            matcher
+                .Start()
+                .MatchForward(false,
+                    new CodeMatch(OpCodes.Nop),
+                    new CodeMatch(OpCodes.Nop),
+                    new CodeMatch(OpCodes.Nop))
+                .ThrowIfInvalid("Failed to find airbladder replaced nop instructions!")
+                .SetInstructionAndAdvance(new CodeInstruction(OpCodes.Ldarg_0))
+                .SetInstructionAndAdvance(CodeInstruction.Call(typeof(BreathingPatcher), nameof(RefillAirBladder)));
+
+            return matcher.InstructionEnumeration();
+        }
+
+        private static void RefillAirBladder(AirBladder bladder)
+        {
+            // Refuse to fill the air bladder in a poisonous atmosphere.
+            if (!CanBreathe(Player.main, SaveData.Main.Config))
+                return;
+            
+            // Start playing the inflating sound.
+            if (!bladder.inflate.playing)
+                bladder.inflate.Play();
+            
+            // Mirrored from the original method.
+            bladder.deflating = false;
+            bladder.applyBuoyancy = false;
+            
+            // Instead of this, see the other air bladder transpiler above which enables OxygenManager.AddOxygen().
+            // bladder.oxygen += 30f * Time.deltaTime;
+            // if (bladder.oxygen > bladder.oxygenCapacity)
+            //     bladder.oxygen = bladder.oxygenCapacity;
+            bladder.animator.SetFloat(AirBladder.kAnimInflate, bladder.oxygen / bladder.oxygenCapacity);
         }
         
         /// <summary>
