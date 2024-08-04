@@ -21,7 +21,8 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(EscapePod), nameof(EscapePod.Awake))]
         public static void PatchAwake(EscapePod __instance)
         {
-            __instance.gameObject.EnsureComponent<EscapePodSinker>();
+            if (SaveData.Main.Config.SinkLifepod)
+                __instance.gameObject.EnsureComponent<EscapePodSinker>();
         }
 
         /// <summary>
@@ -31,7 +32,8 @@ namespace DeathrunRemade.Patches
         [HarmonyPatch(typeof(EscapePod), nameof(EscapePod.StopIntroCinematic))]
         private static void SinkNewbornPod(EscapePod __instance)
         {
-            __instance.gameObject.GetComponent<EscapePodSinker>().SinkPod();
+            if (SaveData.Main.Config.SinkLifepod)
+                __instance.gameObject.GetComponent<EscapePodSinker>().SinkPod();
         }
 
         /// <summary>
