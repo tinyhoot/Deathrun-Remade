@@ -1,4 +1,6 @@
 {
+  "dr_savefile_invalid": "Non-Deathrun saves cannot be loaded while Deathrun is active.",
+  
   "deathrunremade_battery": "Lithium Battery",
   "Tooltip_deathrunremade_battery": "Advanced rechargeable mobile power source.",
   "deathrunremade_powercell": "Lithium Power Cell",
