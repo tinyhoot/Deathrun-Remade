@@ -8,8 +8,8 @@ and the latest version of Subnautica.
 
 ## Installation
 
-- Install [BepInEx](https://submodica.xyz/mods/sn1/141).
-- Install [Nautilus](https://submodica.xyz/mods/sn1/250).
+- Install [BepInEx](https://www.nexusmods.com/subnautica/mods/1108).
+- Install [Nautilus](https://www.nexusmods.com/subnautica/mods/1262).
 - Unzip this mod into your `Subnautica/BepInEx` directory.
 - Enjoy!
 
