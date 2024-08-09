@@ -108,6 +108,7 @@
         <Compile Include="Patches\CauseOfDeathPatcher.cs" />
         <Compile Include="Patches\CompassPatcher.cs" />
         <Compile Include="Patches\CountdownPatcher.cs" />
+        <Compile Include="Patches\CraftTreePatcher.cs" />
         <Compile Include="Patches\DamageTakenPatcher.cs" />
         <Compile Include="Patches\EscapePodPatcher.cs" />
         <Compile Include="Patches\ExplosionPatcher.cs" />
