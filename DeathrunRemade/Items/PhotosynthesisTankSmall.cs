@@ -20,7 +20,7 @@ namespace DeathrunRemade.Items
 
         protected override TechType GetCloneType()
         {
-            return TechType.PlasteelTank;
+            return TechType.Tank;
         }
 
         protected override RecipeData GetRecipe()
