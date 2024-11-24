@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using DeathrunRemade.Handlers;
-using DeathrunRemade.Items;
 using DeathrunRemade.Objects.Attributes;
 using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
@@ -9,23 +8,10 @@ using HarmonyLib;
 namespace DeathrunRemade.Patches
 {
     [HarmonyPatch]
-    [PatchCategory(ApplyPatch.Always)]
+    [PatchCategory(ApplyPatch.Config)]
     internal class CompassPatcher
     {
         private static bool _compassHasInitialised;
-        
-        /// <summary>
-        /// Ensure that FilterChip is also counted as a compass.
-        /// </summary>
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(Equipment), nameof(Equipment.GetCount))]
-        private static void CountFilterChip(ref Equipment __instance, TechType techType, ref int __result)
-        {
-            if (!techType.Equals(TechType.Compass) || __result > 0)
-                return;
-            
-            __result = __instance.equippedCount.GetOrDefault(FilterChip.s_TechType, 0);
-        }
 
         /// <summary>
         /// Replace the compass' depth class with our custom solution.

@@ -7,6 +7,7 @@ using DeathrunRemade.Configuration;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using HootLib;
+using HootLib.Objects;
 using Nautilus.Handlers;
 using Newtonsoft.Json;
 

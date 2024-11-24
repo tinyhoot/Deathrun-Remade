@@ -3,7 +3,6 @@ using DeathrunRemade.Handlers;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using DeathrunRemade.Patches;
-using Nautilus.Handlers;
 using Nautilus.Options;
 using Story;
 using TMPro;
@@ -11,7 +10,7 @@ using UnityEngine;
 
 namespace DeathrunRemade.Components
 {
-    internal class ExplosionCountdown : MonoBehaviour
+    internal class ExplosionCountdown : MonoBehaviour, IStoryGoalListener
     {
         private static ExplosionCountdown _Main;
         public GameObject contentHolder;
@@ -20,6 +19,8 @@ namespace DeathrunRemade.Components
         public TextMeshProUGUI countdownWarning;
         // The time at which the Aurora is schedule to explode.
         private float _explosionTime;
+        // The key for the storygoal that enables the countdown.
+        private const string EnablingStoryGoal = "Story_AuroraWarning3";
         
         /// <summary>
         /// Create the Aurora explosion countdown from components belonging to the Sunbeam Arrival countdown.
@@ -42,6 +43,7 @@ namespace DeathrunRemade.Components
             countdown.countdownTimer = sunbeam.countdownText;
             // Add an extra text field at the bottom of the timer.
             var warningObject = Instantiate(countdown.countdownTitle.gameObject, countdown.contentHolder.transform, false);
+            warningObject.name = "Warning";
             countdown.countdownWarning = warningObject.GetComponent<TextMeshProUGUI>();
             // Make sure the object holding all the content has its positional centre set to the upper left corner.
             countdown.contentHolder.GetComponent<RectTransform>().pivot = new Vector2(0f, 1f);
@@ -72,10 +74,12 @@ namespace DeathrunRemade.Components
             SetWarning($"Shockwave up to {ExplosionPatcher.GetExplosionDepth(SaveData.Main.Config.ExplosionDepth)}m deep!");
             countdownWarning.gameObject.SetActive(SaveData.Main.Config.ExplosionDepth != Difficulty3.Normal);
 
+            // It would be easier to have this registered through Nautilus, but there is no way to undo such a
+            // registration which leads to a nullref on repeat loads.
             if (StoryGoalManager.main.IsGoalComplete("Story_AuroraWarning3"))
                 EnableCountdown();
             else
-                StoryGoalHandler.RegisterCustomEvent("Story_AuroraWarning3", EnableCountdown);
+                StoryGoalManager.main.AddListener(this);
         }
 
         /// <summary>
@@ -103,6 +107,8 @@ namespace DeathrunRemade.Components
         {
             // Unregister the event to avoid forever-references.
             GameEventHandler.OnMainMenuLoaded -= OnMainMenuLoaded;
+            // This is a hashset. Removing is safe even if the listener was never added.
+            StoryGoalManager.main.RemoveListener(this);
         }
 
         /// <summary>
@@ -149,6 +155,15 @@ namespace DeathrunRemade.Components
         public void SetWarning(string warning)
         {
             countdownWarning.text = warning;
+        }
+
+        /// <summary>
+        /// Get notified when the story has progressed far enough to enable this timer.
+        /// </summary>
+        public void NotifyGoalComplete(string key)
+        {
+            if (key == EnablingStoryGoal)
+                EnableCountdown();
         }
     }
 }

@@ -96,7 +96,6 @@
         <Compile Include="Objects\LegacyStats.cs" />
         <Compile Include="Objects\Message.cs" />
         <Compile Include="Objects\JsonTechData.cs" />
-        <Compile Include="Objects\NautilusShell.cs" />
         <Compile Include="Objects\RunStats.cs" />
         <Compile Include="Objects\SaveData.cs" />
         <Compile Include="Objects\StartLocation.cs" />
@@ -113,6 +112,7 @@
         <Compile Include="Patches\EscapePodPatcher.cs" />
         <Compile Include="Patches\ExplosionPatcher.cs" />
         <Compile Include="Patches\FarmingChallengePatcher.cs" />
+        <Compile Include="Patches\FilterChipPatcher.cs" />
         <Compile Include="Patches\FilterPumpPatcher.cs" />
         <Compile Include="Patches\FoodChallengePatcher.cs" />
         <Compile Include="Patches\NitrogenPatcher.cs" />
@@ -163,7 +163,7 @@
       <Content Include="Assets\thermophilesample.psd" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="Subnautica.Nautilus" Version="1.0.0-pre.32" PrivateAssets="All" />
+      <PackageReference Include="Subnautica.Nautilus" Version="1.0.0-pre.33" PrivateAssets="All" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <Import Project="..\HootLib-Subnautica\HootLib\HootLib.projitems" Label="Shared" />

@@ -1,7 +1,7 @@
-using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Attributes;
 using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
+using HootLib.Objects;
 
 namespace DeathrunRemade.Patches
 {
