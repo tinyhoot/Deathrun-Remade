@@ -112,6 +112,7 @@
         <Compile Include="Patches\EscapePodPatcher.cs" />
         <Compile Include="Patches\ExplosionPatcher.cs" />
         <Compile Include="Patches\FarmingChallengePatcher.cs" />
+        <Compile Include="Patches\FilterChipPatcher.cs" />
         <Compile Include="Patches\FilterPumpPatcher.cs" />
         <Compile Include="Patches\FoodChallengePatcher.cs" />
         <Compile Include="Patches\NitrogenPatcher.cs" />

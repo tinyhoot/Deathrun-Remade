@@ -146,6 +146,8 @@ namespace DeathrunRemade
                 // each option only has 1-2 patching classes. Category-based unpatching is convenient enough.
                 if (config.CreatureAggression != Difficulty4.Normal)
                     harmony.PatchAll(typeof(AggressionPatcher));
+                if (config.PersonalCrushDepth != Difficulty3.Normal)
+                    harmony.PatchAll(typeof(CompassPatcher));
                 if (config.DamageTaken != DamageDifficulty.Normal)
                     harmony.PatchAll(typeof(DamageTakenPatcher));
                 if (config.SurfaceAir != Difficulty3.Normal)
