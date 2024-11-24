@@ -26,12 +26,12 @@ using ILogHandler = HootLib.Interfaces.ILogHandler;
 namespace DeathrunRemade
 {
     [BepInPlugin(GUID, NAME, VERSION)]
-    [BepInDependency("com.snmodding.nautilus", "1.0.0.29")]
+    [BepInDependency("com.snmodding.nautilus", "1.0.0.33")]
     internal class DeathrunInit : BaseUnityPlugin
     {
         public const string GUID = "com.github.tinyhoot.DeathrunRemade";
         public const string NAME = "Deathrun Remade";
-        public const string VERSION = "1.0.4";
+        public const string VERSION = "1.0.5";
 
         internal static Config _Config;
         internal static ILogHandler _Log;
