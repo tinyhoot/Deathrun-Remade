@@ -95,6 +95,8 @@ namespace DeathrunRemade.Handlers
         public void StartNewRun(SaveData save)
         {
             int id = GetNewRunID();
+            // Immediately save to keep track of the number of attempted runs, not just the number of deaths.
+            _ = ModStats.SaveAsync();
             _log.Info($"Starting new run with id {id}");
             // The stats themselves do not need to be initialised because they are contained in a struct set up in
             // tandem with the save file. The struct defaults to values recognised as the player having done nothing.
