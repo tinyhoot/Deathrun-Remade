@@ -57,7 +57,7 @@ namespace DeathrunRemade.Components.RunStatsUI
             causeOfDeath.text = Stats.causeOfDeath;
             deaths.text = $"{Stats.deaths}";
             scoreMult.text = $"{Stats.scoreMult:F1}x";
-            score.text = $"{Stats.scoreBase * Stats.scoreMult:F0}";
+            score.text = $"{Stats.scoreTotal:F0}";
         }
     }
 }
