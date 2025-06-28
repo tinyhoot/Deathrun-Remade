@@ -38,6 +38,16 @@ namespace DeathrunRemade.Objects.Enums
     internal static class RunAchievementsExtensions
     {
         /// <summary>
+        /// Check whether the player has not unlocked any part of a flag. Useful for checking with flags that combine
+        /// multiple conditions into one, like the No Vehicle Challenge.
+        /// </summary>
+        public static bool IsCompletelyLocked(this RunAchievements achievements, RunAchievements flag)
+        {
+            // If this zeroes out it means none of the flags checked for were active.
+            return (achievements & flag) == RunAchievements.None;
+        }
+        
+        /// <summary>
         /// Check whether the player has managed to unlock a specific flag.
         /// </summary>
         public static bool IsUnlocked(this RunAchievements achievements, RunAchievements flag)
