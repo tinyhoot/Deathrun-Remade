@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using BepInEx;
 using DeathrunRemade.Components;
 using DeathrunRemade.Objects;
 using HootLib;
@@ -38,6 +39,9 @@ namespace DeathrunRemade.Handlers
         private void Initialise(DeathrunStats stats)
         {
             ModStats = stats;
+            if (stats.version != DeathrunInit.VERSION)
+                MigrateStats();
+            
             // Only if we've never imported a legacy file before, try to do so.
             if (!ModStats.hasImportedLegacyFile)
             {
@@ -48,6 +52,24 @@ namespace DeathrunRemade.Handlers
             {
                 _log.Info("Skipping legacy run importing, already did so previously.");
             }
+        }
+        
+        /// <summary>
+        /// Migrate the stats from a prior version of this mod.
+        /// </summary>
+        private void MigrateStats()
+        {
+            _log.Info($"Migrating best runs (v{ModStats.version} --> v{DeathrunInit.VERSION})");
+            
+            // Recalculate to fix score calculations from prior versions.
+            for (var index = 0; index < ModStats.bestRuns.Count; index++)
+            {
+                var run = ModStats.bestRuns[index];
+                ScoreHandler.UpdateScore(ref run);
+                ModStats.bestRuns[index] = run;
+            }
+
+            _ = ModStats.SaveAsync();
         }
 
         /// <summary>
@@ -214,12 +236,12 @@ namespace DeathrunRemade.Handlers
         private bool TryFindLegacyStatsFile(out FileInfo legacyFile)
         {
             // First, try the modern BepInEx approach.
-            legacyFile = new FileInfo(BepInEx.Paths.PluginPath + "/DeathRun" + LegacyFileName);
+            legacyFile = new FileInfo(Paths.PluginPath + "/DeathRun" + LegacyFileName);
             if (legacyFile.Exists)
                 return true;
             
             // Or try the ancient QMods way.
-            string gameDirectory = new FileInfo(BepInEx.Paths.BepInExRootPath).Directory?.Parent?.FullName;
+            string gameDirectory = new FileInfo(Paths.BepInExRootPath).Directory?.Parent?.FullName;
             legacyFile = new FileInfo(gameDirectory + "/QMods/DeathRun" + LegacyFileName);
             if (legacyFile.Exists)
                 return true;
