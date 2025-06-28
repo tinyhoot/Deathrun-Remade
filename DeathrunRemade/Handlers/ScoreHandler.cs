@@ -101,14 +101,13 @@ namespace DeathrunRemade.Handlers
         /// <summary>
         /// Recalculate and update the scoring for the given run.
         /// </summary>
-        /// <returns>The total score for the run.</returns>
         public void UpdateScore(ref RunStats stats)
         {
             _log.Debug($"Updating score for run with id {stats.id}");
             stats.scoreBase = CalculateScoreBase(stats);
             // Offset vehicle achievements for no vehicle runs.
-            if (stats.victory && !stats.achievements.IsUnlocked(RunAchievements.AllVehicles))
-                stats.scoreBase += GetNoVehicleChallengeBonus();
+            if (stats.victory && (stats.config.NoVehicleChallenge || stats.achievements.IsCompletelyLocked(RunAchievements.AllVehicles)))
+                stats.scoreBase += GetNoVehicleChallengeBonus(stats.achievements);
             _log.Debug($"Base score: {stats.scoreBase}");
             
             stats.scoreMult = stats.isLegacy ? CalculateLegacyScoreMult(stats.legacySettingsCount) : CalculateScoreMultiplier(stats.config);
@@ -160,6 +159,8 @@ namespace DeathrunRemade.Handlers
         {
             float bonus = 0f;
 
+            // This "double dips", since the no vehicle bonus is already included in the base score. But this is such
+            // a feat that giving it both a scaling and non-scaling bonus seems fair.
             bonus += config.NoVehicleChallenge ? BigBonus : 0f;
             bonus += config.FarmingChallenge switch
             {
@@ -316,11 +317,18 @@ namespace DeathrunRemade.Handlers
         /// <summary>
         /// Convenience method to get the score needed for the no vehicle challenge to offset vehicle achievements.
         /// </summary>
-        private static float GetNoVehicleChallengeBonus()
+        private static float GetNoVehicleChallengeBonus(RunAchievements achievements)
         {
-            float score = _achievementRewards[RunAchievements.Seamoth];
-            score += _achievementRewards[RunAchievements.Exosuit];
-            score += _achievementRewards[RunAchievements.Cyclops];
+            float score = 0f;
+            // Award the score normally given for crafting each vehicle, but only if the player does not already
+            // have it (from crafting vehicles with enzymes after the challenge is over).
+            if (achievements.IsCompletelyLocked(RunAchievements.Seamoth))
+                score += _achievementRewards[RunAchievements.Seamoth];
+            if (achievements.IsCompletelyLocked(RunAchievements.Exosuit))
+                score += _achievementRewards[RunAchievements.Exosuit];
+            if (achievements.IsCompletelyLocked(RunAchievements.Cyclops))
+                score += _achievementRewards[RunAchievements.Cyclops];
+            
             score += BigBonus;
             return score;
         }
