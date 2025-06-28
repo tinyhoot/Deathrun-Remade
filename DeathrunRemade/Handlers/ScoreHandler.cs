@@ -24,14 +24,17 @@ namespace DeathrunRemade.Handlers
     /// </summary>
     internal class ScoreHandler
     {
+        // Score given for finishing very quickly.
+        private const float SpeedBonus = 10000f;
+        private const float MinSpeedBonus = 1000f;
+        private const float SpeedGraceHours = 5f;
+        private const float SpeedMaxHours = 15f;
         // Score given for every "segment" of time survived.
-        private const float TimeScoreBase = 2000f;
+        private const float SurvivalScoreBase = 1000f;
         // Score awarded for reaching the very bottom.
         private const float MaxDepthBonus = 5000f;
-        // Best-case score awarded for the fastest possible victory.
-        private const float VictoryBonus = 20000f;
-        private const float VictoryGraceHours = 5f;
-        private const float VictoryMaxHours = 15f;
+        // Extra score awarded for victory.
+        private const float VictoryBonus = 10000f;
         // The additive score multipliers for each difficulty level.
         private const float HardMult = 0.1f;
         private const float DeathrunMult = 0.2f;
@@ -107,22 +110,16 @@ namespace DeathrunRemade.Handlers
             stats.scoreBase = CalculateScoreBase(stats);
             // Offset vehicle achievements for no vehicle runs.
             if (stats.victory && (stats.config.NoVehicleChallenge || stats.achievements.IsCompletelyLocked(RunAchievements.AllVehicles)))
-                stats.scoreBase += GetNoVehicleChallengeBonus(stats.achievements);
+                stats.scoreBase += GetNoVehicleChallengeOffset(stats.achievements);
             _log.Debug($"Base score: {stats.scoreBase}");
+            
+            stats.scoreBonus = CalculateScoreBonus(stats.config, stats.victory, stats.gameMode);
+            _log.Debug($"Bonus: {stats.scoreBonus}");
             
             stats.scoreMult = stats.isLegacy ? CalculateLegacyScoreMult(stats.legacySettingsCount) : CalculateScoreMultiplier(stats.config);
             _log.Debug($"Multiplier: {stats.scoreMult}");
             
-            stats.scoreBonus = CalculateScoreBonus(stats.config);
-            _log.Debug($"Bonus: {stats.scoreBonus}");
-            // Extra bonus for finishing the game.
-            stats.scoreBonus += CalculateVictoryScore(stats.victory, (float)stats.time);
-            // Extra bonus for playing on hardcore.
-            if ((stats.gameMode & GameModeOption.Hardcore) == GameModeOption.Hardcore)
-                stats.scoreBonus += HardcoreBonus;
-            _log.Debug($"With victory and hardcore: {stats.scoreBonus}");
-
-            float total = (stats.scoreBase * stats.scoreMult) + stats.scoreBonus;
+            float total = (stats.scoreBase + stats.scoreBonus) * stats.scoreMult;
             total *= GetDeathMultiplier(stats.deaths);
             _log.Debug($"Total: {total}");
             
@@ -136,26 +133,35 @@ namespace DeathrunRemade.Handlers
         /// </summary>
         public static float CalculateScoreBase(RunStats stats)
         {
-            // Time score. Diminishes greatly as time goes on. Points for every log-base 2 of hours lived.
+            float hours = (float)(stats.time / 3600.0);
+            // Speed score. Rewards finishing as fast as possible, but tapers off with more time used.
+            // Maximum score is achievable within the grace hours, and zero points is reached at max hours.
+            float speedScore = 0f;
+            if (stats.victory)
+            {
+                float speedMult = 1f - Mathf.Clamp01((hours - SpeedGraceHours) / SpeedMaxHours);
+                speedScore = speedMult * (SpeedBonus - MinSpeedBonus) + MinSpeedBonus;
+            }
+            
+            // Survival score. Rewards time survived but grows slower as time goes on. Points for every log-base2 hours
+            // lived. Capped so that it can never outpace the bonus for speed.
             // E.g. 1 hour = 1, 2 hours = 2, 4 hours = 3, 8 hours = 4, etc.
-            float hours = (float)(stats.time / 3600);
-            float adjustedHours = Mathf.Log(hours + 1, 2f);
-            float timeScore = adjustedHours * TimeScoreBase;
-            // _log.Debug($"--Time lived: {timeScore}");
+            float logHours = Mathf.Log(hours + 1, 2f);
+            float survivalScore = Mathf.Min(logHours * SurvivalScoreBase, SpeedBonus * 0.5f);
+            
             float achievements = CalculateAchievementScore(stats.achievements);
-            // _log.Debug($"--Achievements: {achievements}");
-            // Depth score is linear function of how deep the player managed to get out of the total possible.
+            
+            // Depth score is a linear function of how deep the player managed to get out of the total possible.
             float depthMult = Mathf.Clamp(stats.depthReached, 0f, 1600f) / 1600f;
             float depthScore = depthMult * MaxDepthBonus;
-            // _log.Debug($"--Depth: {depthScore}");
             
-            return timeScore + achievements + depthScore;
+            return speedScore + survivalScore + achievements + depthScore;
         }
 
         /// <summary>
         /// Get the flat bonus the player earns for their config settings.
         /// </summary>
-        public static float CalculateScoreBonus(ConfigSave config)
+        public static float CalculateScoreBonus(ConfigSave config, bool victory, GameModeOption gameMode)
         {
             float bonus = 0f;
 
@@ -189,6 +195,13 @@ namespace DeathrunRemade.Handlers
                 _ => 0f
             };
             bonus += config.PacifistChallenge ? BigBonus : 0f;
+            
+            // Extra bonus for finishing the game.
+            if (victory)
+                bonus += VictoryBonus;
+            // Extra bonus for playing on hardcore.
+            if ((gameMode & GameModeOption.Hardcore) == GameModeOption.Hardcore)
+                bonus += HardcoreBonus;
 
             return bonus;
         }
@@ -276,23 +289,6 @@ namespace DeathrunRemade.Handlers
         }
 
         /// <summary>
-        /// Calculate the victory score awarded based on how long it took to achieve. Shorter runs are worth more.
-        /// </summary>
-        private static float CalculateVictoryScore(bool victory, float time)
-        {
-            if (!victory)
-                return 0f;
-
-            float hoursTaken = time / 3600f;
-            // There is a grace period before the score starts to taper off.
-            hoursTaken -= VictoryGraceHours;
-            float malus = hoursTaken / (VictoryMaxHours - VictoryGraceHours);
-            malus = Mathf.Clamp01(malus);
-            // The player can "lose" up to half the maximum victory score reward based on time.
-            return VictoryBonus - (VictoryBonus * 0.5f * malus);
-        }
-
-        /// <summary>
         /// Get the (score-reducing) multiplier for the number of times the player died. Punishing at first but
         /// increases more slowly with more and more deaths. The first death is free!
         /// </summary>
@@ -315,9 +311,10 @@ namespace DeathrunRemade.Handlers
         }
 
         /// <summary>
-        /// Convenience method to get the score needed for the no vehicle challenge to offset vehicle achievements.
+        /// Get the score needed for the no vehicle challenge to offset vehicle achievements so that going for this
+        /// challenge can never yield a lower score than if the player had just made the vehicles instead.
         /// </summary>
-        private static float GetNoVehicleChallengeBonus(RunAchievements achievements)
+        private static float GetNoVehicleChallengeOffset(RunAchievements achievements)
         {
             float score = 0f;
             // Award the score normally given for crafting each vehicle, but only if the player does not already
@@ -329,7 +326,6 @@ namespace DeathrunRemade.Handlers
             if (achievements.IsCompletelyLocked(RunAchievements.Cyclops))
                 score += _achievementRewards[RunAchievements.Cyclops];
             
-            score += BigBonus;
             return score;
         }
     }
