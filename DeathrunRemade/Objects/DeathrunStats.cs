@@ -50,7 +50,7 @@ namespace DeathrunRemade.Objects
             var settings = GetSerializerSettings();
             try
             {
-                StreamReader reader = new StreamReader(fileName);
+                using StreamReader reader = new StreamReader(fileName);
                 string json = await reader.ReadToEndAsync();
                 return JsonConvert.DeserializeObject<DeathrunStats>(json, settings);
             }
