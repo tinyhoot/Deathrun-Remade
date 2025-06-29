@@ -50,6 +50,7 @@
         <Compile Include="Components\RunStatsUI\RunStatsWindow.cs" />
         <Compile Include="Components\RunStatsUI\RunStatsRow.cs" />
         <Compile Include="Configuration\Config.cs" />
+        <Compile Include="Configuration\ConfigPresets.cs" />
         <Compile Include="Configuration\ConfigSave.cs" />
         <Compile Include="Configuration\ScoreMultPreviewText.cs" />
         <Compile Include="DeathrunAPI.cs" />
@@ -131,6 +132,10 @@
     <ItemGroup>
       <Content Include="Assets\DeathrunStarts.csv" />
       <Content Include="Assets\Localization\English.json" />
+      <Content Include="Assets\Presets\Beginner Friendly.json" />
+      <Content Include="Assets\Presets\Default.json" />
+      <Content Include="Assets\Presets\Max Difficulty.json" />
+      <Content Include="Assets\Presets\No Bends or Power Changes.json" />
       <Content Include="Assets\RecipeChanges.json" />
       <Content Include="Assets\safedepthhud" />
       <Content Include="Assets\ScanNumberChanges.json" />

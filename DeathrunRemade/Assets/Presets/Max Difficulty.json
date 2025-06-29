@@ -1,0 +1,142 @@
+[
+  {
+    "Section": "Survival",
+    "Key": "PersonalCrushDepth",
+    "Value": "Deathrun"
+  },
+  {
+    "Section": "Survival",
+    "Key": "DamageTaken",
+    "Value": "Kharaa"
+  },
+  {
+    "Section": "Survival",
+    "Key": "NitrogenBends",
+    "Value": "Deathrun"
+  },
+  {
+    "Section": "Survival",
+    "Key": "SurfaceAir",
+    "Value": "Deathrun"
+  },
+  {
+    "Section": "Survival",
+    "Key": "AlienBaseSafety",
+    "Value": "false"
+  },
+  {
+    "Section": "Survival",
+    "Key": "SpecialAirTanks",
+    "Value": "false"
+  },
+  {
+    "Section": "Survival",
+    "Key": "StartLocation",
+    "Value": "Random"
+  },
+  {
+    "Section": "Survival",
+    "Key": "SinkLifepod",
+    "Value": "true"
+  },
+  {
+    "Section": "Survival",
+    "Key": "ToppleLifepod",
+    "Value": "true"
+  },
+  {
+    "Section": "Environment",
+    "Key": "CreatureAggression",
+    "Value": "Kharaa"
+  },
+  {
+    "Section": "Environment",
+    "Key": "WaterMurkiness",
+    "Value": "Darkest"
+  },
+  {
+    "Section": "Environment",
+    "Key": "ExplosionDepth",
+    "Value": "Deathrun"
+  },
+  {
+    "Section": "Environment",
+    "Key": "ExplosionTime",
+    "Value": "Short"
+  },
+  {
+    "Section": "Environment",
+    "Key": "RadiationDepth",
+    "Value": "Kharaa"
+  },
+  {
+    "Section": "Environment",
+    "Key": "RadiationFX",
+    "Value": "Chernobyl"
+  },
+  {
+    "Section": "Costs",
+    "Key": "ToolCosts",
+    "Value": "Kharaa"
+  },
+  {
+    "Section": "Costs",
+    "Key": "VehicleCosts",
+    "Value": "Kharaa"
+  },
+  {
+    "Section": "Costs",
+    "Key": "ScansRequired",
+    "Value": "Kharaa"
+  },
+  {
+    "Section": "Costs",
+    "Key": "BatteryCosts",
+    "Value": "Kharaa"
+  },
+  {
+    "Section": "Costs",
+    "Key": "BatteryCapacity",
+    "Value": "Kharaa"
+  },
+  {
+    "Section": "Costs",
+    "Key": "PowerCosts",
+    "Value": "Kharaa"
+  },
+  {
+    "Section": "Costs",
+    "Key": "VehicleExitPowerLoss",
+    "Value": "Kharaa"
+  },
+  {
+    "Section": "Challenges",
+    "Key": "FoodChallenge",
+    "Value": "Vegan"
+  },
+  {
+    "Section": "Challenges",
+    "Key": "FarmingChallenge",
+    "Value": "Deathrun"
+  },
+  {
+    "Section": "Challenges",
+    "Key": "IslandFoodChallenge",
+    "Value": "Never"
+  },
+  {
+    "Section": "Challenges",
+    "Key": "FilterPumpChallenge",
+    "Value": "Deathrun"
+  },
+  {
+    "Section": "Challenges",
+    "Key": "NoVehicleChallenge",
+    "Value": "true"
+  },
+  {
+    "Section": "Challenges",
+    "Key": "PacifistChallenge",
+    "Value": "true"
+  }
+]
