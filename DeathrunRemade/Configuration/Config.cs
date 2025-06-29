@@ -85,7 +85,7 @@ namespace DeathrunRemade.Configuration
             using CsvParser parser = new CsvParser(Hootils.GetAssetHandle("DeathrunStarts.csv"));
             _startLocations = parser.ParseAllLines<StartLocation>().ToList();
             // Add two extra options which aren't explicit spawn locations. They'll need special handling later on.
-            // _startLocations.Insert(0, new StartLocation("Vanilla", 0, 0, 0));
+            _startLocations.Insert(0, new StartLocation("Vanilla", 0, 0, 0));
             _startLocations.Insert(1, new StartLocation("Random", 0, 0, 0));
             
             // Ensure the presets are always ready.
@@ -180,7 +180,8 @@ namespace DeathrunRemade.Configuration
                 section: SectionSurvival,
                 key: nameof(SinkLifepod),
                 defaultValue: true,
-                description: "Make the lifepod sink to the bottom of the ocean."
+                description: "Make the lifepod sink to the bottom of the ocean. Do NOT use this with vanilla start " +
+                             "location or your pod may get stuck in the floor!"
             ).WithDescription("Sink Lifepod");
             ToppleLifepod = RegisterEntry(
                 section: SectionSurvival,
