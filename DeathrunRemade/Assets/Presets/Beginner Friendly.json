@@ -1,0 +1,142 @@
+[
+  {
+    "Section": "Survival",
+    "Key": "PersonalCrushDepth",
+    "Value": "Hard"
+  },
+  {
+    "Section": "Survival",
+    "Key": "DamageTaken",
+    "Value": "Hard"
+  },
+  {
+    "Section": "Survival",
+    "Key": "NitrogenBends",
+    "Value": "Hard"
+  },
+  {
+    "Section": "Survival",
+    "Key": "SurfaceAir",
+    "Value": "Hard"
+  },
+  {
+    "Section": "Survival",
+    "Key": "AlienBaseSafety",
+    "Value": "true"
+  },
+  {
+    "Section": "Survival",
+    "Key": "SpecialAirTanks",
+    "Value": "true"
+  },
+  {
+    "Section": "Survival",
+    "Key": "StartLocation",
+    "Value": "Random"
+  },
+  {
+    "Section": "Survival",
+    "Key": "SinkLifepod",
+    "Value": "true"
+  },
+  {
+    "Section": "Survival",
+    "Key": "ToppleLifepod",
+    "Value": "true"
+  },
+  {
+    "Section": "Environment",
+    "Key": "CreatureAggression",
+    "Value": "Normal"
+  },
+  {
+    "Section": "Environment",
+    "Key": "WaterMurkiness",
+    "Value": "Normal"
+  },
+  {
+    "Section": "Environment",
+    "Key": "ExplosionDepth",
+    "Value": "Hard"
+  },
+  {
+    "Section": "Environment",
+    "Key": "ExplosionTime",
+    "Value": "Long"
+  },
+  {
+    "Section": "Environment",
+    "Key": "RadiationDepth",
+    "Value": "Hard"
+  },
+  {
+    "Section": "Environment",
+    "Key": "RadiationFX",
+    "Value": "Normal"
+  },
+  {
+    "Section": "Costs",
+    "Key": "ToolCosts",
+    "Value": "Hard"
+  },
+  {
+    "Section": "Costs",
+    "Key": "VehicleCosts",
+    "Value": "Hard"
+  },
+  {
+    "Section": "Costs",
+    "Key": "ScansRequired",
+    "Value": "Normal"
+  },
+  {
+    "Section": "Costs",
+    "Key": "BatteryCosts",
+    "Value": "Hard"
+  },
+  {
+    "Section": "Costs",
+    "Key": "BatteryCapacity",
+    "Value": "Hard"
+  },
+  {
+    "Section": "Costs",
+    "Key": "PowerCosts",
+    "Value": "Hard"
+  },
+  {
+    "Section": "Costs",
+    "Key": "VehicleExitPowerLoss",
+    "Value": "Normal"
+  },
+  {
+    "Section": "Challenges",
+    "Key": "FoodChallenge",
+    "Value": "Omnivore"
+  },
+  {
+    "Section": "Challenges",
+    "Key": "FarmingChallenge",
+    "Value": "Normal"
+  },
+  {
+    "Section": "Challenges",
+    "Key": "IslandFoodChallenge",
+    "Value": "Always"
+  },
+  {
+    "Section": "Challenges",
+    "Key": "FilterPumpChallenge",
+    "Value": "Normal"
+  },
+  {
+    "Section": "Challenges",
+    "Key": "NoVehicleChallenge",
+    "Value": "false"
+  },
+  {
+    "Section": "Challenges",
+    "Key": "PacifistChallenge",
+    "Value": "false"
+  }
+]

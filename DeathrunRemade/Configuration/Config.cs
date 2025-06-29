@@ -11,6 +11,7 @@ using DeathrunRemade.Objects.Enums;
 using DeathrunRemade.Patches;
 using HootLib;
 using HootLib.Configuration;
+using Nautilus.Options;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,11 +20,14 @@ namespace DeathrunRemade.Configuration
     internal class Config : HootConfig
     {
         // Section Keys. Intentionally static readonly to enable quick equality checks by reference.
+        public static readonly string SectionPresets = "Presets";
         public static readonly string SectionChallenges = "Challenges";
         public static readonly string SectionCosts = "Costs";
         public static readonly string SectionEnvironment = "Environment";
         public static readonly string SectionSurvival = "Survival";
         public static readonly string SectionUI = "UI";
+
+        public ConfigEntryWrapper<string> SelectedPreset;
 
         // Survival
         public ConfigEntryWrapper<Difficulty3> PersonalCrushDepth;
@@ -83,10 +87,21 @@ namespace DeathrunRemade.Configuration
             // Add two extra options which aren't explicit spawn locations. They'll need special handling later on.
             // _startLocations.Insert(0, new StartLocation("Vanilla", 0, 0, 0));
             _startLocations.Insert(1, new StartLocation("Random", 0, 0, 0));
+            
+            // Ensure the presets are always ready.
+            ConfigPresets.LoadPresetFiles();
         }
 
         protected override void RegisterOptions()
         {
+            SelectedPreset = RegisterEntry(
+                section: SectionPresets,
+                key: nameof(SelectedPreset),
+                defaultValue: "Default",
+                description: "Change your preset here.",
+                new AcceptableValueList<string>(ConfigPresets.GetPresetNames())
+            ).WithDescription("Select a config preset or customise below.");
+            
             RegisterSurvivalOptions();
             RegisterEnvironmentOptions();
             RegisterCostOptions();
@@ -450,6 +465,7 @@ namespace DeathrunRemade.Configuration
         protected override void RegisterModOptions(HootModOptions modOptions)
         {
             modOptions.OnAddOptionToMenu += OnAddOptionToModMenu;
+            modOptions.OnChanged += OnAnyOptionChanged;
             
             modOptions.AddText("Choose carefully. Any options you set here lock in and <color=#FF0000FF>cannot</color>"
                                + " be changed during an ongoing game.");
@@ -457,6 +473,9 @@ namespace DeathrunRemade.Configuration
             var scorePreview = new ScoreMultPreviewText(this, "Your current settings grant you a score multiplier "
                                                               + "of <b>{0}</b>");
             modOptions.AddDecorator(scorePreview);
+            
+            modOptions.AddSeparator();
+            modOptions.AddItem(ConfigPresets.CreatePresetButton(SelectedPreset, OnPresetChanged));
             
             modOptions.AddSeparator();
             modOptions.AddItem(PersonalCrushDepth.ToModChoiceOption());
@@ -580,6 +599,37 @@ namespace DeathrunRemade.Configuration
             }
             DeathrunInit._Log.Warn($"Tried to adjust displayed value of in-game option {option.name} but failed "
                                    + $"to find option type.");
+        }
+        
+        private void OnPresetChanged(string presetJson)
+        {
+            if (string.IsNullOrEmpty(presetJson))
+                return;
+
+            // Temporarily stop listening to these changes since we're about to change the whole config at once.
+            ModOptions.OnChanged -= OnAnyOptionChanged;
+            
+            // Make sure the player cannot trap themselves into a cycle by loading a preset that has a different preset
+            // in its settings.
+            var preset = SelectedPreset.Value;
+            FromJson(presetJson);
+            // Override any preset contained inside the preset so the validation does not cause a loop.
+            SelectedPreset.Entry.SetSerializedValue(preset);
+            ModOptions.Validate();
+            
+            ModOptions.OnChanged += OnAnyOptionChanged;
+        }
+
+        private void OnAnyOptionChanged(object sender, OptionEventArgs optionEventArgs)
+        {
+            string section = GetEntryById(optionEventArgs.Id).GetSection();
+            // Only consider options that influence the scores.
+            if (section == SectionPresets || section == SectionUI)
+                return;
+
+            // When the user edits an option themselves, set their preset to "Custom".
+            SelectedPreset.Entry.Value = ConfigPresets.CustomPresetId;
+            ModOptions.Validate();
         }
     }
 }

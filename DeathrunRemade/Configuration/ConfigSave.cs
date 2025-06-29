@@ -16,6 +16,7 @@ namespace DeathrunRemade.Configuration
     internal readonly struct ConfigSave
     {
         // JsonProperty everywhere is necessary to allow deserialising to read-only fields.
+        [JsonProperty] public readonly string SelectedPreset;
         // Survival
         [JsonProperty] public readonly Difficulty3 PersonalCrushDepth;
         [JsonProperty] public readonly DamageDifficulty DamageTaken;
@@ -58,6 +59,8 @@ namespace DeathrunRemade.Configuration
 
         public ConfigSave(Config config)
         {
+            SelectedPreset = config.SelectedPreset.Value;
+            
             PersonalCrushDepth = config.PersonalCrushDepth.Value;
             DamageTaken = config.DamageTaken.Value;
             NitrogenBends = config.NitrogenBends.Value;
