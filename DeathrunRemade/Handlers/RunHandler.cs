@@ -137,16 +137,7 @@ namespace DeathrunRemade.Handlers
                 && (damageType == DamageType.Normal || damageType == DamageType.Starve))
                 return _deathCauseOverride;
 
-            string cause = damageType switch
-            {
-                DamageType.Collide => "Heavy Impact",
-                DamageType.Electrical => "Electrocution",
-                DamageType.Explosive => "Explosion",
-                DamageType.Heat => "Unbearable Heat",
-                _ => damageType.ToString()
-            };
-
-            return cause;
+            return damageType.ToString();
         }
         
         /// <summary>
@@ -170,7 +161,8 @@ namespace DeathrunRemade.Handlers
             // Get the language lines and let the game insert stats variables for us.
             NotificationHandler.VanillaMessage("dr_run_death1",
                 Mathf.Floor(DeathrunUtils.TimeToGameDays(save.Stats.time)), save.Stats.deaths);
-            NotificationHandler.VanillaMessage("dr_run_death2", save.Stats.causeOfDeath);
+            var deathCause = LocalisationHandler.GetLocalisedCauseOfDeath(save.Stats.causeOfDeath);
+            NotificationHandler.VanillaMessage("dr_run_death2", deathCause);
         }
 
         private void OnVictory(Player player)
@@ -200,7 +192,7 @@ namespace DeathrunRemade.Handlers
         /// <param name="techType">The <see cref="TechType"/> of the thing or attacker causing the death.</param>
         public void SetCauseOfDeathOverride(TechType techType)
         {
-            _deathCauseOverride = techType == TechType.None ? "Unknown Creature" : Language.main.Get(techType.AsString());
+            _deathCauseOverride = techType == TechType.None ? "Unknown Creature" : techType.AsString();
             DeathrunInit._Log.Debug($"Setting death cause override: {_deathCauseOverride}");
         }
 

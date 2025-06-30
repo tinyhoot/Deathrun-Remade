@@ -18,9 +18,11 @@ namespace DeathrunRemade.Components.RunStatsUI
 
         private const string HintKey = "dr_hint";
         private int _maxNumHints = 0;
+        private Language _language;
 
         private void Awake()
         {
+            _language = Language.main;
             UpdateMaxNumHints();
             Language.OnLanguageChanged += UpdateMaxNumHints;
         }
@@ -37,7 +39,7 @@ namespace DeathrunRemade.Components.RunStatsUI
         {
             // Inclusive lower bound, exclusive upper bound.
             int hint = Random.Range(1, _maxNumHints + 1);
-            textMesh.text = "Tip: " + Language.main.Get($"{HintKey}{hint}");
+            textMesh.text = _language.Get("dr_scoresui_hint") + _language.Get($"{HintKey}{hint}");
         }
 
         /// <summary>
@@ -46,15 +48,14 @@ namespace DeathrunRemade.Components.RunStatsUI
         /// </summary>
         private void UpdateMaxNumHints()
         {
-            Language language = Language.main;
             int hints = 1;
-            while (language.Contains($"{HintKey}{hints}"))
+            while (_language.Contains($"{HintKey}{hints}"))
             {
                 hints++;
             }
 
             if (hints <= 1)
-                throw new KeyNotFoundException($"There are no hint messages in the currently loaded language '{language.currentLanguage}'");
+                throw new KeyNotFoundException($"There are no hint messages in the currently loaded language '{_language.currentLanguage}'");
 
             _maxNumHints = hints - 1;
         }

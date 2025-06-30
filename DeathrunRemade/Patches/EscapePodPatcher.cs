@@ -47,7 +47,12 @@ namespace DeathrunRemade.Patches
             Vector3 start = GetStartPoint(SaveData.Main.Config, out string name);
             SaveData.Main.Stats.startPoint = name;
             // Show the intro sequence.
-            NotificationHandler.Main.AddMessage(NotificationHandler.Centre, $"DEATHRUN\nStart: {name}")
+            var language = Language.main;
+            var intro = 
+                language.Get("dr_intro_title") + 
+                language.Get("dr_intro_start") +
+                language.Get(LocalisationHandler.GetStartKey(name));
+            NotificationHandler.Main.AddMessage(NotificationHandler.Centre, intro)
                 .SetDuration(10f, 2f);
             
             // If the setting was on Vanilla, do not override anything.

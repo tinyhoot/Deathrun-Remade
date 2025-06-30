@@ -1,4 +1,5 @@
 using System;
+using DeathrunRemade.Handlers;
 using DeathrunRemade.Objects;
 using TMPro;
 using UnityEngine;
@@ -50,11 +51,13 @@ namespace DeathrunRemade.Components.RunStatsUI
         /// </summary>
         public void UpdateRow()
         {
+            var language = Language.main;
+            
             if (string.IsNullOrEmpty(rank.text))
                 rank.text = "-1";
-            startPoint.text = Stats.startPoint;
-            time.text = $"{DeathrunUtils.TimeToGameDays(Stats.time):F0} Days";
-            causeOfDeath.text = Stats.causeOfDeath;
+            startPoint.text = language.Get(LocalisationHandler.GetStartKey(Stats.startPoint));
+            time.text = language.GetFormat("dr_scoresui_time_entry", Mathf.Floor(DeathrunUtils.TimeToGameDays(Stats.time)));
+            causeOfDeath.text = LocalisationHandler.GetLocalisedCauseOfDeath(Stats.causeOfDeath);
             deaths.text = $"{Stats.deaths}";
             scoreMult.text = $"{Stats.scoreMult:F1}x";
             score.text = $"{Stats.scoreTotal:F0}";
