@@ -1,4 +1,5 @@
 {
+  "dr_mainmenu_button": "Deathrun Stats",
   "dr_savefile_invalid": "Non-Deathrun saves cannot be loaded while Deathrun is active.",
   
   "deathrunremade_battery": "Lithium Battery",
@@ -14,6 +15,8 @@
   "dr_crushdepth_infinite": "Unlimited",
   "dr_nitrogenaddon": "NITROGEN: {0}",
   
+  "WorkbenchMenu_deathrunremade_specialsuits": "Dive Suit Upgrades",
+  "WorkbenchMenu_deathrunremade_specialtanks": "Specialty O2 Tanks",
   "deathrunremade_acidbattery": "Copper/Zinc Battery",
   "Tooltip_deathrunremade_acidbattery": "A very basic mobile power source, and NOT rechargeable. Please dispose of safely.",
   "deathrunremade_acidpowercell": "Lead Acid Power Cell",
@@ -70,11 +73,14 @@
   "EncyDesc_Deathrun_AuroraFiltration": "The Aurora features a sophisticated air filtration system. Based on patented Alterra technology, it provides a clean and safe atmosphere onboard the vessel even on long distance journeys, ensuring optimal productivity of Alterra staff.\n\nAlterra advises staff not to pay attention to jealous detractors criticising the supposedly immense power draw of the system.",
   
   "dr_auroraRepairedBreathable": "The air filtration system roars to life!",
+  "dr_explosion_ui_title": "Drive Core Explosion In:",
+  "dr_explosion_ui_warning": "Shockwave up to {0}m deep!",
   "dr_foodChallengeAfter": "The plant is working hard to expel any poison. Check back later.",
   "dr_foodChallengeAfterSoon": "The plant is working hard to expel any poison. It is almost done!",
   "dr_foodChallengeNever": "The irradiated plant decays at your touch!",
   "dr_lifepodHitBottom": "The lifepod has hit bottom!",
   "dr_notEnoughCraftPower": "Not enough power (need {0}).",
+  "dr_radiation_immune": "Radiation (Immune)",
   "dr_vehicleExitPowerLoss": "{0} drained of {1} energy for exiting at {2} depth.",
   
   "dr_tut_exosuitVehicleExitPowerLoss": "Although more efficient than the Seamoth, the Prawn suit\nstill draws power when exited at depth.",

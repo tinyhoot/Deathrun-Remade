@@ -3,6 +3,7 @@ using DeathrunRemade.Handlers;
 using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using DeathrunRemade.Patches;
+using HootLib.Components;
 using Nautilus.Options;
 using Story;
 using TMPro;
@@ -35,20 +36,27 @@ namespace DeathrunRemade.Components
             gameObject.SetActive(false);
             gameObject.name = nameof(ExplosionCountdown);
             ExplosionCountdown countdown = gameObject.AddComponent<ExplosionCountdown>();
+            
             // Copy the references to existing text components.
             var sunbeam = gameObject.GetComponent<uGUI_SunbeamCountdown>();
             countdown.contentHolder = sunbeam.countdownHolder;
             countdown.contentHolder.SetActive(false);
             countdown.countdownTitle = sunbeam.countdownTitle;
             countdown.countdownTimer = sunbeam.countdownText;
+            // Do not let the cloned component run.
+            DestroyImmediate(sunbeam);
             // Add an extra text field at the bottom of the timer.
             var warningObject = Instantiate(countdown.countdownTitle.gameObject, countdown.contentHolder.transform, false);
             warningObject.name = "Warning";
             countdown.countdownWarning = warningObject.GetComponent<TextMeshProUGUI>();
+            
+            // Make the text localisable.
+            countdown.countdownTitle.AddDynamicTranslation("dr_explosion_ui_title");
+            countdown.countdownWarning.AddDynamicTranslation("dr_explosion_ui_warning",
+                () => ExplosionPatcher.GetExplosionDepth(SaveData.Main.Config.ExplosionDepth));
+            
             // Make sure the object holding all the content has its positional centre set to the upper left corner.
             countdown.contentHolder.GetComponent<RectTransform>().pivot = new Vector2(0f, 1f);
-            // Do not let the cloned component run.
-            DestroyImmediate(gameObject.GetComponent<uGUI_SunbeamCountdown>());
             // Ensure this component does not survive a return to menu.
             GameEventHandler.OnMainMenuLoaded += countdown.OnMainMenuLoaded;
             
@@ -69,9 +77,7 @@ namespace DeathrunRemade.Components
             
             DeathrunUtils.SetCountdownWindowPosition(transform, DeathrunInit._Config.ExplosionWindowPosX.Value,
                 DeathrunInit._Config.ExplosionWindowPosY.Value);
-            SetTitle("Drive Core Explosion In:");
             // Add an extra depth warning if explosion depth is enabled.
-            SetWarning($"Shockwave up to {ExplosionPatcher.GetExplosionDepth(SaveData.Main.Config.ExplosionDepth)}m deep!");
             countdownWarning.gameObject.SetActive(SaveData.Main.Config.ExplosionDepth != Difficulty3.Normal);
 
             // It would be easier to have this registered through Nautilus, but there is no way to undo such a
