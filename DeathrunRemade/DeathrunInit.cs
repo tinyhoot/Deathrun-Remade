@@ -221,11 +221,11 @@ namespace DeathrunRemade
         {
             // Ensure the highscore window is always ready to go.
             var window = Instantiate(_baseStatsWindow, uGUI_MainMenu.main.transform, false);
-            var option = uGUI_MainMenu.main.primaryOptions.gameObject.AddComponent<MainMenuCustomPrimaryOption>();
+            // Create a new main menu option to access Deathrun run stats.
+            var option = MainMenuCustomPrimaryOption.Create("Deathrun Highscores", "dr_mainmenu_button");
             option.onClick.AddListener(window.GetComponent<MainMenuCustomWindow>().Open);
-            option.SetText("Deathrun Stats");
             // Put this new option in the right place - just after the options menu button.
-            int index = uGUI_MainMenu.main.primaryOptions.transform.Find("PrimaryOptions/MenuButtons/ButtonOptions").GetSiblingIndex();
+            int index = option.transform.Find("../ButtonOptions").GetSiblingIndex();
             option.SetIndex(index + 1);
         }
 
@@ -345,10 +345,9 @@ namespace DeathrunRemade
             Atlas.Sprite suitIcon = Hootils.LoadSprite("SuitTabIcon.png", true);
             Atlas.Sprite tankIcon = Hootils.LoadSprite("TankTabIcon.png", true);
             
-            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, SuitBase.WorkbenchSuitTab,
-                "Dive Suit Upgrades", suitIcon);
-            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, TankBase.WorkbenchTankTab,
-                "Specialty O2 Tanks", tankIcon);
+            // Set the display name to null to force a fallback on localisable language keys.
+            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, SuitBase.WorkbenchSuitTab, null, suitIcon);
+            CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, TankBase.WorkbenchTankTab, null, tankIcon);
         }
 
         private void DumpLocation()

@@ -16,7 +16,7 @@ namespace DeathrunRemade.Patches
     internal static class RadiationPatcher
     {
         // Static readonly means it can be used by reference, which allows quick equality checks.
-        private static readonly string _radiationImmuneMsg = "Radiation (Immune)";
+        private static readonly string _radiationImmuneMsg = "dr_radiation_immune";
         private static Vector3 _radWarningPos;
         private static Vector3 _radWarningImmunePos;
         private static bool _playerIsImmune;
@@ -161,10 +161,11 @@ namespace DeathrunRemade.Patches
         {
             if (Player.main == null)
                 return;
+            string immuneMsg = Language.main.Get(_radiationImmuneMsg);
 
             // Get the animation for the radiation warning.
             Animation animation = __instance.warning.GetComponent<Animation>();
-            bool isImmuneMsg = __instance.text.text.Equals(_radiationImmuneMsg);
+            bool isImmuneMsg = __instance.text.text.Equals(immuneMsg);
 
             // Check whether any update is necessary at all.
             if (_playerIsImmune == isImmuneMsg)
@@ -173,7 +174,7 @@ namespace DeathrunRemade.Patches
             if (_playerIsImmune)
             {
                 // Move warning to top right corner, stop the animation.
-                __instance.text.text = _radiationImmuneMsg;
+                __instance.text.text = immuneMsg;
                 __instance.transform.localPosition = _radWarningImmunePos; //new Vector3(720f, 550f, 0f);
                 if (animation != null)
                 {
