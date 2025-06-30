@@ -98,6 +98,17 @@
   "dr_run_victory": "Victory in {1} deaths and {0} days!",
   "dr_run_deathlessVictory": "Flawless victory in {0} days!",
   
+  "dr_scoresui_title": "Deathrun Scores",
+  "dr_scoresui_rank": "Rank",
+  "dr_scoresui_start": "Start",
+  "dr_scoresui_time": "Time",
+  "dr_scoresui_time_entry": "{0} Days",
+  "dr_scoresui_causeofdeath": "Cause",
+  "dr_scoresui_deaths": "Deaths",
+  "dr_scoresui_multiplier": "Multiplier",
+  "dr_scoresui_score": "Score",
+  "dr_scoresui_backbutton": "Back",
+  
   "dr_hint1": "Eating certain native fish may help purge nitrogen.",
   "dr_hint2": "First aid kits not only heal you, they also purge nitrogen.",
   "dr_hint3": "Did you know eating raw bladderfish yields oxygen?",
