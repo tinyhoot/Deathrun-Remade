@@ -1,4 +1,3 @@
-using BepInEx.Configuration;
 using DeathrunRemade.Handlers;
 using DeathrunRemade.Objects;
 using HootLib.Configuration;
@@ -9,36 +8,27 @@ namespace DeathrunRemade.Configuration
     internal class ScoreMultPreviewText : TextDecorator
     {
         private Config _config;
-        private string _textTemplate;
+        private string _languageKey;
         
-        public ScoreMultPreviewText(Config config, string formatTemplate, float fontSize = 30) : base(formatTemplate, fontSize)
+        public ScoreMultPreviewText(Config config, string languageKey, float fontSize = 30) : base(languageKey, fontSize)
         {
             _config = config;
-            config.ConfigFile.SettingChanged += OnSettingChanged;
-            // Keep a copy that won't change.
-            _textTemplate = formatTemplate;
+            // Ensure the multiplier updates whenever a setting is changed.
+            config.ConfigFile.SettingChanged += (_, _) => UpdateText();
+            _languageKey = languageKey;
         }
 
         public override void AddToPanel(Transform panel)
         {
             base.AddToPanel(panel);
-            UpdateScorePreview(_textObject.GetComponentInParent<uGUI_MainMenu>() != null);
+            SetText(_languageKey, GetScoreMult);
         }
 
-        private void OnSettingChanged(object sender, SettingChangedEventArgs args)
+        private object GetScoreMult()
         {
-            UpdateScorePreview(_textObject.GetComponentInParent<uGUI_MainMenu>() != null);
-        }
-
-        private void UpdateScorePreview(bool isMainMenu)
-        {
-            // If this is the in-game menu we need to use the settings that are locked in for this save rather than
-            // whatever is set in the mod options menu.
+            var isMainMenu = _textObject.GetComponentInParent<uGUI_MainMenu>() != null;
             ConfigSave configSave = isMainMenu ? new ConfigSave(_config) : SaveData.Main.Config;
-            
-            // Recalculate the multiplier with the current settings.
-            float mult = ScoreHandler.CalculateScoreMultiplier(configSave);
-            SetText(string.Format(_textTemplate, $"{mult:F1}x"));
+            return $"{ScoreHandler.CalculateScoreMultiplier(configSave):F1}";
         }
     }
 }

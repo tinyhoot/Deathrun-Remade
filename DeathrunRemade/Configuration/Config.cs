@@ -98,9 +98,10 @@ namespace DeathrunRemade.Configuration
                 section: SectionPresets,
                 key: nameof(SelectedPreset),
                 defaultValue: "Default",
-                description: "Change your preset here.",
+                description: "Select a config preset to apply to the rest of the config. Only takes effect if you " +
+                             "change it in the in-game mod menu.",
                 new AcceptableValueList<string>(ConfigPresets.GetPresetNames())
-            ).WithDescription("Select a config preset or customise below.");
+            ).WithDescription("dr_preset_label");
             
             RegisterSurvivalOptions();
             RegisterEnvironmentOptions();
@@ -468,12 +469,9 @@ namespace DeathrunRemade.Configuration
             modOptions.OnAddOptionToMenu += OnAddOptionToModMenu;
             modOptions.OnChanged += OnAnyOptionChanged;
             
-            modOptions.AddText("Choose carefully. Any options you set here lock in and <color=#FF0000FF>cannot</color>"
-                               + " be changed during an ongoing game.");
+            modOptions.AddText("dr_options_lockin_warning");
             // Add a preview of the score multiplier, which updates whenever the user changes an option.
-            var scorePreview = new ScoreMultPreviewText(this, "Your current settings grant you a score multiplier "
-                                                              + "of <b>{0}</b>");
-            modOptions.AddDecorator(scorePreview);
+            modOptions.AddDecorator(new ScoreMultPreviewText(this, "dr_options_multpreview"));
             
             modOptions.AddSeparator();
             modOptions.AddItem(ConfigPresets.CreatePresetButton(SelectedPreset, OnPresetChanged));
@@ -515,8 +513,7 @@ namespace DeathrunRemade.Configuration
             modOptions.AddItem(PacifistChallenge.ToModToggleOption());
             
             modOptions.AddSeparator();
-            modOptions.AddText("These options can always be changed and will take effect immediately, even during a "
-                               + "run. They do not affect your score.");
+            modOptions.AddText("dr_options_ui_infotext");
             modOptions.AddItem(ShowHints.ToModToggleOption());
             modOptions.AddItem(ShowTutorials.ToModToggleOption());
             modOptions.AddItem(ShowWarnings.ToModChoiceOption());
