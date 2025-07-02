@@ -137,9 +137,9 @@ namespace DeathrunRemade.Handlers
             // Speed score. Rewards finishing as fast as possible, but tapers off with more time used.
             // Maximum score is achievable within the grace hours, and zero points is reached at max hours.
             float speedScore = 0f;
-            if (stats.victory)
+            if (stats.victory && hours <= SpeedMaxHours)
             {
-                float speedMult = 1f - Mathf.Clamp01((hours - SpeedGraceHours) / SpeedMaxHours);
+                float speedMult = 1f - Mathf.Clamp01((hours - SpeedGraceHours) / (SpeedMaxHours - SpeedGraceHours));
                 speedScore = speedMult * (SpeedBonus - MinSpeedBonus) + MinSpeedBonus;
             }
             
@@ -164,9 +164,7 @@ namespace DeathrunRemade.Handlers
         public static float CalculateScoreBonus(ConfigSave config, bool victory, GameModeOption gameMode)
         {
             float bonus = 0f;
-
-            // This "double dips", since the no vehicle bonus is already included in the base score. But this is such
-            // a feat that giving it both a scaling and non-scaling bonus seems fair.
+            
             bonus += config.NoVehicleChallenge ? BigBonus : 0f;
             bonus += config.FarmingChallenge switch
             {
