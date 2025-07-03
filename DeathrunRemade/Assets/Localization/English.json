@@ -66,6 +66,7 @@
   "dr_options_lockin_warning": "Choose carefully. Any options you set here lock in and <color=#FF0000FF>cannot</color> be changed during an ongoing game.",
   "dr_options_multpreview": "Your current settings grant you a score multiplier of <b>{0}x</b>.",
   "dr_options_preset_label": "Select a config preset or customise below.",
+  "dr_options_preset_tooltip": "The preset applies to the rest of the config. You can make your own presets in Deathrun's <b>DeathrunRemade/Assets/Presets</b> folder.",
   "dr_options_ui_infotext": "These options can always be changed and will take effect immediately, even during a run. They do not affect your score.",
   
   "deathrunremade_battery": "Lithium Battery",

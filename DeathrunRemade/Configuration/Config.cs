@@ -101,7 +101,7 @@ namespace DeathrunRemade.Configuration
                 description: "Select a config preset to apply to the rest of the config. Only takes effect if you " +
                              "change it in the in-game mod menu.",
                 new AcceptableValueList<string>(ConfigPresets.GetPresetNames())
-            ).WithDescription("dr_preset_label");
+            ).WithDescription("dr_options_preset_label", "dr_options_preset_tooltip");
             
             RegisterSurvivalOptions();
             RegisterEnvironmentOptions();
