@@ -13,13 +13,6 @@ namespace DeathrunRemade.Objects
     {
         [NonSerialized]
         public static SaveData Main;
-        [NonSerialized]
-        public bool Ready;
-        
-        /// <summary>
-        /// Invoked when the save cache has finished initialising and/or loading data from disk.
-        /// </summary>
-        public static event Action<SaveData> OnSaveDataLoaded;
 
         public ConfigSave Config;
         public EscapePodSave EscapePod;
@@ -27,10 +20,16 @@ namespace DeathrunRemade.Objects
         public RunStats Stats;
         public TutorialSave Tutorials;
         public WarningSave Warnings;
-        
-        public override void Load(bool createFileIfNotExist = true)
+
+        public void Init()
         {
-            base.Load(createFileIfNotExist);
+            // Loading a different save repopulates the fields in this class, it does *not* create a new instance.
+            // Therefore, register an instanced method for this.
+            OnFinishedLoading += OnSaveDataLoaded;
+        }
+
+        private void OnSaveDataLoaded(object obj, JsonFileEventArgs args)
+        {
             // The save data loads on game start. If the config data has not been set already, lock it in.
             if (!Config.WasInitialised)
             {
@@ -41,28 +40,8 @@ namespace DeathrunRemade.Objects
             {
                 DeathrunInit._Log.Info($"Loading existing run with id {Stats.id}");
             }
-
-            DeathrunInit.OnReset += OnReset;
-            // Once the file has completed loading/creation, notify everything waiting on it.
-            Ready = true;
+            
             DeathrunInit._Log.Debug("Save data is ready.");
-            OnSaveDataLoaded?.Invoke(this);
-        }
-
-        /// <summary>
-        /// Work around an issue in Nautilus/Newtonsoft(?) where the JSON fails to populate fields that already have
-        /// values in them. By resetting these we ensure the save games of successive games are loaded properly.
-        /// </summary>
-        public void OnReset()
-        {
-            DeathrunInit._Log.Debug("Purging save data from memory.");
-            Config = default;
-            EscapePod = default;
-            Nitrogen = default;
-            Stats = default;
-            Tutorials = default;
-            Warnings = default;
-            DeathrunInit.OnReset -= OnReset;
         }
     }
 

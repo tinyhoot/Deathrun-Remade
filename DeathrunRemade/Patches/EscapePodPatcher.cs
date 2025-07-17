@@ -15,17 +15,6 @@ namespace DeathrunRemade.Patches
     internal class EscapePodPatcher
     {
         /// <summary>
-        /// Make sure the component responsible for sinking the lifepod is added to its gameobject as soon as possible.
-        /// </summary>
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(EscapePod), nameof(EscapePod.Awake))]
-        public static void PatchAwake(EscapePod __instance)
-        {
-            if (SaveData.Main.Config.SinkLifepod)
-                __instance.gameObject.EnsureComponent<EscapePodSinker>();
-        }
-
-        /// <summary>
         /// If this is a new game start sinking the pod once the intro is either over or it has been skipped.
         /// </summary>
         [HarmonyPostfix]

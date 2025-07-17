@@ -3,7 +3,6 @@ using DeathrunRemade.Objects.Attributes;
 using DeathrunRemade.Objects.Enums;
 using HarmonyLib;
 using UnityEngine.SceneManagement;
-using UWE;
 
 namespace DeathrunRemade.Handlers
 {
@@ -25,12 +24,6 @@ namespace DeathrunRemade.Handlers
         /// Invoked whenever the main menu is loaded, both from startup and by returning from play.
         /// </summary>
         public static event Action OnMainMenuLoaded;
-        
-        /// <summary>
-        /// Invoked after the player has pressed the button to either start or load a game and the game transitions
-        /// to the loading screen.
-        /// </summary>
-        public static event Action OnMainMenuPressPlay;
 
         /// <summary>
         /// Invoked whenever the PDA is opened/closed. The parameter is true if the PDA is currently open.
@@ -48,11 +41,6 @@ namespace DeathrunRemade.Handlers
         /// inconsistently.
         /// </summary>
         public static event Action<Player, DamageType> OnPlayerDeath;
-        
-        /// <summary>
-        /// Invoked when the loading screen for is done and the player gains control.
-        /// </summary>
-        public static event Action<Player> OnPlayerGainControl;
 
         /// <summary>
         /// Invoked as soon as the rocket is launched, i.e. just as the ending cinematic begins.
@@ -85,14 +73,6 @@ namespace DeathrunRemade.Handlers
         }
 
         [HarmonyPostfix]
-        [HarmonyPatch(typeof(FreezeTime), nameof(FreezeTime.End))]
-        private static void TriggerSaveGameLoaded(FreezeTime.Id id)
-        {
-            if (id == FreezeTime.Id.WaitScreen && Player.main != null)
-                OnPlayerGainControl?.Invoke(Player.main);
-        }
-
-        [HarmonyPostfix]
         [HarmonyPatch(typeof(uGUI_PDA), nameof(uGUI_PDA.SetCanvasVisible))]
         private static void TriggerPdaStateChanged(bool visible)
         {
@@ -118,13 +98,6 @@ namespace DeathrunRemade.Handlers
         private static void TriggerPlayerVictory()
         {
             OnPlayerVictory?.Invoke(Player.main);
-        }
-
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(MainSceneLoading), nameof(MainSceneLoading.Launch))]
-        private static void TriggerPressPlay()
-        {
-            OnMainMenuPressPlay?.Invoke();
         }
     }
 }

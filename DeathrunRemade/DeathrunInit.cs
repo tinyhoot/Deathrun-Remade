@@ -26,7 +26,7 @@ using ILogHandler = HootLib.Interfaces.ILogHandler;
 namespace DeathrunRemade
 {
     [BepInPlugin(GUID, NAME, VERSION)]
-    [BepInDependency("com.snmodding.nautilus", "1.0.0.33")]
+    [BepInDependency("com.snmodding.nautilus", "1.0.0.39")]
     internal class DeathrunInit : BaseUnityPlugin
     {
         public const string GUID = "com.github.tinyhoot.DeathrunRemade";
@@ -68,8 +68,11 @@ namespace DeathrunRemade
             _Config.Setup();
             _Config.CreateModMenu(NAME, _persistentObject.transform);
 
+            // Ensure the Reset event is always called just before the save data loads.
+            WaitScreenHandler.RegisterEarlyLoadTask(NAME, _ => OnReset.Invoke(), "Preparing clean slate");
             // Register the in-game save game of the current run.
             SaveData.Main = SaveDataHandler.RegisterSaveDataCache<SaveData>();
+            SaveData.Main.Init();
 
             try {
                 InitHandlers();
@@ -85,7 +88,9 @@ namespace DeathrunRemade
                 _Log.Debug("Applying general harmony patches.");
                 _harmony.PatchTypesWithCategory(ApplyPatch.Always);
                 OnReset += () => UnpatchHarmony(_harmony);
-                SaveData.OnSaveDataLoaded += save => PatchHarmonyWithConfig(_harmony, save.Config);
+                // Set up mod loading tasks for anything save-specific that needs doing during the loading screen.
+                WaitScreenHandler.RegisterEarlyAsyncLoadTask(NAME, OnEarlyModLoadingStage);
+                WaitScreenHandler.RegisterLateAsyncLoadTask(NAME, OnLateModLoadingStage);
             }
             catch (Exception ex)
             {
@@ -229,14 +234,24 @@ namespace DeathrunRemade
             option.SetIndex(index + 1);
         }
 
+        private IEnumerator OnEarlyModLoadingStage(WaitScreenHandler.WaitScreenTask task)
+        {
+            task.Status = "Registering items and recipes";
+            SaveData saveData = SaveData.Main;
+            SetUpItemsWithConfig(saveData.Config);
+            yield return null;
+            
+            task.Status = "Patching game according to mod settings";
+            PatchHarmonyWithConfig(_harmony, saveData.Config);
+        }
+
         /// <summary>
         /// Do everything that can only be set up once the config is locked in, i.e. either a new game was started or
         /// the save cache of an existing save was loaded during the loading process.
-        /// Happens early on in the loading process and generally precedes <see cref="OnPlayerAwake"/>.
+        /// Happens very early on in the loading process.
         /// </summary>
-        private void OnConfigLockedIn(SaveData save)
+        private void SetUpItemsWithConfig(ConfigSave config)
         {
-            var config = save.Config;
             CustomItems.Do(item => item.Register(config));
             _recipeChanges.LockBatteryBlueprint(config.BatteryCosts);
             // Deal with any recipe changes.
@@ -246,23 +261,35 @@ namespace DeathrunRemade
             CraftDataHandler.SetQuickSlotType(TechType.FirstAidKit, QuickSlotType.Selectable);
             CraftDataHandler.SetEquipmentType(TechType.FirstAidKit, EquipmentType.Hand);
         }
-        
+
         /// <summary>
         /// Do all the necessary work to get the mod going which can only be done when the game has set up most of its
         /// systems and is about to be ready to play.
         /// </summary>
-        /// <param name="player">A freshly awoken player instance.</param>
-        private void OnPlayerAwake(Player player)
+        private IEnumerator OnLateModLoadingStage(WaitScreenHandler.WaitScreenTask task)
         {
             ConfigSave config = SaveData.Main.Config;
-            
-            try {
+            PreparePlayer(task, Player.main, config);
+            // Wait a frame to reduce stuttering on weaker machines.
+            yield return null;
+            PerformLastSecondSetup(task, config);
+        }
+        
+        /// <summary>
+        /// Perform every save/config-specific change directly related to the player.
+        /// </summary>
+        private void PreparePlayer(WaitScreenHandler.WaitScreenTask task, Player player, ConfigSave config)
+        {
+            try
+            {
+                task.Status = "Setting up GUI";
                 // Enable the tracker which updates all run statistics.
                 player.gameObject.AddComponent<RunStatsTracker>();
                 // Set up GUI components.
                 RadiationPatcher.CalculateGuiPosition();
                 TooltipHandler.OverrideVanillaTooltips(config);
-            
+
+                task.Status = "Preparing Player";
                 // Enable crush depth if the player needs to breathe, i.e. is not in creative mode.
                 if (config.PersonalCrushDepth != Difficulty3.Normal && GameModeUtils.RequiresOxygen())
                     player.tookBreathEvent.AddHandler(this, CrushDepthHandler.CrushPlayer);
@@ -287,17 +314,28 @@ namespace DeathrunRemade
         /// Initialise parts that need to be set up at the very last moment before the loading screen vanishes and
         /// the player gains control of their character.
         /// </summary>
-        private void OnPlayerGainControl(Player player)
+        private void PerformLastSecondSetup(WaitScreenHandler.WaitScreenTask task, ConfigSave config)
         {
-            try {
-                EscapePod.main.gameObject.AddComponent<EscapePodRecharge>();
-                EscapePod.main.gameObject.AddComponent<EscapePodStatusScreen>();
+            try
+            {
+                task.Status = "Setting up Lifepod";
+                GameObject pod = EscapePod.main.gameObject;
+                pod.AddComponent<EscapePodRecharge>();
+                pod.AddComponent<EscapePodStatusScreen>();
+                if (config.SinkLifepod)
+                    pod.EnsureComponent<EscapePodSinker>().OnSavedGameLoaded();
+
+                task.Status = "Setting up explosion countdown";
                 ExplosionCountdown.Create(out GameObject go);
                 go.SetActive(true);
+                
                 // Unlock all encyclopedia entries with Deathrun tutorials, but only on a freshly started game.
+                task.Status = "Unlocking helpful encyclopedia entries";
                 if (EscapePod.main.isNewBorn)
                     EncyclopediaHandler.UnlockPdaIntroEntries();
+                
                 // Ensure we always know about the player's current radiation immunity.
+                task.Status = "Initialising radiation";
                 RadiationPatcher.Init();
             }
             catch (Exception ex)
@@ -318,10 +356,6 @@ namespace DeathrunRemade
         {
             GameEventHandler.RegisterEvents();
             GameEventHandler.OnMainMenuLoaded += OnMainMenuLoaded;
-            GameEventHandler.OnMainMenuPressPlay += () => OnReset?.Invoke();
-            GameEventHandler.OnPlayerAwake += OnPlayerAwake;
-            GameEventHandler.OnPlayerGainControl += OnPlayerGainControl;
-            SaveData.OnSaveDataLoaded += OnConfigLockedIn;
         }
 
         /// <summary>

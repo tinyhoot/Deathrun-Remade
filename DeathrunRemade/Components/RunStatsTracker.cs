@@ -55,8 +55,6 @@ namespace DeathrunRemade.Components
 
         private void Update()
         {
-            if (!SaveData.Main.Ready)
-                return;
             if (!_timer.Tick())
                 return;
             

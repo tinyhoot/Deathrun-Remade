@@ -30,7 +30,8 @@ namespace DeathrunRemade.Handlers
             RegisterPdaEntries();
             RegisterStoryGoals();
             // No need to register an OnReset event, the LocalisationHandler will see to it.
-            SaveData.OnSaveDataLoaded += save => FormatEncyEntries(save.Config);
+            WaitScreenHandler.RegisterEarlyLoadTask(DeathrunInit.NAME, _ => FormatEncyEntries(SaveData.Main.Config), 
+                "Formatting PDA encyclopedia entries");
         }
         
         /// <summary>
