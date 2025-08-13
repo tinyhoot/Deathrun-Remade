@@ -26,12 +26,12 @@ using ILogHandler = HootLib.Interfaces.ILogHandler;
 namespace DeathrunRemade
 {
     [BepInPlugin(GUID, NAME, VERSION)]
-    [BepInDependency("com.snmodding.nautilus", "1.0.0.39")]
+    [BepInDependency("com.snmodding.nautilus", "1.0.0.42")]
     internal class DeathrunInit : BaseUnityPlugin
     {
         public const string GUID = "com.github.tinyhoot.DeathrunRemade";
         public const string NAME = "Deathrun Remade";
-        public const string VERSION = "1.1.2";
+        public const string VERSION = "1.1.3";
 
         internal static Config _Config;
         internal static ILogHandler _Log;
@@ -376,8 +376,8 @@ namespace DeathrunRemade
         /// </summary>
         private void SetupCraftTree()
         {
-            Atlas.Sprite suitIcon = Hootils.LoadSprite("SuitTabIcon.png", true);
-            Atlas.Sprite tankIcon = Hootils.LoadSprite("TankTabIcon.png", true);
+            Sprite suitIcon = Hootils.LoadSprite("SuitTabIcon.png", true);
+            Sprite tankIcon = Hootils.LoadSprite("TankTabIcon.png", true);
             
             // Set the display name to null to force a fallback on localisable language keys.
             CraftTreeHandler.AddTabNode(CraftTree.Type.Workbench, SuitBase.WorkbenchSuitTab, null, suitIcon);

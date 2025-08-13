@@ -26,10 +26,10 @@ namespace DeathrunRemade.Items
         {
             CustomPrefab prefab = new CustomPrefab(info);
             prefab.SetRecipe(new RecipeData(
-                    new CraftData.Ingredient(TechType.Compass, 1),
-                    new CraftData.Ingredient(TechType.ComputerChip, 1),
-                    new CraftData.Ingredient(TechType.Polyaniline, 1),
-                    new CraftData.Ingredient(TechType.AramidFibers, 1)
+                    new Ingredient(TechType.Compass, 1),
+                    new Ingredient(TechType.ComputerChip, 1),
+                    new Ingredient(TechType.Polyaniline, 1),
+                    new Ingredient(TechType.AramidFibers, 1)
                 ))
                 .WithFabricatorType(CraftTree.Type.Fabricator)
                 .WithStepsToFabricatorTab(CraftTreeHandler.Paths.FabricatorEquipment);

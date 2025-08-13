@@ -2,6 +2,7 @@ using DeathrunRemade.Configuration;
 using HootLib;
 using Nautilus.Assets;
 using Nautilus.Handlers;
+using UnityEngine;
 
 namespace DeathrunRemade.Items
 {
@@ -19,7 +20,7 @@ namespace DeathrunRemade.Items
             return ClassIdPrefix + "thermophilesample";
         }
 
-        protected override Atlas.Sprite GetSprite()
+        protected override Sprite GetSprite()
         {
             return Hootils.LoadSprite("thermophilesample.png", true);
         }

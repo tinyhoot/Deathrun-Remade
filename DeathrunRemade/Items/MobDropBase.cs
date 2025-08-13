@@ -1,7 +1,7 @@
-using DeathrunRemade.Configuration;
 using HootLib;
 using Nautilus.Assets;
 using Nautilus.Assets.PrefabTemplates;
+using UnityEngine;
 
 namespace DeathrunRemade.Items
 {
@@ -44,7 +44,7 @@ namespace DeathrunRemade.Items
         
         protected abstract string GetClassId();
         
-        protected abstract Atlas.Sprite GetSprite();
+        protected abstract Sprite GetSprite();
         
         protected abstract void RegisterHarvestData();
 

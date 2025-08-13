@@ -3,6 +3,7 @@ using DeathrunRemade.Objects.Enums;
 using HootLib;
 using Nautilus.Assets;
 using Nautilus.Handlers;
+using UnityEngine;
 
 namespace DeathrunRemade.Items
 {
@@ -20,7 +21,7 @@ namespace DeathrunRemade.Items
             return ClassIdPrefix + "spineeelscale";
         }
 
-        protected override Atlas.Sprite GetSprite()
+        protected override Sprite GetSprite()
         {
             return Hootils.LoadSprite("rivereelscale.png", true);
         }

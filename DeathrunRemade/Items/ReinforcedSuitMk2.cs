@@ -2,6 +2,7 @@ using DeathrunRemade.Handlers;
 using HootLib;
 using Nautilus.Assets;
 using Nautilus.Crafting;
+using UnityEngine;
 
 namespace DeathrunRemade.Items
 {
@@ -27,13 +28,13 @@ namespace DeathrunRemade.Items
         protected override RecipeData GetRecipe()
         {
             return new RecipeData(
-                new CraftData.Ingredient(TechType.ReinforcedDiveSuit, 1),
-                new CraftData.Ingredient(TechType.AramidFibers, 1),
-                new CraftData.Ingredient(TechType.AluminumOxide, 2),
-                new CraftData.Ingredient(SpineEelScale.s_TechType, 2));
+                new Ingredient(TechType.ReinforcedDiveSuit, 1),
+                new Ingredient(TechType.AramidFibers, 1),
+                new Ingredient(TechType.AluminumOxide, 2),
+                new Ingredient(SpineEelScale.s_TechType, 2));
         }
 
-        protected override Atlas.Sprite GetSprite()
+        protected override Sprite GetSprite()
         {
             return Hootils.LoadSprite("reinforcedsuit2.png", true);
         }

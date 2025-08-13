@@ -113,7 +113,7 @@ namespace DeathrunRemade.Items
         /// <summary>
         /// Gets the right sprite for the suit upgrade.
         /// </summary>
-        protected abstract Atlas.Sprite GetSprite();
+        protected abstract Sprite GetSprite();
 
         /// <summary>
         /// Gets the right unlocking item for the type of suit.

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!-- These references are intended for use during beta stage Nautilus updates where a fast update is necessary
+     but the new version has not made it to nuget yet. -->
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Core" Version="5.4.21" />
+        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+        <PackageReference Include="Subnautica.GameLibs" Version="82304.0.0-r.0" PrivateAssets="All"/>
+        <PackageReference Include="UnityEngine.Modules" Version="2019.4.36" PrivateAssets="All"/>
+        <Reference Include="Nautilus">
+            <HintPath>..\NautilusBeta\Nautilus.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+</Project>

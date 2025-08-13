@@ -1,6 +1,7 @@
 using HootLib;
 using Nautilus.Assets;
 using Nautilus.Crafting;
+using UnityEngine;
 
 namespace DeathrunRemade.Items
 {
@@ -26,12 +27,12 @@ namespace DeathrunRemade.Items
         protected override RecipeData GetRecipe()
         {
             return new RecipeData(
-                new CraftData.Ingredient(TechType.PlasteelTank, 1),
-                new CraftData.Ingredient(ThermophileSample.s_TechType, 4),
-                new CraftData.Ingredient(TechType.Kyanite, 1));
+                new Ingredient(TechType.PlasteelTank, 1),
+                new Ingredient(ThermophileSample.s_TechType, 4),
+                new Ingredient(TechType.Kyanite, 1));
         }
 
-        protected override Atlas.Sprite GetSprite()
+        protected override Sprite GetSprite()
         {
             return Hootils.LoadSprite("chemosynthesistank.png", true);
         }

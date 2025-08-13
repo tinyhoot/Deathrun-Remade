@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using HootLib;
+using Nautilus.Crafting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -21,15 +22,14 @@ namespace DeathrunRemade.Objects
         public int craftAmount = 1;
         public List<SerialIngredient> ingredients;
 
-        public CraftData.TechData ToTechData()
+        public RecipeData ToTechData()
         {
-            var data = new CraftData.TechData
+            var data = new RecipeData
             {
-                _craftAmount = craftAmount,
-                _techType = techType,
-                _ingredients = new CraftData.Ingredients()
+                craftAmount = craftAmount,
+                Ingredients = new List<Ingredient>()
             };
-            ingredients.ForEach(i => data._ingredients.Add(i.techType, i.amount));
+            ingredients.ForEach(serialIngredient => data.Ingredients.Add(serialIngredient.ToIngredient()));
 
             return data;
         }
@@ -48,9 +48,9 @@ namespace DeathrunRemade.Objects
             this.amount = amount;
         }
 
-        public CraftData.Ingredient ToIngredient()
+        public Ingredient ToIngredient()
         {
-            return new CraftData.Ingredient(techType, amount);
+            return new Ingredient(techType, amount);
         }
 
         public override string ToString()

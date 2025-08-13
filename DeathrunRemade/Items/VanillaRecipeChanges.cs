@@ -8,6 +8,7 @@ using DeathrunRemade.Objects;
 using DeathrunRemade.Objects.Enums;
 using HootLib;
 using HootLib.Objects;
+using Nautilus.Crafting;
 using Nautilus.Handlers;
 using Newtonsoft.Json;
 
@@ -19,13 +20,13 @@ namespace DeathrunRemade.Items
         private const string FragmentFileName = "ScanNumberChanges.json";
         private Dictionary<string, List<SerialScanData>> _fragmentJson;
         private Dictionary<string, List<SerialTechData>> _recipeJson;
-        private NautilusShell<TechType, ITechData> _recipeCache;
+        private NautilusShell<TechType, RecipeData> _recipeCache;
         private NautilusShell<TechType, int> _scanNumberCache;
 
         public VanillaRecipeChanges()
         {
             // Set up caching so we can reset our changes at any point.
-            _recipeCache = new NautilusShell<TechType, ITechData>(CraftDataHandler.SetRecipeData, CraftDataHandler.GetRecipeData);
+            _recipeCache = new NautilusShell<TechType, RecipeData>(CraftDataHandler.SetRecipeData, CraftDataHandler.GetRecipeData);
             _scanNumberCache = new NautilusShell<TechType, int>(PDAHandler.EditFragmentsToScan, GetFragmentScanNumber);
 
             // Ensure we clean up after ourselves.
